@@ -1,0 +1,197 @@
+﻿@{
+    ViewData["Title"] = "Invite Friends";
+}
+
+<div class="flex flex-col w-full">
+<div class="w-full bg-surface-container-low py-space-sm">
+<div class="max-w-[1320px] mx-auto px-margin-mobile md:px-margin">
+<nav class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="~/">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="~/Programmes">Community</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Invite Friends &amp; Expand the Cause</span>
+</nav>
+</div>
+</div>
+<section class="w-full py-space-xl">
+<div class="max-w-[1320px] mx-auto px-margin-mobile md:px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column: Mission, Imagery, Metrics, Referral Share (approx 45% -> 5 cols lg) -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- Editorial Narrative & Header -->
+<div class="flex flex-col gap-space-sm">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed w-fit">
+<span class="material-symbols-outlined text-[16px] text-secondary">favorite</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Community Outreach Initiative</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary leading-tight">
+              Kindness multiplies when shared.
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Collective giving achieves what no individual can alone. When you invite friends and colleagues to Give-AID, you help vetted local NGOs build clean water wells, equip rural classrooms, and supply urgent medical relief across underserved frontiers.
+            </p>
+</div>
+<!-- Illustrated Rich Community Artwork Card -->
+<div class="relative overflow-hidden rounded-full rounded-[16px] shadow-sm bg-surface-container-lowest">
+<div class="relative h-64 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Editorial warm documentary photography combined with hand-drawn stylized artistic overlays showing diverse hands gently holding a flourishing young sapling enveloped in glowing teal and terracotta heart leaves, morning soft golden light illuminating genuine smiles of aid volunteers in outdoor field work, warm cream background tones, photorealistic depth." src="/images/invite-29.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 text-on-primary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed">Grassroots Solidarity</span>
+<p class="font-title-sm text-title-sm mt-0.5 font-medium">Over 48,000 friends mobilized in 2024–2025.</p>
+</div>
+</div>
+</div>
+<!-- Impact Metric Callout Card -->
+<div class="bg-surface-container-lowest p-space-lg rounded-[16px] shadow-sm flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[26px]">volunteer_activism</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Direct Multiplier Effect</span>
+<p class="font-title-sm text-title-sm text-primary font-bold">
+                Every friend who joins through your link generates an average of <span class="text-secondary">$140</span> in community aid within their first 60 days.
+              </p>
+</div>
+</div>
+<!-- Milestone Reward / Gamification Badge -->
+<div class="bg-tertiary-fixed/40 p-space-md rounded-[16px] flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-tertiary font-bold">Ambassador Circle</span>
+<span class="font-body-sm text-body-sm text-on-tertiary-fixed-variant">Unlock the verified badge at 5 successful invitations.</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-sm">
+<span class="font-label-sm text-label-sm font-bold text-primary">2 / 5</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">stars</span>
+</div>
+</div>
+<!-- Shareable Referral Link Box -->
+<div class="bg-surface-container-lowest p-space-lg rounded-[16px] shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Your Unique Referral Link</span>
+<p class="font-body-sm text-body-sm text-on-surface">Share anywhere to automatically track aid channeled via your circle.</p>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-outline text-[20px] ml-2">link</span>
+<input class="w-full bg-transparent px-2 font-body-sm text-body-sm text-on-surface focus:outline-none select-all" id="referral-input" readonly="" type="text" value="https://give-aid.org/invite/your-name"/>
+<button class="shrink-0 bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-2 rounded-lg transition-colors flex items-center gap-1" id="copy-link-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span id="copy-btn-text">Copy Link</span>
+</button>
+</div>
+<!-- Quick Social Share Row -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Or dispatch directly through your networks:</span>
+<div class="flex items-center gap-space-sm flex-wrap">
+<a aria-label="Share on WhatsApp" data-share="whatsapp" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</a>
+<a aria-label="Share on LinkedIn" data-share="linkedin" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-[#0077B5]/10 hover:bg-[#0077B5]/20 text-[#0077B5] flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">work</span>
+</a>
+<a aria-label="Share on X Twitter" data-share="x" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">tag</span>
+</a>
+<a aria-label="Share on Telegram" data-share="telegram" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-[#229ED9]/10 hover:bg-[#229ED9]/20 text-[#229ED9] flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</a>
+<a aria-label="Share via Email client" data-share="email" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-secondary/10 hover:bg-secondary/20 text-secondary flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">alternate_email</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Invitation Card & Success Confirmation (approx 55% -> 7 cols lg) -->
+<div class="lg:col-span-7 flex flex-col gap-space-xl">
+<!-- Primary Management Card -->
+<form id="inviteForm" method="post" asp-controller="Invite" asp-action="Index" novalidate class="bg-surface-container-lowest p-space-xl rounded-[16px] shadow-sm flex flex-col gap-space-lg">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-widest">Multi-Recipient Dispatch</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Invite friends via email</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Send personalized invitations with seamless 1-click joining and instant verification.</p>
+</div>
+<!-- Email Input & Add Action -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="email-field">Recipient Email Address</label>
+<div class="flex items-center gap-space-sm">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+<input class="w-full pl-10 pr-space-md py-space-sm bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="email-field" placeholder="colleague@@organization.org" type="email"/>
+</div>
+<button class="bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-lg font-label-lg text-label-lg transition-colors shrink-0 uppercase tracking-wide flex items-center gap-1 shadow-sm" id="add-email-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-error hidden" id="email-error-msg">Please provide a valid email format.</p>
+</div>
+<!-- Added Emails Tag Pool -->
+<div class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Staged Recipients</span>
+<span class="font-label-md text-label-md text-primary font-bold" id="recipient-count">0 invitations staged (Up to 20 at a time)</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs min-h-[42px]" id="email-tags-container">
+<span class="font-body-sm text-body-sm text-outline" id="empty-recipients">No recipients yet — add an email above.</span>
+</div>
+</div>
+<!-- Personal Message Box -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="personal-msg">Personalized Endorsement Note</label>
+<span class="font-label-sm text-label-sm text-outline">Editable message</span>
+</div>
+<textarea class="w-full p-space-md bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-sm leading-relaxed" id="personal-msg" name="Message" maxlength="1000" rows="4">Hey everyone! I've been supporting verified grassroots NGO projects on Give-AID and thought you'd love seeing the direct impact they make. Join me in backing some truly life-changing programs!</textarea>
+</div>
+<!-- Trust Indicator / Privacy Note -->
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">security</span>
+<span>We never share or spam contact details. Invitations are sent once on your direct request.</span>
+</div>
+<!-- Direct Action button -->
+<button class="w-full bg-secondary hover:bg-secondary-container text-on-secondary py-space-md px-space-lg rounded-xl font-title-sm text-title-sm font-semibold transition-all duration-200 flex items-center justify-center gap-space-xs shadow-md opacity-50 pointer-events-none" id="submit-invites-btn" type="submit">
+<span class="material-symbols-outlined text-[22px]">send</span>
+<span id="send-btn-label">Send invitations (0)</span>
+</button>
+</form>
+<!-- Success State Preview Container / Card Overlay -->
+<div class="bg-surface-container-lowest p-space-xl rounded-[16px] shadow-sm hidden flex-col gap-space-md transition-all duration-300" id="dispatch-success-panel">
+<div class="flex items-start gap-space-md">
+<div class="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[32px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Confirmation Receipt</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold" id="dispatch-title">3 Invitations Dispatched!</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                  Your friends will receive an invitation email with instructions to view your favorite programmes and join your giving circle.
+                </p>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-md mt-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]">query_stats</span>
+<a class="font-label-lg text-label-lg font-semibold hover:underline" href="~/Account/Register">Track invitation status in your Member Dashboard →</a>
+</div>
+<button class="px-space-md py-space-xs rounded-lg font-label-md text-label-md text-primary bg-primary/10 hover:bg-primary/20 transition-colors uppercase tracking-wider font-bold" id="invite-more-btn" type="button">
+                Invite more friends
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive JavaScript Logic -->
+</div>
+
+@section Scripts {
+<script src="~/js/invite.js" asp-append-version="true"></script>
+}

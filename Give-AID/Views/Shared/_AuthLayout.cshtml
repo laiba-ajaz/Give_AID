@@ -1,0 +1,14 @@
+@* Minimal layout for Register / Log In (the design has its own brand bar, no site header/footer). *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_Head" />
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface">
+    <main class="w-full bg-surface min-h-screen flex items-center justify-center p-space-md">
+        @RenderBody()
+    </main>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,704 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="flex flex-col w-full">
+<!-- 1. HERO SECTION -->
+<section class="relative w-full overflow-hidden bg-surface py-space-xl lg:py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<!-- Hero Left Column -->
+<div class="lg:col-span-6 flex flex-col gap-space-md z-10">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-primary/10 text-primary w-fit">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Verified NGO Welfare Network</span>
+</div>
+<h1 class="font-display text-display text-primary tracking-tight font-normal leading-tight">
+            Small gifts.<br/>
+<span class="relative inline-block text-secondary italic font-serif">
+              Big change.
+              <svg class="absolute -bottom-1 left-0 w-full h-2.5 text-secondary-container opacity-80" preserveaspectratio="none" viewbox="0 0 100 12">
+<path d="M0,7 Q45,14 100,5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+            Join thousands of everyday changemakers empowering vetted grassroots NGOs across child protection, digital education, community health, and elder dignity. 100% of public donations directly reach frontline beneficiaries with open-ledger audits.
+          </p>
+<div class="flex flex-wrap items-center gap-space-sm pt-space-xs">
+<a class="inline-flex items-center justify-center gap-space-xs bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-md rounded-xl font-title-sm text-title-sm transition-all duration-200 shadow-md hover:shadow-lg uppercase tracking-wider" href="~/Donate">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+              Donate now
+            </a>
+<a class="inline-flex items-center justify-center gap-space-xs bg-surface-container-high hover:bg-surface-container-highest text-primary px-space-lg py-space-md rounded-xl font-title-sm text-title-sm transition-all duration-200 uppercase tracking-wider" href="~/Account/Register">
+<span class="material-symbols-outlined text-[20px]">group_add</span>
+              Join as a member
+            </a>
+</div>
+<div class="flex items-center gap-space-md pt-space-xs">
+<div class="flex -space-x-3 overflow-hidden p-1">
+<img class="inline-block h-10 w-10 rounded-full object-cover shadow-sm bg-surface-variant" data-alt="Close-up portrait of an active community philanthropist smiling warmly, natural sunlight, cinematic documentary photography" src="/images/home-3.jpg"/>
+<img class="inline-block h-10 w-10 rounded-full object-cover shadow-sm bg-surface-variant" data-alt="Portrait of an enthusiastic female healthcare volunteer wearing medical scrubs, genuine humanitarian expression, natural outdoor light" src="/images/home-4.jpg"/>
+<img class="inline-block h-10 w-10 rounded-full object-cover shadow-sm bg-surface-variant" data-alt="Portrait of a young social worker wearing a teal vest, smiling outdoors in a community garden, high quality photography" src="/images/home-5.jpg"/>
+<img class="inline-block h-10 w-10 rounded-full object-cover shadow-sm bg-surface-variant" data-alt="Portrait of an elderly compassionate civic supporter with glasses, soft warm lighting, editorial framing" src="/images/home-6.jpg"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Trusted by <strong class="text-primary font-semibold">14,800+ donors</strong> worldwide
+              </p>
+</div>
+</div>
+</div>
+<!-- Hero Right Column (Collage & Badges) -->
+<div class="lg:col-span-6 relative flex justify-center">
+<div class="relative w-full max-w-[560px] h-[520px]">
+<!-- Main Hero Image Frame -->
+<div class="absolute inset-0 rounded-full overflow-hidden shadow-xl bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Heartwarming photo collage of frontline charity volunteers assisting laughing school children holding books and a nurse providing gentle care to an elderly woman in a sunlit community center, rich teal and warm coral atmospheric tones" src="/images/home-7.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent"></div>
+</div>
+<!-- Floating Card Top Left: NGO Verification -->
+<div class="absolute -top-3 -left-4 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl p-space-md shadow-lg flex items-center gap-space-sm max-w-xs transition-transform duration-300 hover:scale-105">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[26px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-primary leading-tight">450+ Vetted NGOs</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+                  100% Tax Deductible
+                </span>
+</div>
+</div>
+<!-- Floating Card Bottom Right: Disbursed Metric -->
+<div class="absolute -bottom-4 right-4 bg-primary text-on-primary rounded-xl p-space-md shadow-xl flex items-center gap-space-md transition-transform duration-300 hover:scale-105">
+<div class="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center shrink-0 text-on-secondary">
+<span class="material-symbols-outlined text-[24px]">payments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-bold text-on-primary tracking-tight leading-none">$8.4M+</span>
+<span class="font-label-md text-label-md text-on-primary-container tracking-wider uppercase pt-1">Disbursed Directly</span>
+</div>
+</div>
+<!-- Small Accent Floating Badge -->
+<div class="absolute top-1/2 -right-4 -translate-y-1/2 bg-secondary text-on-secondary rounded-full px-space-md py-space-xs shadow-md flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">volunteer_activism</span>
+<span class="font-label-md text-label-md tracking-wider uppercase">Zero Overhead Deductions</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. IMPACT NUMBERS STRIP -->
+<section class="w-full bg-surface-container-low py-space-lg">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="bg-surface-container-lowest rounded-full p-space-lg shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg items-center">
+<!-- Metric 1 -->
+<div class="flex items-center gap-space-md px-space-md">
+<div class="w-14 h-14 rounded-full bg-primary-container/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[32px]">shield_person</span>
+</div>
+<div class="flex flex-col">
+<div class="font-headline-md text-headline-md text-primary font-bold tracking-tight">480+</div>
+<div class="font-title-sm text-title-sm text-on-surface">Vetted NGO Partners</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Subject to background diligence</div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="flex items-center gap-space-md px-space-md">
+<div class="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[32px]">local_fire_department</span>
+</div>
+<div class="flex flex-col">
+<div class="font-headline-md text-headline-md text-secondary font-bold tracking-tight">1,250+</div>
+<div class="font-title-sm text-title-sm text-on-surface">Active Welfare Projects</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Serving frontline humanitarian needs</div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="flex items-center gap-space-md px-space-md">
+<div class="w-14 h-14 rounded-full bg-tertiary-fixed-dim/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[32px]">diversity_1</span>
+</div>
+<div class="flex flex-col">
+<div class="font-headline-md text-headline-md text-primary font-bold tracking-tight">2.4M+</div>
+<div class="font-title-sm text-title-sm text-on-surface">Lives Uplifted &amp; Dignified</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Validated through quarterly external audit</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-low rounded-xl px-space-md py-space-xs text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span class="font-body-sm text-body-sm">All disbursements audited independently every quarter by global accounting partners.</span>
+</div>
+<a class="font-label-lg text-label-lg text-primary hover:text-secondary flex items-center gap-1" href="#">
+            View 2024 Audit Disclosure <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. CHOOSE A CAUSE (3x2 Grid) -->
+<section class="w-full bg-surface py-space-xl" id="causes-section">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<!-- Section Heading -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">Frontline Focus</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-normal">Choose a cause close to your heart</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Support certified frontline programmes engineered for measurable impact, backed by direct receipts and complete capital clarity.
+          </p>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-lg text-label-lg uppercase" type="button">All Causes</button>
+<button class="px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg uppercase hover:bg-surface-container-highest" type="button">Urgent Needs</button>
+<button class="px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg uppercase hover:bg-surface-container-highest" type="button">Monthly Aid</button>
+</div>
+</div>
+<!-- 3x2 Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1: Children -->
+<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Group of energetic young school children smiling together in classroom setting, holding up fresh colorful notebooks, bright soft morning daylight" src="/images/home-8.jpg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-secondary shadow-sm flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">child_care</span>
+<span>Child Welfare</span>
+</div>
+<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
+              92% Goal Reached
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Children</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Nutrition packs, trauma safety retreats, and nurturing shelter homes for vulnerable children facing extreme poverty.
+              </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 92%;"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
+<span>Raised: <strong>$142,800</strong></span>
+<span>Goal: $155,000</span>
+</div>
+<div class="pt-space-xs flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-outline">1,420 Beneficiaries</span>
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=children">
+                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Education -->
+<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Attentive young female student in science laboratory looking through digital tablet with focused expression, modern rural classroom setting, natural lighting" src="/images/home-9.jpg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-primary shadow-sm flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>Literacy &amp; STEM</span>
+</div>
+<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
+              78% Goal Reached
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Education</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Essential school supplies, rural digital learning labs, and secondary school completion scholarships for first-generation learners.
+              </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 78%;"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
+<span>Raised: <strong>$218,500</strong></span>
+<span>Goal: $280,000</span>
+</div>
+<div class="pt-space-xs flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-outline">3,850 Students</span>
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=education">
+                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Disabled Persons -->
+<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Smiling person using an advanced motorized wheelchair participating in an inclusive community art project, sunny airy community workshop space" src="/images/home-10.jpg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-secondary shadow-sm flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">accessible</span>
+<span>Accessibility</span>
+</div>
+<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
+              84% Goal Reached
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Disabled Persons</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Custom assistive mobility devices, specialized sensory therapy sessions, and inclusive livelihood skills training workshops.
+              </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 84%;"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
+<span>Raised: <strong>$95,300</strong></span>
+<span>Goal: $113,000</span>
+</div>
+<div class="pt-space-xs flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-outline">640 Families</span>
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=disabled">
+                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Women -->
+<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Determined female cooperative artisan weaving fine sustainable textiles in a cooperative studio, warm sunlight, inspiring expression of independence" src="/images/home-11.jpg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-primary shadow-sm flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">female</span>
+<span>Empowerment</span>
+</div>
+<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
+              65% Goal Reached
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Women</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Seed micro-grants for female entrepreneurs, community legal defence counsel, and comprehensive maternal and newborn care.
+              </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 65%;"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
+<span>Raised: <strong>$176,000</strong></span>
+<span>Goal: $270,000</span>
+</div>
+<div class="pt-space-xs flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-outline">1,910 Women</span>
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=women">
+                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 5: Youth -->
+<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Two focused young developers collaborating over computer programming screens inside modern tech community workshop, vibrant collaborative learning" src="/images/home-12.jpg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-secondary shadow-sm flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">school</span>
+<span>Skilling &amp; Tech</span>
+</div>
+<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
+              89% Goal Reached
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Youth</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Vocational apprenticeships, digital codework bootcamps, and career mentorship unlocking meaningful paths to economic resilience.
+              </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 89%;"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
+<span>Raised: <strong>$89,200</strong></span>
+<span>Goal: $100,000</span>
+</div>
+<div class="pt-space-xs flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-outline">820 Young Leaders</span>
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=youth">
+                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 6: Elderly -->
+<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Kind caregiver and cheerful senior citizen sharing laughter while holding cups of tea in a warm, welcoming common room, heartwarming respectful interaction" src="/images/home-13.jpg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-primary shadow-sm flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">elderly</span>
+<span>Elder Dignity</span>
+</div>
+<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
+              96% Goal Reached
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Elderly</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Daily hot nutrition delivery, healthcare companionship visits, and critical home winterization aid for isolated seniors.
+              </p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 96%;"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
+<span>Raised: <strong>$125,600</strong></span>
+<span>Goal: $130,000</span>
+</div>
+<div class="pt-space-xs flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-outline">1,150 Seniors</span>
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=elderly">
+                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. UPCOMING PROGRAMMES AND EVENTS -->
+<section class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">Get Involved Locally</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-normal">Upcoming programmes and events</h2>
+</div>
+<a class="font-title-sm text-title-sm text-primary hover:text-secondary inline-flex items-center gap-1 font-semibold" href="~/Programmes">
+          View all calendar (24) <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Event Card 1 -->
+<div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="relative h-44 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Community volunteers packing school backpacks with books and stationery boxes inside bright community warehouse, wide shot, warm daylight" src="/images/home-14.jpg"/>
+<div class="absolute top-3 left-3 bg-secondary text-on-secondary rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">OCT</span>
+<span class="font-title-lg text-title-lg font-bold">28</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-primary/80 backdrop-blur-sm text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">groups</span> 48 spots open
+              </div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                Austin Community Hub &amp; Remote
+              </div>
+<h3 class="font-title-lg text-title-lg text-primary">Back-to-School Literacy Drive 2025</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Sort, catalog, and package 5,000 science kits and bilingual books for high-need school districts ahead of the winter term.
+              </p>
+</div>
+</div>
+<div class="p-space-md pt-0">
+<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="~/Programmes">
+<span class="material-symbols-outlined text-[18px]">check</span> I'm interested
+            </a>
+</div>
+</div>
+<!-- Event Card 2 -->
+<div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="relative h-44 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Volunteer doctors and medical practitioners checking vitals in a converted high-tech mobile clinic van in a rural mountain township, clear morning sky" src="/images/home-15.jpg"/>
+<div class="absolute top-3 left-3 bg-primary text-on-primary rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">NOV</span>
+<span class="font-title-lg text-title-lg font-bold">04</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-primary/80 backdrop-blur-sm text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">groups</span> 12 clinician slots
+              </div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                Appalachia Health Mission
+              </div>
+<h3 class="font-title-lg text-title-lg text-primary">Mobile Medical Van for Remote Elders</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Bringing free preventative screenings, blood glucose monitoring, dental checks, and prescription delivery to remote valleys.
+              </p>
+</div>
+</div>
+<div class="p-space-md pt-0">
+<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="~/Programmes">
+<span class="material-symbols-outlined text-[18px]">check</span> I'm interested
+            </a>
+</div>
+</div>
+<!-- Event Card 3 -->
+<div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="relative h-44 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High school and college youth assembling solar power sensors in a bright community workshop, high energy teamwork, modern setting" src="/images/home-16.jpg"/>
+<div class="absolute top-3 left-3 bg-secondary text-on-secondary rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">NOV</span>
+<span class="font-title-lg text-title-lg font-bold">12</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-primary/80 backdrop-blur-sm text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">groups</span> 30 youth seats
+              </div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                Metro Tech Center &amp; Lab
+              </div>
+<h3 class="font-title-lg text-title-lg text-primary">Youth Eco-Tech &amp; Skills Bootcamp</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Hands-on weekend sprint teaching clean technology, IoT environmental sensors, and career placement mentorship.
+              </p>
+</div>
+</div>
+<div class="p-space-md pt-0">
+<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="~/Programmes">
+<span class="material-symbols-outlined text-[18px]">check</span> I'm interested
+            </a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. ABOUT US SECTION (Split Layout) -->
+<section class="w-full bg-surface py-space-xl" id="about-section">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<!-- Left Side: Narrative Photo -->
+<div class="lg:col-span-6 relative">
+<div class="relative w-full h-[480px] rounded-full overflow-hidden shadow-xl bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Diverse humanitarian field coordinators gathered around an architectural plan table in an open-air village community centre, smiling and sharing genuine camaraderie, warm natural light, high resolution" src="/images/home-17.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/40 to-transparent"></div>
+</div>
+<!-- Trust Badge Overlay -->
+<div class="absolute bottom-6 left-6 bg-surface-container-lowest/95 backdrop-blur-md p-space-md rounded-xl shadow-lg max-w-sm">
+<div class="flex items-center gap-space-xs text-secondary font-bold font-label-sm text-label-sm uppercase">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+              Institutional Governance
+            </div>
+<p class="font-body-sm text-body-sm text-primary mt-1">
+              "We ensure funds reach local changemakers within 48 hours of verification, bypassing multi-tiered administrative friction."
+            </p>
+</div>
+</div>
+<!-- Right Side: Content & Quick Links -->
+<div class="lg:col-span-6 flex flex-col gap-space-md">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-secondary/10 text-secondary w-fit font-label-md text-label-md uppercase">
+<span>Our Foundation</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary font-normal">
+            Bridging generosity with grassroots resilience.
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Give-AID was established on a single non-negotiable premise: communities know best how to solve their own challenges. We operate as the global infrastructure connecting passionate donors with thoroughly vetted, grassroots non-governmental organizations.
+          </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Backed by corporate philanthropic sponsors who underwrite 100% of our platform operating expenses, every single dollar of individual public giving reaches direct field relief, education supplies, and medical dispensaries.
+          </p>
+<!-- 2-Column Quick Links Grid -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<span class="font-title-sm text-title-sm text-primary">What we do</span>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<span class="font-title-sm text-title-sm text-primary">Our achievements</span>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<span class="font-title-sm text-title-sm text-primary">Our mission</span>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<span class="font-title-sm text-title-sm text-primary">Our supporters</span>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<span class="font-title-sm text-title-sm text-primary">Our leadership team</span>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<span class="font-title-sm text-title-sm text-primary">Careers with us</span>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. OUR PARTNERS (Corporate Match Strip) -->
+<section id="partners-section" class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="bg-surface-container-lowest rounded-full p-space-xl shadow-sm text-center flex flex-col items-center gap-space-md">
+<div class="max-w-2xl flex flex-col gap-space-xs">
+<span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">1:1 Impact Multiplier</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-normal">
+            Proudly supported by leading corporate allies who match public donations 1:1
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Institutional matching funds double the velocity of your contribution automatically upon receipt.
+          </p>
+</div>
+<!-- Stylized Corporate Badges Row -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-space-md w-full pt-space-sm">
+<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary">memory</span> TechCorp
+            </span>
+</div>
+<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary">health_and_safety</span> HealthFirst
+            </span>
+</div>
+<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary">account_balance</span> Global Bank
+            </span>
+</div>
+<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary">eco</span> GreenLife
+            </span>
+</div>
+<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary">rocket_launch</span> Apex Ventures
+            </span>
+</div>
+<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary">public</span> Horizon Media
+            </span>
+</div>
+</div>
+<div class="pt-space-xs">
+<a class="font-label-lg text-label-lg text-secondary hover:text-primary uppercase tracking-wider font-bold inline-flex items-center gap-1" href="~/HelpCentre#contact">
+            Join as corporate partner <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. PHOTO GALLERY STRIP (5 Authentic Moments) -->
+<section class="w-full bg-surface py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm mb-space-md">
+<div>
+<span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">Field Chronicles</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-normal">Real stories. Tangible dignity.</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+          Unfiltered moments captured directly by field partners across 34 operational countries this month.
+        </p>
+</div>
+<!-- 5 Photo Tiles Strip -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-space-sm">
+<!-- Tile 1 -->
+<div class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Smiling schoolgirl in bright turquoise school uniform reading an open illustrated book outdoors in sunlight, cinematic portrait photography" src="/images/home-18.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<p class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">Education</p>
+<p class="font-title-sm text-title-sm leading-snug">Day 1 of Primary School</p>
+</div>
+</div>
+<!-- Tile 2 -->
+<div class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Compassionate volunteer serving warm nutritious soup from large silver cauldron in vibrant community food center, steam rising, warm emotional light" src="/images/home-19.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<p class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">Nutrition</p>
+<p class="font-title-sm text-title-sm leading-snug">Warm Meals for 500</p>
+</div>
+</div>
+<!-- Tile 3 -->
+<div class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Emotional and tender close-up photo of a young healthcare worker gently holding the weathered hand of an elderly grandmother, authentic empathy and trust" src="/images/home-20.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<p class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">Elder Care</p>
+<p class="font-title-sm text-title-sm leading-snug">Companionship Visits</p>
+</div>
+</div>
+<!-- Tile 4 -->
+<div class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Dynamic photo of an athlete with prosthetic running blades training enthusiastically on outdoor athletic running track, triumphant sports photo, golden hour" src="/images/home-21.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<p class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">Mobility</p>
+<p class="font-title-sm text-title-sm leading-snug">Empowering All Abilities</p>
+</div>
+</div>
+<!-- Tile 5 -->
+<div class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container col-span-2 md:col-span-1">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Group of young female apprentices proudly displaying hand-woven textiles and certificates inside a sunlit vocational center, joyful celebration" src="/images/home-22.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<p class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">Vocational</p>
+<p class="font-title-sm text-title-sm leading-snug">Graduation Day</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 8. ENGAGEMENT CALLOUT BANNER -->
+<section class="w-full bg-primary text-on-primary py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-lg bg-primary-container/40 p-space-xl rounded-full">
+<div class="flex flex-col gap-space-xs max-w-xl">
+<div class="inline-flex items-center gap-1 text-secondary-fixed font-label-md text-label-md uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">celebration</span> Ready to make an enduring impact?
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-primary font-normal leading-tight">
+            Start a recurring monthly pledge or sponsor a verified local NGO today.
+          </h2>
+<p class="font-body-sm text-body-sm text-on-primary-container">
+            Receive detailed monthly photographic progress dossiers and itemized fiscal expenditure receipts straight to your inbox.
+          </p>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-space-sm shrink-0 w-full sm:w-auto">
+<a class="w-full sm:w-auto text-center bg-secondary hover:bg-secondary-container text-on-secondary px-space-xl py-space-md rounded-xl font-title-sm text-title-sm transition-all duration-200 uppercase tracking-wider shadow-md" href="~/Donate">
+            Donate to a cause
+          </a>
+<a class="w-full sm:w-auto text-center bg-transparent border-2 border-on-primary text-on-primary hover:bg-on-primary/10 px-space-lg py-space-md rounded-xl font-title-sm text-title-sm transition-all duration-200 uppercase tracking-wider" href="#">
+            Download NGO Guide
+          </a>
+</div>
+</div>
+</div>
+</section>
+</div>

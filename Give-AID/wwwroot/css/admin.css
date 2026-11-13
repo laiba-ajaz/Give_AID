@@ -1,0 +1,60 @@
+/* Admin dashboard styles */
+dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 24px;
+    width: min(480px, 90vw);
+    box-shadow: 0 10px 40px rgba(0,0,0,.2);
+}
+dialog::backdrop { background: rgba(0,0,0,.45); }
+dialog form { display: flex; flex-direction: column; gap: 8px; }
+dialog input, dialog textarea { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+
+/* Table action buttons */
+td.actions { display: flex; gap: 6px; align-items: center; }
+td.actions form { margin: 0; }
+.btn-edit, .btn-delete {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #fff;
+}
+.btn-edit   { background: #2563eb; }
+.btn-delete { background: #dc2626; }
+.btn-edit:hover   { background: #1d4ed8; }
+.btn-delete:hover { background: #b91c1c; }
+
+/* Active toggle switch */
+.toggle-form { margin: 0; }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch .slider {
+    position: absolute;
+    inset: 0;
+    background: #cbd5e1;
+    border-radius: 24px;
+    transition: background .2s;
+}
+.switch .slider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    transition: transform .2s;
+}
+.switch input:checked + .slider { background: #16a34a; }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+.switch input:focus-visible + .slider { outline: 2px solid #2563eb; outline-offset: 2px; }

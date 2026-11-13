@@ -1,0 +1,424 @@
+﻿@{
+    ViewData["Title"] = "Donate";
+}
+
+<div class="flex flex-col w-full">
+<div class="max-w-[1440px] w-full mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin py-space-lg lg:py-space-xl">
+<!-- Top Breadcrumb & Section Header -->
+<div class="flex flex-col gap-space-xs mb-space-xl">
+<nav class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+<a class="hover:text-primary transition-colors" href="~/">Home</a>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="~/Donate">Donate</a>
+<span class="material-symbols-outlined text-[14px] text-secondary font-semibold">chevron_right</span>
+<span class="text-secondary font-bold">Make an Impact</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-medium">Empower Lives with Every Contribution</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mt-space-xs">Your direct tax-deductible gift empowers vetted grassroots programs with immediate field capital, certified medical supplies, and accredited classroom infrastructure.</p>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container rounded-lg shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">security</span>
+<span class="font-label-md text-label-md text-primary font-semibold">100% Tax Deductible (501c3)</span>
+</div>
+</div>
+</div>
+<!-- Main Content: Two Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- LEFT COLUMN: 3-Step Donation Journey -->
+<div class="lg:col-span-7 xl:col-span-8 flex flex-col gap-space-lg">
+<!-- STEP 1: Choose a Cause -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md relative overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center font-bold">1</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-medium">Choose a Cause</h2>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline px-space-sm py-space-xs rounded bg-surface-container-low">Step 1 of 3</span>
+</div>
+<!-- Cause Selector Chips -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-space-sm" id="causeSelector">
+<!-- Children (Selected Active) -->
+<button data-key="children" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-lowest shadow-sm text-left transition-all duration-150 bg-secondary/10" data-cause="Children Welfare &amp; Early Education" data-partner="St. Jude Hope Alliance" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">child_care</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-primary font-semibold leading-tight">Children</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Education &amp; care</span>
+</button>
+<!-- Education -->
+<button data-key="education" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Universal Literacy &amp; Classrooms" data-partner="Global Book Trust" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">menu_book</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Education</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Schools &amp; tech</span>
+</button>
+<!-- Disabled Persons -->
+<button data-key="disabled" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Mobility &amp; Adaptive Welfare" data-partner="All-Ability Foundation" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">accessible</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Disabled</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Mobility &amp; aids</span>
+</button>
+<!-- Women -->
+<button data-key="women" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Women Empowerment &amp; Health" data-partner="Sisterhood Global Micro" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">female</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Women</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Empowerment</span>
+</button>
+<!-- Youth -->
+<button data-key="youth" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Youth Vocational Academy" data-partner="NextGen Skill Labs" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">psychology</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Youth</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Mentorship</span>
+</button>
+<!-- Elderly -->
+<button data-key="elderly" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Elderly Nutrition &amp; Care" data-partner="Silver Years Sanctuary" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">elderly</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Elderly</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Nutritional care</span>
+</button>
+<!-- Emergency Disaster Relief (Span 2) -->
+<button data-key="disaster" class="cause-btn group col-span-2 flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Emergency Disaster Relief Taskforce" data-partner="UN Rapid Response Team" type="button">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-error-container text-on-error-container uppercase font-bold">Urgent</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Disaster Relief</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Immediate medical kits &amp; field shelter</span>
+</button>
+</div>
+</section>
+<!-- STEP 2: Choose an Amount -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center font-bold">2</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-medium">Choose an Amount</h2>
+</div>
+<!-- Frequency Toggle -->
+<div class="inline-flex p-1 bg-surface-container rounded-full text-label-sm font-label-sm self-start sm:self-auto">
+<button class="px-space-md py-1.5 rounded-full bg-primary text-on-primary font-bold shadow-sm transition-all duration-200" id="freqOnce" type="button">
+                One-Time Gift
+              </button>
+<button class="px-space-md py-1.5 rounded-full text-on-surface-variant hover:text-on-surface font-medium transition-all duration-200 flex items-center gap-1" id="freqMonthly" type="button">
+<span>Monthly Champion</span>
+<span class="px-1.5 py-0.2 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold">2x Impact</span>
+</button>
+</div>
+</div>
+<!-- Preset Amount Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm" id="amountSelector">
+<!-- $25 Preset -->
+<button class="amount-btn p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150 flex flex-col justify-between" data-amount="25" data-impact="Provides 15 warm, nutrient-dense meals for children in field shelters." type="button">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">$25</span>
+<span class="material-symbols-outlined text-secondary check-icon hidden text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Provides 15 warm meals</p>
+</button>
+<!-- $50 Preset (Active Selected) -->
+<button class="amount-btn p-space-md rounded-xl bg-secondary/10 shadow-sm text-left transition-all duration-150 flex flex-col justify-between" data-amount="50" data-impact="Provides school books, geometry sets, and 2 full uniforms for 2 children." type="button">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-headline-md text-headline-md text-secondary font-bold tracking-tight">$50</span>
+<span class="material-symbols-outlined text-secondary check-icon text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-primary font-medium">Provides school books &amp; uniforms for 2 children</p>
+</button>
+<!-- $100 Preset -->
+<button class="amount-btn p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150 flex flex-col justify-between" data-amount="100" data-impact="Full medical diagnostic panel and 30-day vital prescriptions." type="button">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">$100</span>
+<span class="material-symbols-outlined text-secondary check-icon hidden text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Full health checkup &amp; medications for an elder</p>
+</button>
+<!-- $250 Preset -->
+<button class="amount-btn p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150 flex flex-col justify-between" data-amount="250" data-impact="Micro-grant with commercial sewing machinery &amp; seed capital." type="button">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">$250</span>
+<span class="material-symbols-outlined text-secondary check-icon hidden text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Vocational starter kit for a woman entrepreneur</p>
+</button>
+</div>
+<!-- Custom Amount & Fee Coverage -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md pt-space-xs">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-0 pl-space-md flex items-center font-headline-sm text-headline-sm text-on-surface-variant pointer-events-none">$</span>
+<input class="w-full pl-9 pr-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-title-md text-title-md placeholder:font-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-low shadow-sm" id="customAmountInput" min="5" placeholder="Enter custom gift" step="1" type="number"/>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-low rounded-lg shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed-variant text-[18px]">volunteer_activism</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Average gift: <strong class="text-primary font-semibold">$68</strong></span>
+</div>
+</div>
+<!-- Fee Checkbox Option -->
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low/70 cursor-pointer hover:bg-surface-container-low transition-colors">
+<input checked="" class="mt-1 w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary cursor-pointer" id="coverFeeCheckbox" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-primary font-semibold">Add 3% to cover transaction fees (<span id="feeLabelAmount">$1.50</span>)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ensures 100% of your generous gift directly funds ground programs without merchant deductions.</span>
+</div>
+</label>
+</section>
+<!-- STEP 3: Payment Details -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center font-bold">3</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-medium">Payment Details</h2>
+</div>
+<div class="flex items-center gap-space-xs text-outline font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>256-Bit SSL Encrypted</span>
+</div>
+</div>
+<!-- Payment Methods Pills -->
+<div class="grid grid-cols-2 gap-space-xs" id="paymentTypeSelector">
+<button class="pay-type-btn py-space-sm px-space-xs rounded-lg bg-secondary/10 text-primary font-label-md text-label-md flex items-center justify-center gap-space-xs font-semibold shadow-sm transition-colors" data-type="Credit" type="button">
+<span class="material-symbols-outlined text-secondary text-[18px]">credit_card</span>
+<span>Credit Card</span>
+</button>
+<button class="pay-type-btn py-space-sm px-space-xs rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors" data-type="Debit" type="button">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span>Debit Card</span>
+</button>
+</div>
+<!-- Donation form: field names are ready for model binding (DonationViewModel) -->
+<form class="flex flex-col gap-space-md" id="donationForm" method="post" asp-controller="Donate" asp-action="Index" novalidate>
+<input type="hidden" name="Cause" id="fCause" value="children"/>
+<input type="hidden" name="Amount" id="fAmount" value="50"/>
+<input type="hidden" name="Frequency" id="fFrequency" value="OneTime"/>
+<input type="hidden" name="CoverFees" id="fCoverFees" value="true"/>
+<input type="hidden" name="TotalAmount" id="fTotal" value="51.50"/>
+<input type="hidden" name="CardType" id="fCardType" value="Credit"/>
+<!-- Name on Card -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-lg text-label-lg text-primary font-semibold flex items-center justify-between" for="cardName">
+<span>Name on Card</span>
+<span class="valid-tag hidden text-tertiary-fixed-variant font-label-sm text-label-sm font-normal items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check</span> Validated
+                </span>
+</label>
+<div class="relative">
+<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none focus:bg-surface-container-low" id="cardName" name="CardHolderName" autocomplete="cc-name" placeholder="As printed on the card" type="text"/>
+<span class="valid-icon hidden absolute right-space-md top-1/2 -translate-y-1/2 material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="field-error hidden font-label-md text-label-md text-error"></p>
+</div>
+<!-- Card Number -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-lg text-label-lg text-primary font-semibold" for="cardNumber">Card Number</label>
+<div class="relative flex items-center">
+<span class="absolute left-space-md font-label-sm text-label-sm font-bold bg-primary text-on-primary px-1.5 py-0.5 rounded tracking-wider" id="cardBrand">CARD</span>
+<input class="card-field w-full pl-16 pr-space-xl py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm tracking-widest focus:outline-none" id="cardNumber" name="CardNumber" autocomplete="cc-number" inputmode="numeric" maxlength="23" placeholder="1234 5678 9012 3456" type="text"/>
+<span class="valid-icon hidden absolute right-space-md material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="field-error hidden font-label-md text-label-md text-error"></p>
+</div>
+<!-- Expiry & CVV Grid -->
+<div class="grid grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-lg text-label-lg text-primary font-semibold" for="cardExpiry">Expiration (MM/YY)</label>
+<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none" id="cardExpiry" name="ExpiryDate" autocomplete="cc-exp" inputmode="numeric" maxlength="5" placeholder="MM/YY" type="text"/>
+<p class="field-error hidden font-label-md text-label-md text-error"></p>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-lg text-label-lg text-primary font-semibold" for="cardCvv">Security Code</label>
+<span class="text-outline font-label-sm text-label-sm flex items-center gap-0.5" title="3-digit security code on the back of your card (4 digits for Amex)">
+<span class="material-symbols-outlined text-[14px]">help</span> <span id="cvvHint">3 digits</span>
+                  </span>
+</div>
+<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none tracking-widest" id="cardCvv" name="Cvv" autocomplete="cc-csc" inputmode="numeric" maxlength="4" placeholder="•••" type="password"/>
+<p class="field-error hidden font-label-md text-label-md text-error"></p>
+</div>
+</div>
+<!-- Secure checkout notice -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Secure Card Verification</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Card number, expiry date and security code are checked before your donation is submitted.</p>
+</div>
+</div>
+</form>
+</section>
+</div>
+<!-- RIGHT COLUMN: Sticky "Your Donation" Summary Card -->
+<div class="lg:col-span-5 xl:col-span-4 sticky top-24 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-md p-space-lg flex flex-col gap-space-md relative overflow-hidden">
+<!-- Cause Image & Badge Header -->
+<div class="relative w-full h-44 rounded-lg overflow-hidden bg-primary-container">
+<img class="w-full h-full object-cover" data-alt="A warm, emotionally uplifting documentary portrait of happy children and a compassionate female teacher smiling together in an educational workshop filled with natural morning light and vibrant classroom supplies, shot on 35mm film with warm terracotta and sage tones." src="/images/donate-30.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-space-sm left-space-sm right-space-sm flex items-center justify-between text-on-primary">
+<div class="flex items-center gap-space-xs bg-surface/90 backdrop-blur-md px-space-sm py-1 rounded-full text-primary">
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm font-bold tracking-tight">Verified 501(c)(3)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-primary/90 font-medium">St. Jude Hope Alliance</span>
+</div>
+</div>
+<!-- Cause Title & Metadata -->
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold" id="summaryCategory">Children Welfare &amp; Early Education</span>
+<h3 class="font-headline-sm text-headline-sm text-primary leading-tight font-medium" id="summaryHeadline">Primary Education Support &amp; Meal Kits</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="summaryImpactStatement">Provides school books, geometry sets, and 2 full uniforms for 2 children.</p>
+</div>
+<!-- Corporate Match Callout Banner -->
+<div class="bg-secondary-fixed/50 rounded-lg p-space-sm flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5">bolt</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-secondary-fixed font-bold tracking-tight">1:1 Corporate Match Unlocked!</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+                TechCorp Philanthropy is matching your <span class="font-semibold text-primary" id="matchBase">$50.00</span> gift. Total program funding will be <strong class="text-secondary font-bold" id="matchTotal">$100.00</strong>.
+              </p>
+</div>
+</div>
+<!-- Financial Breakdown Ledger -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Gift Frequency</span>
+<span class="text-primary font-semibold" id="summaryFrequency">One-Time Gift</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Base Contribution</span>
+<span class="text-primary font-semibold" id="summaryBaseAmount">$50.00</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Payment Fee Coverage (3%)</span>
+<span class="text-primary font-semibold" id="summaryFeeAmount">$1.50</span>
+</div>
+<div class="h-px bg-surface-variant my-space-xs"></div>
+<div class="flex items-baseline justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-primary font-bold">Total Charge Today</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Immediate tax deductible receipt</span>
+</div>
+<span class="font-headline-md text-headline-md text-secondary font-bold" id="summaryTotal">$51.50</span>
+</div>
+</div>
+<!-- Primary CTA Button -->
+<button class="w-full bg-secondary hover:bg-secondary-container text-on-secondary py-space-md rounded-xl font-label-lg text-label-lg uppercase tracking-wider font-bold transition-all shadow-md flex items-center justify-center gap-space-sm group" form="donationForm" type="submit">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span id="ctaButtonLabel">Complete My $51.50 Donation</span>
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</button>
+<!-- Security Badges & Transparency Badges -->
+<div class="pt-space-xs flex items-center justify-around text-on-surface-variant text-center opacity-85">
+<div class="flex flex-col items-center gap-0.5">
+<span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
+<span class="font-label-sm text-[10px] leading-tight">Charity Navigator<br/><strong class="text-primary">4-Star 100%</strong></span>
+</div>
+<div class="w-px h-6 bg-surface-variant"></div>
+<div class="flex flex-col items-center gap-0.5">
+<span class="material-symbols-outlined text-primary text-[20px]">award_star</span>
+<span class="font-label-sm text-[10px] leading-tight">Give.org<br/><strong class="text-primary">Accredited</strong></span>
+</div>
+<div class="w-px h-6 bg-surface-variant"></div>
+<div class="flex flex-col items-center gap-0.5">
+<span class="material-symbols-outlined text-primary text-[20px]">lock_clock</span>
+<span class="font-label-sm text-[10px] leading-tight">Norton<br/><strong class="text-primary">SSL Secured</strong></span>
+</div>
+</div>
+</div>
+<!-- Reassurance Mini Card -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">policy</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">The Give-AID 100% Guarantee</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Every dollar is audited by independent public accountants and disbursed directly to project bank accounts with milestones tracked transparently.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SUCCESS STATE MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-primary/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="successModal">
+<div class="bg-surface-container-lowest max-w-xl w-full rounded-2xl shadow-xl overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col" id="modalCard">
+<!-- Top Decorative Accent -->
+<div class="h-2 bg-gradient-to-r from-primary via-secondary to-secondary-container"></div>
+<!-- Modal Close Button -->
+<button class="absolute top-space-md right-space-md w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" onclick="closeSuccessModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+<div class="p-space-xl flex flex-col items-center text-center gap-space-md">
+<!-- Celebration Badge -->
+<div class="w-16 h-16 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary shadow-md animate-bounce">
+<span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+</div>
+<div class="flex flex-col gap-1 max-w-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Contribution Confirmed</span>
+<h2 class="font-headline-md text-headline-md text-primary font-medium tracking-tight">Thank You<span id="modalDonorName"></span>! Your Gift is on its Way.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            Because of your <strong class="text-primary font-bold" id="modalAmount">$51.50 donation</strong>, 2 children will receive complete educational uniforms and essential textbooks this school semester.
+          </p>
+</div>
+<!-- Receipt Summary Box -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs text-left">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="text-on-surface-variant">Transaction ID:</span>
+<span class="font-mono text-primary font-bold" id="modalTxnId">TXN-GIVE-2025-884920</span>
+</div>
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="text-on-surface-variant">Allocated Cause:</span>
+<span class="text-primary font-semibold" id="modalCause">Children Welfare &amp; Early Education</span>
+</div>
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="text-on-surface-variant">Matching Corporate Partner:</span>
+<span class="text-secondary font-bold">TechCorp Foundation (+<span id="modalMatch">$50.00</span>)</span>
+</div>
+<div class="h-px bg-surface-variant my-1"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Official 501(c)(3) Receipt</span>
+</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-secondary font-bold hover:underline" href="#" onclick="event.preventDefault(); alert('Receipt PDF downloaded.');">
+<span>Download PDF</span>
+<span class="material-symbols-outlined text-[16px]">download</span>
+</a>
+</div>
+</div>
+<!-- Next Step Action Buttons -->
+<div class="flex flex-col sm:flex-row items-center gap-space-sm w-full pt-space-xs">
+<a class="w-full sm:flex-1 py-space-sm px-space-md rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-label-lg font-bold transition-colors flex items-center justify-center gap-space-xs" href="~/Invite">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span>Invite Friends</span>
+</a>
+<a class="w-full sm:flex-1 py-space-sm px-space-md rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg uppercase tracking-wider font-bold transition-colors flex items-center justify-center gap-space-xs shadow-sm" href="~/Programmes">
+<span>Join a Programme</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Logic for Donation Calculations, Cause Selector, Presets & Modal -->
+</div>
+
+@section Scripts {
+<script src="~/js/donate.js" asp-append-version="true"></script>
+}

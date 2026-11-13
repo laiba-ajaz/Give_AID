@@ -1,0 +1,117 @@
+@model List<DonationCauses>
+@{ ViewData["Title"] = "Donation Causes"; }
+
+<h1>Donation Causes</h1>
+
+@if (TempData["Success"] != null) { <p class="alert-success">@TempData["Success"]</p> }
+@if (TempData["Error"] != null)   { <p class="alert-error">@TempData["Error"]</p> }
+
+<button type="button" onclick="document.getElementById('addCauseModal').showModal()">
+    + Add Cause
+</button>
+
+<table>
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.DonationCausesID</td>
+            <td>@c.CauseName</td>
+            <td>@c.CauseDescription</td>
+            <td>
+                <form asp-action="ToggleActive" asp-route-id="@c.DonationCausesID" method="post" class="toggle-form">
+                    <label class="switch" title="@(c.isActive ? "Active — click to deactivate" : "Inactive — click to activate")">
+                        <input type="checkbox" @(c.isActive ? "checked" : "") onchange="this.form.submit()" />
+                        <span class="slider"></span>
+                    </label>
+                </form>
+            </td>
+            <td class="actions">
+                <button type="button" class="btn-edit"
+                        data-id="@c.DonationCausesID"
+                        data-name="@c.CauseName"
+                        data-description="@c.CauseDescription"
+                        data-image="@c.imageURL"
+                        data-active="@(c.isActive ? "true" : "false")"
+                        onclick="openEditModal(this)">
+                    Edit
+                </button>
+
+                <form asp-action="DltCause" asp-route-id="@c.DonationCausesID" method="post"
+                      data-name="@c.CauseName"
+                      onsubmit="return confirm('Delete &quot;' + this.dataset.name + '&quot;? This cannot be undone.');">
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    @if (Model.Count == 0)
+    {
+        <tr><td colspan="5">No causes added yet.</td></tr>
+    }
+    </tbody>
+</table>
+
+<!-- ===== Add Cause Modal ===== -->
+<dialog id="addCauseModal">
+    <form asp-action="AddCause" method="post">
+        <h2>Add Cause</h2>
+
+        <label>Cause Name</label>
+        <input name="CauseName" maxlength="50" required />
+
+        <label>Description</label>
+        <textarea name="CauseDescription" maxlength="100" required></textarea>
+
+        <label>Image URL</label>
+        <input name="imageURL" />
+
+        <label><input type="checkbox" name="isActive" value="true" checked /> Active</label>
+
+        <div>
+            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- ===== Edit Cause Modal ===== -->
+<dialog id="editCauseModal">
+    <form asp-action="EditCause" method="post">
+        <h2>Edit Cause</h2>
+
+        <input type="hidden" name="DonationCausesID" id="editId" />
+
+        <label>Cause Name</label>
+        <input name="CauseName" id="editName" maxlength="50" required />
+
+        <label>Description</label>
+        <textarea name="CauseDescription" id="editDescription" maxlength="100" required></textarea>
+
+        <label>Image URL</label>
+        <input name="imageURL" id="editImage" />
+
+        <label><input type="checkbox" name="isActive" id="editActive" value="true" /> Active</label>
+
+        <div>
+            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit">Update</button>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+<script>
+    function openEditModal(btn) {
+        document.getElementById('editId').value = btn.dataset.id;
+        document.getElementById('editName').value = btn.dataset.name;
+        document.getElementById('editDescription').value = btn.dataset.description;
+        document.getElementById('editImage').value = btn.dataset.image || '';
+        document.getElementById('editActive').checked = btn.dataset.active === 'true';
+        document.getElementById('editCauseModal').showModal();
+    }
+</script>
+}

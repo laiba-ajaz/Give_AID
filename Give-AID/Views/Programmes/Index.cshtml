@@ -1,0 +1,487 @@
+﻿@{
+    ViewData["Title"] = "Programmes & Events";
+}
+
+<div class="flex flex-col w-full">
+<div class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<!-- Breadcrumb navigation -->
+<nav class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md mb-space-sm">
+<a class="hover:text-primary transition-colors" href="~/">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Welfare Programmes &amp; Activities</span>
+</nav>
+<!-- Section Title & Narrative Intro -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-lg">
+<div class="max-w-2xl">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-wider mb-space-xs">
+<span class="material-symbols-outlined text-[14px]">volunteer_activism</span>
+            Grassroots Action Framework
+          </div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Active Grassroots Programmes</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+            Explore vetted on-the-ground welfare initiatives. Volunteer your time, mentor participants, or attend upcoming NGO community events backed by transparent stewardship.
+          </p>
+</div>
+<!-- Live metrics bar -->
+<div class="flex items-center gap-space-md sm:gap-space-lg bg-surface-container-lowest p-space-md rounded-xl shadow-sm shrink-0 self-start max-w-full">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary font-semibold leading-none">38</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Active Projects</span>
+</div>
+<div class="w-px h-8 bg-surface-container-high"></div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-secondary font-semibold leading-none">142</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Open Volunteer Roles</span>
+</div>
+<div class="w-px h-8 bg-surface-container-high"></div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary font-semibold leading-none">100%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Audited Compliance</span>
+</div>
+</div>
+</div>
+<!-- Search, Filters, and Sorting Controls -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
+<!-- Main Search Field -->
+<div class="md:col-span-6 relative">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full pl-11 pr-space-md py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" id="programmeSearch" name="q" placeholder="Search by keyword, city, or NGO name..." type="search"/>
+</div>
+<!-- Location Dropdown -->
+<div class="md:col-span-3 relative">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">near_me</span>
+<select class="w-full appearance-none pl-11 pr-space-lg py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary cursor-pointer">
+<option selected="">All Locations / Nationwide</option>
+<option>Austin, TX (Southwest)</option>
+<option>Appalachian Region, KY</option>
+<option>Seattle, WA (Pacific Northwest)</option>
+<option>Chicago, IL (Midwest)</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+<!-- Sort Dropdown -->
+<div class="md:col-span-3 relative">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">sort</span>
+<select class="w-full appearance-none pl-11 pr-space-lg py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary cursor-pointer">
+<option selected="">Sort by: Nearest Date</option>
+<option>Sort by: Most Urgent Need</option>
+<option>Sort by: Volunteer Slots Needed</option>
+<option>Sort by: Alphabetical</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Filter Chips with active indicators -->
+<div class="flex flex-wrap items-center gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mr-space-xs">Category:</span>
+<button type="button" data-filter="all" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>
+            All Programmes (38)
+          </button>
+<button type="button" data-filter="education" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
+            Education (14)
+          </button>
+<button type="button" data-filter="health" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
+            Health Care (9)
+          </button>
+<button type="button" data-filter="special" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
+            Special Children (8)
+          </button>
+<button type="button" data-filter="women" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
+            Women Empowerment (7)
+          </button>
+<div class="ml-auto hidden xl:flex items-center gap-space-xs text-outline font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<button type="button" id="resetFilters" class="hover:text-primary">Reset filters</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Program Canvas: 2-Column Grid + Slide-in Drawer Container -->
+<div class="w-full max-w-[1440px] mx-auto px-margin-mobile md:px-margin py-space-xl relative">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- 2-Column Programme Cards Section (Span 7 when drawer is visible) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-primary">Displaying 4 Featured Programmes in Texas &amp; Nationwide</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Live volunteer registrations open</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Card 1 (Selected State) -->
+<div data-id="1" data-category="education" data-meta="Nov 15, 2025 • Austin, TX" data-thumb="/images/programmes-27.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-md p-space-md flex flex-col justify-between group transition-all duration-300 relative ring-2 ring-secondary/30">
+<!-- Active indicator ribbon -->
+<div id="selectedRibbon" class="absolute -top-3 left-space-md bg-secondary text-on-secondary px-space-sm py-0.5 rounded font-label-sm text-label-sm shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">edit_note</span>
+              Selected for Registration
+            </div>
+<div>
+<!-- Photo Container -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md mt-1">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Group of diverse middle school children in an educational STEM laboratory smiling and collaborating over robotic circuits, laptop coding screens, and science test equipment under bright classroom lighting with deep teal uniforms." src="/images/programmes-23.jpg"/>
+<div class="absolute top-2 left-2 flex flex-wrap gap-1">
+<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
+                    Education &amp; STEM
+                  </span>
+<span class="bg-secondary-container text-on-secondary-container font-semibold px-space-xs py-0.5 rounded font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">alarm</span> Urgent Need
+                  </span>
+</div>
+</div>
+<!-- Metadata & Title -->
+<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
+                Future Innovators: Rural STEM &amp; Coding Lab
+              </h2>
+<div class="flex items-center gap-space-xs mb-space-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">verified</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By OpenDoors Youth Foundation • 501(c)(3)</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<span class="font-medium text-on-surface">Saturday, Nov 15, 2025</span>
+<span>• 9:00 AM - 2:00 PM</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+<span>East Valley Community Center, Austin TX</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
+                Providing 85 underprivileged middle-schoolers with laptop kits, robotics supplies, and hands-on coding mentors for a 6-month certified syllabus.
+              </p>
+</div>
+<div>
+<!-- Progress bar of spots left -->
+<div class="mb-space-md">
+<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
+<span class="text-on-surface font-semibold">18 of 25 Volunteer Mentors Registered</span>
+<span class="text-secondary font-bold">7 Slots Open</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: 72%;"></div>
+</div>
+</div>
+<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-secondary hover:bg-secondary-container text-on-secondary font-label-lg text-label-lg flex items-center justify-center gap-space-xs shadow-sm transition-all">
+<span>I'm interested</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div data-id="2" data-category="health" data-meta="Nov 20 – 22, 2025 • Appalachian Region, KY" data-thumb="/images/programmes-24.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-space-md flex flex-col justify-between group transition-all duration-300">
+<div>
+<!-- Photo Container -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Mobile health clinic truck parked in a rural hillside village with doctor and nurse examining an elderly patient's eyesight using professional vision charts and medical diagnostic tools." src="/images/programmes-24.jpg"/>
+<div class="absolute top-2 left-2">
+<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
+                    Health Care
+                  </span>
+</div>
+</div>
+<!-- Metadata & Title -->
+<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
+                Mobile Vision &amp; Dental Clinic for Remote Elders
+              </h2>
+<div class="flex items-center gap-space-xs mb-space-sm">
+<span class="material-symbols-outlined text-outline text-[16px]">domain</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By CareWave Health Alliance</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<span class="font-medium text-on-surface">Nov 20 – Nov 22, 2025</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+<span>Appalachian Rural Clinics, KY</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
+                Deploying medical volunteer teams to conduct free cataract screening, eyeglasses distribution, and restorative dental treatments for seniors in remote hollows.
+              </p>
+</div>
+<div>
+<!-- Progress / Need summary -->
+<div class="mb-space-md">
+<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
+<span class="text-on-surface font-semibold">6 Specialists • 12 Aides Needed</span>
+<span class="text-primary font-bold">18 Open Positions</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 45%;"></div>
+</div>
+</div>
+<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
+<span>I'm interested</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div data-id="3" data-category="special" data-meta="Dec 06, 2025 • Seattle, WA" data-thumb="/images/programmes-25.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-space-md flex flex-col justify-between group transition-all duration-300">
+<div>
+<!-- Photo Container -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Joyful child in an adaptive pediatric wheelchair smiling with an art mentor while holding paintbrushes in front of a colorful large canvas inside a light-filled conservatory pavilion." src="/images/programmes-25.jpg"/>
+<div class="absolute top-2 left-2">
+<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
+                    Special Children
+                  </span>
+</div>
+</div>
+<!-- Metadata & Title -->
+<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
+                Sensory Art &amp; Inclusive Play Day
+              </h2>
+<div class="flex items-center gap-space-xs mb-space-sm">
+<span class="material-symbols-outlined text-outline text-[16px]">domain</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By BrightWings Children's Trust</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<span class="font-medium text-on-surface">Dec 06, 2025</span>
+<span>• 10:00 AM - 3:30 PM</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+<span>Botanical Pavilion, Seattle WA</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
+                An adaptive recreational day for children with neurodivergence and mobility challenges featuring sensory arts, animal therapy, and family respite.
+              </p>
+</div>
+<div>
+<!-- Progress indicator -->
+<div class="mb-space-md">
+<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
+<span class="text-on-surface font-semibold">14 Buddy Volunteers Needed</span>
+<span class="text-primary font-bold">Registration Live</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 58%;"></div>
+</div>
+</div>
+<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
+<span>I'm interested</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div data-id="4" data-category="women" data-meta="Dec 10, 2025 • Chicago, IL" data-thumb="/images/programmes-26.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-space-md flex flex-col justify-between group transition-all duration-300">
+<div>
+<!-- Photo Container -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Determined woman learning precision textile tailoring on modern industrial sewing machines alongside a digital tablet displaying online marketplace listings in a creative workshop studio." src="/images/programmes-26.jpg"/>
+<div class="absolute top-2 left-2">
+<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
+                    Women Empowerment
+                  </span>
+</div>
+</div>
+<!-- Metadata & Title -->
+<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
+                Artisan Micro-Enterprise &amp; Digital Skills Guild
+              </h2>
+<div class="flex items-center gap-space-xs mb-space-sm">
+<span class="material-symbols-outlined text-outline text-[16px]">domain</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By HerFuture Global</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<span class="font-medium text-on-surface">Dec 10, 2025</span>
+<span>• Cohort Kickoff</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+<span>Downtown Maker Hub, Chicago IL</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
+                Equipping 40 women transitioning from shelters with textile equipment, digital store management skills, and seed grants.
+              </p>
+</div>
+<div>
+<!-- Progress indicator -->
+<div class="mb-space-md">
+<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
+<span class="text-on-surface font-semibold">4 Business Mentors Needed</span>
+<span class="text-primary font-bold">Final Call</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: 80%;"></div>
+</div>
+</div>
+<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
+<span>I'm interested</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Pagination & Direct NGO submission note -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span>Showing <strong class="text-primary">1 – 4</strong> of 38 initiatives</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button type="button" class="px-space-md py-space-xs rounded bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Previous</button>
+<button type="button" class="px-space-md py-space-xs rounded bg-primary text-on-primary font-label-md text-label-md">1</button>
+<button type="button" class="px-space-md py-space-xs rounded bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">2</button>
+<button type="button" class="px-space-md py-space-xs rounded bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">3</button>
+<button type="button" class="px-space-md py-space-xs rounded bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Slide-in Modal Drawer / Interactive Registration Panel (Span 5) -->
+<div class="lg:col-span-5 sticky top-24" id="interestPanel">
+<div class="bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden">
+<!-- Drawer Header -->
+<div class="bg-primary text-on-primary px-space-lg py-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary-fixed">assignment_turned_in</span>
+<div>
+<h3 class="font-title-md text-title-md font-semibold text-on-primary leading-tight">Register Your Interest</h3>
+<span class="font-label-sm text-label-sm text-on-primary-container">Official Welfare Coordinator Dispatch</span>
+</div>
+</div>
+<button type="button" id="clearInterest" aria-label="Clear form" class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary hover:bg-surface-container hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Active Programme Selected Context Banner -->
+<div class="p-space-md bg-surface-container-low flex items-center gap-space-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+<img id="selThumb" alt="" class="w-full h-full object-cover" data-alt="Close up of miniature electronics robotics kit assembled by students in rural coding workshop." src="/images/programmes-27.jpg"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Active Selection</span>
+<span class="font-title-sm text-title-sm text-primary font-bold truncate" id="selTitle">Future Innovators: Rural STEM &amp; Coding Lab</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">event</span> <span id="selMeta">Nov 15, 2025 • Austin, TX</span>
+              </span>
+</div>
+</div>
+<!-- Registration Form Body -->
+<form class="p-space-lg flex flex-col gap-space-md" id="interestForm" method="post" asp-controller="Programmes" asp-action="Interest" novalidate>
+<input type="hidden" name="ProgrammeId" id="selProgrammeId" value="1"/>
+<!-- Full Name -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="piName">Full Name *</label>
+<div class="relative">
+<input class="w-full px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary" id="piName" name="FullName" autocomplete="name" placeholder="Your full name" required type="text"/>
+<span class="valid-icon hidden material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-primary text-[18px]">check_circle</span>
+</div>
+</div>
+<!-- Contact Grid (Email & Phone) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="piEmail">Email Address *</label>
+<input class="w-full px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary" id="piEmail" name="Email" autocomplete="email" placeholder="you@@example.com" required type="email"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="piPhone">Phone Number *</label>
+<input class="w-full px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary" id="piPhone" name="Phone" autocomplete="tel" placeholder="+92 300 1234567" required type="tel"/>
+</div>
+</div>
+<!-- Participation Role Radios -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold">How would you like to participate?</label>
+<div class="grid grid-cols-1 gap-2">
+<!-- Option 1: Checked -->
+<label class="flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container-low has-[:checked]:bg-surface-container-low cursor-pointer transition-colors">
+<input type="radio" name="ParticipationRole" value="Volunteer" class="w-4 h-4 accent-primary shrink-0 cursor-pointer" checked/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Volunteer In-Person</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Be present at East Valley Community Center for hands-on mentoring.</span>
+</div>
+</label>
+<!-- Option 2 -->
+<label class="flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container-low has-[:checked]:bg-surface-container-low cursor-pointer transition-colors">
+<input type="radio" name="ParticipationRole" value="Sponsor" class="w-4 h-4 accent-primary shrink-0 cursor-pointer"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Sponsor Materials</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Fund 1 or more Arduino/Raspberry Pi learner kits ($65 each).</span>
+</div>
+</label>
+<!-- Option 3 -->
+<label class="flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container-low has-[:checked]:bg-surface-container-low cursor-pointer transition-colors">
+<input type="radio" name="ParticipationRole" value="OnlineMentor" class="w-4 h-4 accent-primary shrink-0 cursor-pointer"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Online Mentor</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Review weekly code submissions remotely via GitHub classroom.</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Notes & Background -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="piMessage">Personal Message / Relevant Experience</label>
+<textarea class="w-full p-space-md rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary resize-none" id="piMessage" name="Message" maxlength="1000" placeholder="Tell the coordinator about your skills or why you want to join..." rows="3"></textarea>
+</div>
+<!-- Consent Checkbox -->
+<label class="flex items-start gap-space-xs cursor-pointer">
+<input type="checkbox" id="piConsent" name="AgreeBackgroundCheck" value="true" class="w-4 h-4 accent-primary shrink-0 mt-0.5 cursor-pointer"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">
+                I agree to undergo the standard background check required for programmes interacting with youth and vulnerable communities.
+              </span>
+</label>
+<!-- Submit Button (Warm Coral) -->
+<p id="interestError" class="hidden font-label-md text-label-md text-error"></p>
+<button type="submit" class="w-full py-space-md px-space-lg rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary font-label-lg text-label-lg font-bold flex items-center justify-center gap-space-xs uppercase tracking-wider shadow-md hover:shadow transition-all">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Send my interest</span>
+</button>
+<!-- Embedded Confirmation State Preview Card -->
+<div id="interestSuccess" class="hidden mt-space-xs p-space-md rounded-lg bg-tertiary-fixed/30 items-start gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-[22px] shrink-0 mt-0.5">check_circle</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-tertiary font-bold">Interest Sent Successfully!</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[12px] mt-0.5">
+                  You'll receive event logistics, background clearance links, and orientation materials from coordinator Sarah Lin within 24 hours.
+                </p>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+<!-- Corporate / Alliance Welfare Banner -->
+<div class="w-full bg-surface-container-high py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-lg bg-surface-container-lowest rounded-2xl p-space-xl shadow-sm">
+<div class="flex items-start gap-space-md max-w-2xl">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[28px]">handshake</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-primary font-semibold">Organize a Corporate Giving Day or Host a Programme</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+              Give-AID partners with enterprise CSR teams to structure measurable employee engagement events, equipment grants, and verified local field visits.
+            </p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm shrink-0">
+<a href="~/HelpCentre#contact" class="px-space-lg py-space-sm rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors">
+            Inquire for Enterprise
+          </a>
+<button type="button" class="px-space-lg py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors">
+            Download NGO Guidebook
+          </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+@section Scripts {
+<script src="~/js/programmes.js" asp-append-version="true"></script>
+}
