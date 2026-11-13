@@ -84,21 +84,21 @@ public class DonationCausesController : Controller
     }
 
     [HttpPost]
-[ValidateAntiForgeryToken]
-public IActionResult ToggleActive(int id)
-{
-    var cause = _context.DonationCauses.Find(id);
-    if (cause == null)
+    [ValidateAntiForgeryToken]
+    public IActionResult ToggleActive(int id)
     {
-        TempData["Error"] = "Cause not found.";
+        var cause = _context.DonationCauses.Find(id);
+        if (cause == null)
+        {
+            TempData["Error"] = "Cause not found.";
+            return RedirectToAction("Index");
+        }
+
+        cause.isActive = !cause.isActive;
+        _context.SaveChanges();
+
+        TempData["Success"] = cause.isActive ? "Cause activated." : "Cause deactivated.";
         return RedirectToAction("Index");
     }
-
-    cause.isActive = !cause.isActive;   
-    _context.SaveChanges();
-
-    TempData["Success"] = cause.isActive ? "Cause activated." : "Cause deactivated.";
-    return RedirectToAction("Index");
-}
 
 }

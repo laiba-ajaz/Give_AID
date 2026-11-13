@@ -1,0 +1,101 @@
+@model List<NGO>
+@{ ViewData["Title"] = "NGOs"; }
+
+<h1>NGOs</h1>
+
+@if (TempData["Success"] != null) { <p class="alert-success">@TempData["Success"]</p> }
+@if (TempData["Error"] != null)   { <p class="alert-error">@TempData["Error"]</p> }
+
+<button type="button" onclick="document.getElementById('addNgoModal').showModal()">
+    + Add NGO
+</button>
+
+<table>
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Created</th><th>Active</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var n in Model)
+    {
+        <tr>
+            <td>@n.NGOID</td>
+            <td>@n.NGOName</td>
+            <td>@n.CreatedAt.ToString("dd MMM yyyy")</td>
+            <td>
+                <form asp-action="ToggleActive" asp-route-id="@n.NGOID" method="post" class="toggle-form">
+                    <label class="switch" title="@(n.isActive ? "Active — click to deactivate" : "Inactive — click to activate")">
+                        <input type="checkbox" @(n.isActive ? "checked" : "") onchange="this.form.submit()" />
+                        <span class="slider"></span>
+                    </label>
+                </form>
+            </td>
+            <td class="actions">
+                <button type="button" class="btn-edit"
+                        data-id="@n.NGOID"
+                        data-name="@n.NGOName"
+                        data-active="@(n.isActive ? "true" : "false")"
+                        onclick="openEditModal(this)">
+                    Edit
+                </button>
+
+                <form asp-action="DltNGO" asp-route-id="@n.NGOID" method="post"
+                      data-name="@n.NGOName"
+                      onsubmit="return confirm('Delete &quot;' + this.dataset.name + '&quot;? This cannot be undone.');">
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    @if (Model.Count == 0)
+    {
+        <tr><td colspan="5">No NGOs added yet.</td></tr>
+    }
+    </tbody>
+</table>
+
+<!-- ===== Add NGO Modal ===== -->
+<dialog id="addNgoModal">
+    <form asp-action="AddNgo" method="post">
+        <h2>Add NGO</h2>
+
+        <label>NGO Name</label>
+        <input name="NGOName" maxlength="100" required />
+
+        <label><input type="checkbox" name="isActive" value="true" checked /> Active</label>
+
+        <div>
+            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- ===== Edit NGO Modal ===== -->
+<dialog id="editNgoModal">
+    <form asp-action="Edit" method="post">
+        <h2>Edit NGO</h2>
+
+        <input type="hidden" name="NGOID" id="editId" />
+
+        <label>NGO Name</label>
+        <input name="NGOName" id="editName" maxlength="100" required />
+
+        <label><input type="checkbox" name="isActive" id="editActive" value="true" /> Active</label>
+
+        <div>
+            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit">Update</button>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+<script>
+    function openEditModal(btn) {
+        document.getElementById('editId').value = btn.dataset.id;
+        document.getElementById('editName').value = btn.dataset.name;
+        document.getElementById('editActive').checked = btn.dataset.active === 'true';
+        document.getElementById('editNgoModal').showModal();
+    }
+</script>
+}

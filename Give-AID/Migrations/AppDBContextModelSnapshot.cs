@@ -51,6 +51,79 @@ namespace Give_AID.Migrations
                     b.ToTable("DonationCauses");
                 });
 
+            modelBuilder.Entity("Give_AID.Models.Programme", b =>
+                {
+                    b.Property<int>("ProgrammeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProgrammeId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("DonationCausesID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NGOID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ProgrammeId");
+
+                    b.HasIndex("DonationCausesID");
+
+                    b.HasIndex("NGOID");
+
+                    b.ToTable("Programmes");
+                });
+
+            modelBuilder.Entity("NGO", b =>
+                {
+                    b.Property<int>("NGOID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NGOID"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NGOName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("NGOID");
+
+                    b.ToTable("NGOs");
+                });
+
             modelBuilder.Entity("User", b =>
                 {
                     b.Property<int>("Id")
@@ -92,6 +165,25 @@ namespace Give_AID.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Give_AID.Models.Programme", b =>
+                {
+                    b.HasOne("DonationCauses", "Cause")
+                        .WithMany()
+                        .HasForeignKey("DonationCausesID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NGO", "NGO")
+                        .WithMany()
+                        .HasForeignKey("NGOID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cause");
+
+                    b.Navigation("NGO");
                 });
 #pragma warning restore 612, 618
         }

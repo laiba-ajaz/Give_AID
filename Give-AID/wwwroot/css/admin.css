@@ -8,7 +8,7 @@ dialog {
 }
 dialog::backdrop { background: rgba(0,0,0,.45); }
 dialog form { display: flex; flex-direction: column; gap: 8px; }
-dialog input, dialog textarea { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+dialog input, dialog textarea, dialog select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
 
 /* Table action buttons */
 td.actions { display: flex; gap: 6px; align-items: center; }
