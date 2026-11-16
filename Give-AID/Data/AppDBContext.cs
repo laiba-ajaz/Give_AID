@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Give_AID.Models;
 
 namespace Give_AID.Data
@@ -13,6 +13,8 @@ namespace Give_AID.Data
         public DbSet<DonationCauses> DonationCauses { get; set; }
         public DbSet<NGO> NGOs { get; set; }
         public DbSet<Programme> Programmes { get; set; }
+        // Stores all financial contributions submitted by donors
+        public DbSet<Donation> Donations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
