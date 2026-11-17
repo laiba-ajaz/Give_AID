@@ -43,11 +43,30 @@
             </nav>
 
             <div class="flex items-center gap-space-sm shrink-0">
-                <a asp-controller="Account" asp-action="Register"
-                   class="hidden sm:inline-flex items-center justify-center bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg transition-colors duration-200 uppercase tracking-wide shadow-[0_1px_3px_0_rgba(11,69,69,0.04)]">Register / Log In</a>
-                <a asp-controller="Account" asp-action="Register" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0" aria-label="My account">
-                    <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
-                </a>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Donate" asp-action="History" class="hidden sm:inline-flex items-center gap-1 px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors">
+                        <span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+                        <span>@(User.Identity.Name ?? "Donor")</span>
+                    </a>
+                    <a asp-controller="Donate" asp-action="History" title="My Donations" class="hidden md:inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">
+                        <span>My Donations</span>
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="inline-flex items-center justify-center bg-surface-container hover:bg-error-container/30 text-primary hover:text-error px-space-md py-1.5 rounded-full font-label-md text-label-md transition-colors duration-200 uppercase tracking-wide">
+                            Log Out
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register"
+                       class="hidden sm:inline-flex items-center justify-center bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg transition-colors duration-200 uppercase tracking-wide shadow-[0_1px_3px_0_rgba(11,69,69,0.04)]">Register / Log In</a>
+                    <a asp-controller="Account" asp-action="Register" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0" aria-label="My account">
+                        <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+                    </a>
+                }
                 <!-- Mobile menu toggle (below xl) -->
                 <button id="navToggle" type="button" class="xl:hidden w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-surface-container" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
                     <span class="material-symbols-outlined">menu</span>
@@ -63,7 +82,21 @@
                     var active = item.Key == controller;
                     <a href="@item.Url" class="@(active ? activeCls : idleCls) py-space-sm">@item.Text</a>
                 }
-                <a asp-controller="Account" asp-action="Register" class="sm:hidden mt-space-sm inline-flex items-center justify-center bg-secondary text-on-secondary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg uppercase tracking-wide">Register / Log In</a>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Donate" asp-action="History" class="sm:hidden mt-space-sm inline-flex items-center justify-between bg-surface-container text-primary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg">
+                        <span>My Donations (@(User.Identity.Name ?? "Donor"))</span>
+                        <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="sm:hidden mt-space-xs">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="w-full inline-flex items-center justify-center bg-error-container/30 text-error px-space-lg py-space-sm rounded-full font-label-lg text-label-lg uppercase tracking-wide">Log Out</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register" class="sm:hidden mt-space-sm inline-flex items-center justify-center bg-secondary text-on-secondary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg uppercase tracking-wide">Register / Log In</a>
+                }
             </div>
         </nav>
     </header>
