@@ -1,17 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Give_AID.Data;
 using Give_AID.Models;
+using Give_AID.Services;
 
 namespace Give_AID.Areas.Admin.Controllers;
 
 [Area("Admin")]
 public class DonationCausesController : Controller
 {
-    private readonly AppDBContext _context;
+    private const string ImageFolder = "causes";
 
-    public DonationCausesController(AppDBContext context)
+    private readonly AppDBContext _context;
+    private readonly ImageService _images;
+
+    public DonationCausesController(AppDBContext context, ImageService images)
     {
         _context = context;
+        _images = images;
     }
 
     public IActionResult Index()
@@ -22,12 +27,23 @@ public class DonationCausesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AddCause(DonationCauses cause)
+    public async Task<IActionResult> AddCause(DonationCauses cause, IFormFile? ImageFile)
     {
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Please fill all required fields.";
             return RedirectToAction("Index");
+        }
+
+        cause.imageURL = null;
+        if (ImageFile != null)
+        {
+            try { cause.imageURL = await _images.SaveAsync(ImageFile, ImageFolder); }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
         }
 
         _context.DonationCauses.Add(cause);
@@ -39,14 +55,13 @@ public class DonationCausesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult EditCause(DonationCauses cause)
+    public async Task<IActionResult> EditCause(DonationCauses cause, IFormFile? ImageFile, bool RemoveImage = false)
     {
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Please fill all required fields.";
             return RedirectToAction("Index");
         }
-
 
         var existing = _context.DonationCauses.Find(cause.DonationCausesID);
         if (existing == null)
@@ -55,9 +70,27 @@ public class DonationCausesController : Controller
             return RedirectToAction("Index");
         }
 
+        if (ImageFile != null)
+        {
+            string newPath;
+            try { newPath = await _images.SaveAsync(ImageFile, ImageFolder); }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+            _images.Delete(existing.imageURL);
+            existing.imageURL = newPath;
+        }
+        else if (RemoveImage)
+        {
+            _images.Delete(existing.imageURL);
+            existing.imageURL = null;
+        }
+        // warna purani image waisi hi rahegi
+
         existing.CauseName = cause.CauseName;
         existing.CauseDescription = cause.CauseDescription;
-        existing.imageURL = cause.imageURL;
         existing.isActive = cause.isActive;
 
         _context.SaveChanges();
@@ -77,8 +110,15 @@ public class DonationCausesController : Controller
             return RedirectToAction("Index");
         }
 
+        if (_context.Programmes.Any(p => p.DonationCausesID == id))
+        {
+            TempData["Error"] = "This cause has programmes. Delete them first or deactivate the cause.";
+            return RedirectToAction("Index");
+        }
+
         _context.DonationCauses.Remove(cause);
         _context.SaveChanges();
+        _images.Delete(cause.imageURL);
         TempData["Success"] = "Cause deleted successfully.";
         return RedirectToAction("Index");
     }

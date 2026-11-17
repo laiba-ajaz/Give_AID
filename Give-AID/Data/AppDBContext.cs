@@ -18,6 +18,11 @@ namespace Give_AID.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Ek email se sirf ek account
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             // NGO ya Cause delete karne par uske programmes khud delete na hon
             modelBuilder.Entity<Programme>()
                 .HasOne(p => p.NGO).WithMany()

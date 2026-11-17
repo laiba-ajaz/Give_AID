@@ -1,101 +1,250 @@
 @model List<NGO>
-@{ ViewData["Title"] = "NGOs"; }
+@{
+    ViewData["Title"] = "NGOs";
+    var activeCount = Model.Count(n => n.isActive);
+}
 
-<h1>NGOs</h1>
+<div class="page-header">
+    <div>
+        <h1>Associated NGOs</h1>
+        <p>Organisations that run programmes under Give-AID. Their logos and details appear on the website.</p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="openCreate()">
+        <span class="material-symbols-outlined">add</span> Add NGO
+    </button>
+</div>
 
-@if (TempData["Success"] != null) { <p class="alert-success">@TempData["Success"]</p> }
-@if (TempData["Error"] != null)   { <p class="alert-error">@TempData["Error"]</p> }
+<section class="card">
+    <div class="toolbar">
+        <div class="search">
+            <span class="material-symbols-outlined">search</span>
+            <input class="input" type="search" placeholder="Search NGOs…" aria-label="Search NGOs"
+                   oninput="filterRows(this.value)" />
+        </div>
+        <span class="toolbar-count">@Model.Count NGO@(Model.Count == 1 ? "" : "s") · @activeCount active</span>
+    </div>
 
-<button type="button" onclick="document.getElementById('addNgoModal').showModal()">
-    + Add NGO
-</button>
-
-<table>
-    <thead>
-        <tr><th>ID</th><th>Name</th><th>Created</th><th>Active</th><th>Actions</th></tr>
-    </thead>
-    <tbody>
-    @foreach (var n in Model)
-    {
-        <tr>
-            <td>@n.NGOID</td>
-            <td>@n.NGOName</td>
-            <td>@n.CreatedAt.ToString("dd MMM yyyy")</td>
-            <td>
-                <form asp-action="ToggleActive" asp-route-id="@n.NGOID" method="post" class="toggle-form">
-                    <label class="switch" title="@(n.isActive ? "Active — click to deactivate" : "Inactive — click to activate")">
-                        <input type="checkbox" @(n.isActive ? "checked" : "") onchange="this.form.submit()" />
-                        <span class="slider"></span>
-                    </label>
-                </form>
-            </td>
-            <td class="actions">
-                <button type="button" class="btn-edit"
-                        data-id="@n.NGOID"
-                        data-name="@n.NGOName"
-                        data-active="@(n.isActive ? "true" : "false")"
-                        onclick="openEditModal(this)">
-                    Edit
-                </button>
-
-                <form asp-action="DltNGO" asp-route-id="@n.NGOID" method="post"
-                      data-name="@n.NGOName"
-                      onsubmit="return confirm('Delete &quot;' + this.dataset.name + '&quot;? This cannot be undone.');">
-                    <button type="submit" class="btn-delete">Delete</button>
-                </form>
-            </td>
-        </tr>
-    }
     @if (Model.Count == 0)
     {
-        <tr><td colspan="5">No NGOs added yet.</td></tr>
-    }
-    </tbody>
-</table>
-
-<!-- ===== Add NGO Modal ===== -->
-<dialog id="addNgoModal">
-    <form asp-action="AddNgo" method="post">
-        <h2>Add NGO</h2>
-
-        <label>NGO Name</label>
-        <input name="NGOName" maxlength="100" required />
-
-        <label><input type="checkbox" name="isActive" value="true" checked /> Active</label>
-
-        <div>
-            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
-            <button type="submit">Save</button>
+        <div class="empty">
+            <span class="material-symbols-outlined">diversity_3</span>
+            <h3>No NGOs yet</h3>
+            <p>Add an NGO before creating programmes — every programme belongs to one.</p>
+            <button type="button" class="btn btn-primary" onclick="openCreate()">
+                <span class="material-symbols-outlined">add</span> Add NGO
+            </button>
         </div>
-    </form>
-</dialog>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="col-id">#</th>
+                        <th>NGO</th>
+                        <th>About</th>
+                        <th>Website</th>
+                        <th>Added</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var n in Model)
+                {
+                    <tr>
+                        <td class="col-id">@n.NGOID</td>
+                        <td>
+                            <div class="cell-main">
+                                @if (!string.IsNullOrEmpty(n.LogoPath))
+                                {
+                                    <img src="@n.LogoPath" alt="" class="thumb logo" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="thumb-empty"><span class="material-symbols-outlined">apartment</span></span>
+                                }
+                                <div class="cell-title">@n.NGOName</div>
+                            </div>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(n.Description)) { <div class="clamp" title="@n.Description">@n.Description</div> }
+                            else { <span class="muted">—</span> }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(n.Website))
+                            {
+                                <a href="@n.Website" target="_blank" rel="noopener" class="small">
+                                    @n.Website.Replace("https://", "").Replace("http://", "").TrimEnd('/')
+                                </a>
+                            }
+                            else { <span class="muted">—</span> }
+                        </td>
+                        <td class="nowrap muted">@n.CreatedAt.ToString("dd MMM yyyy")</td>
+                        <td>
+                            <form asp-action="ToggleActive" asp-route-id="@n.NGOID" method="post" class="toggle-form">
+                                <label class="switch" title="@(n.isActive ? "Click to deactivate" : "Click to activate")">
+                                    <input type="checkbox" @(n.isActive ? "checked" : "") onchange="this.form.submit()"
+                                           aria-label="Active: @n.NGOName" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-text @(n.isActive ? "on" : "")">@(n.isActive ? "Active" : "Hidden")</span>
+                            </form>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button type="button" class="icon-btn edit" title="Edit" aria-label="Edit @n.NGOName"
+                                        data-id="@n.NGOID"
+                                        data-name="@n.NGOName"
+                                        data-description="@n.Description"
+                                        data-website="@n.Website"
+                                        data-image="@n.LogoPath"
+                                        data-active="@(n.isActive ? "true" : "false")"
+                                        onclick="openEdit(this)">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <form asp-action="DltNGO" asp-route-id="@n.NGOID" method="post"
+                                      data-confirm="Delete the NGO &quot;@n.NGOName&quot;? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete @n.NGOName">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
 
-<!-- ===== Edit NGO Modal ===== -->
-<dialog id="editNgoModal">
-    <form asp-action="Edit" method="post">
-        <h2>Edit NGO</h2>
+<!-- ===== Add / Edit NGO Modal ===== -->
+<dialog id="ngoModal" class="modal" aria-labelledby="ngoModalTitle">
+    <form method="post" enctype="multipart/form-data" id="ngoForm"
+          data-add-url="@Url.Action("AddNgo")" data-edit-url="@Url.Action("Edit")">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="NGOID" id="fId" value="0" />
 
-        <input type="hidden" name="NGOID" id="editId" />
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined" id="modalIcon">add</span></span>
+            <div>
+                <h2 id="ngoModalTitle">Add NGO</h2>
+                <p id="modalSub">Shown in the list of associated NGOs on the website.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
 
-        <label>NGO Name</label>
-        <input name="NGOName" id="editName" maxlength="100" required />
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="fName">NGO name <span class="req">*</span></label>
+                    <input id="fName" name="NGOName" maxlength="100" required placeholder="e.g. Hope Foundation" />
+                </div>
 
-        <label><input type="checkbox" name="isActive" id="editActive" value="true" /> Active</label>
+                <div class="field">
+                    <label for="fWebsite">Website</label>
+                    <input id="fWebsite" type="url" name="Website" maxlength="200" placeholder="https://example.org" />
+                </div>
 
-        <div>
-            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
-            <button type="submit">Update</button>
+                <div class="field full">
+                    <label for="fDescription">About the NGO</label>
+                    <textarea id="fDescription" name="Description" maxlength="500" data-count="fDescCount"
+                              placeholder="What the organisation does, where it works, who it helps."></textarea>
+                    <div class="char-count" id="fDescCount">0 / 500</div>
+                </div>
+
+                <div class="field full">
+                    <span class="field-label">Logo</span>
+                    <div class="uploader logo">
+                        <div class="uploader-preview">
+                            <img id="fPreview" alt="Logo preview" hidden />
+                            <span class="material-symbols-outlined">add_photo_alternate</span>
+                        </div>
+                        <div class="uploader-info">
+                            <input type="file" name="LogoFile" id="fImageFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="fPreview" />
+                            <span class="field-hint" id="fImageHint">PNG with transparent background works best · max 2 MB</span>
+                            <label class="check danger" id="fRemoveWrap" hidden>
+                                <input type="checkbox" name="RemoveImage" id="fRemove" value="true" /> Remove current logo
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <div class="active-row">
+                        <div>
+                            <b>Show on website</b>
+                            <span>Inactive NGOs are hidden and can't be picked for new programmes.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="isActive" id="fActive" value="true" checked aria-label="Show on website" />
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="isActive" value="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="fSubmit">
+                <span class="material-symbols-outlined">check</span> <span>Save NGO</span>
+            </button>
         </div>
     </form>
 </dialog>
 
 @section Scripts {
+<script src="~/js/image-preview.js" asp-append-version="true"></script>
 <script>
-    function openEditModal(btn) {
-        document.getElementById('editId').value = btn.dataset.id;
-        document.getElementById('editName').value = btn.dataset.name;
-        document.getElementById('editActive').checked = btn.dataset.active === 'true';
-        document.getElementById('editNgoModal').showModal();
+    const form = document.getElementById('ngoForm');
+
+    function setMode(isEdit) {
+        form.action = isEdit ? form.dataset.editUrl : form.dataset.addUrl;
+        document.getElementById('ngoModalTitle').textContent = isEdit ? 'Edit NGO' : 'Add NGO';
+        document.getElementById('modalIcon').textContent = isEdit ? 'edit' : 'add';
+        document.getElementById('modalSub').textContent = isEdit
+            ? 'Changes appear on the website straight away.'
+            : 'Shown in the list of associated NGOs on the website.';
+        document.querySelector('#fSubmit span:last-child').textContent = isEdit ? 'Update NGO' : 'Save NGO';
+        document.getElementById('fImageHint').textContent = isEdit
+            ? 'Leave empty to keep the current logo · max 2 MB'
+            : 'PNG with transparent background works best · max 2 MB';
+    }
+
+    function openCreate() {
+        setMode(false);
+        document.getElementById('fId').value = 0;
+        document.getElementById('fRemoveWrap').hidden = true;
+        openAddModal('ngoModal');
+        document.getElementById('fActive').checked = true;
+    }
+
+    function openEdit(btn) {
+        form.reset();
+        setMode(true);
+        document.getElementById('fId').value = btn.dataset.id;
+        document.getElementById('fName').value = btn.dataset.name;
+        document.getElementById('fWebsite').value = btn.dataset.website || '';
+        document.getElementById('fDescription').value = btn.dataset.description || '';
+        document.getElementById('fActive').checked = btn.dataset.active === 'true';
+        setCurrentImage('fPreview', 'fImageFile', btn.dataset.image);
+        document.getElementById('fRemove').checked = false;
+        document.getElementById('fRemoveWrap').hidden = !btn.dataset.image;
+        updateCharCounts(form);
+        document.getElementById('ngoModal').showModal();
+    }
+
+    function filterRows(term) {
+        term = term.trim().toLowerCase();
+        document.querySelectorAll('#dataTable tbody tr').forEach(function (tr) {
+            tr.hidden = term && !tr.textContent.toLowerCase().includes(term);
+        });
     }
 </script>
 }

@@ -2,17 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Give_AID.Data;
 using Give_AID.Models;
+using Give_AID.Services;
 
 namespace Give_AID.Areas.Admin.Controllers;
 
 [Area("Admin")]
 public class ProgrammesController : Controller
 {
-    private readonly AppDBContext _context;
+    private const string ImageFolder = "programmes";
 
-    public ProgrammesController(AppDBContext context)
+    private readonly AppDBContext _context;
+    private readonly ImageService _images;
+
+    public ProgrammesController(AppDBContext context, ImageService images)
     {
         _context = context;
+        _images = images;
     }
 
     public IActionResult Index()
@@ -23,7 +28,6 @@ public class ProgrammesController : Controller
             .OrderByDescending(p => p.StartDate)
             .ToList();
 
-        // Add/Edit form ke dropdowns ke liye
         ViewBag.NGOs = _context.NGOs.Where(n => n.isActive).OrderBy(n => n.NGOName).ToList();
         ViewBag.Causes = _context.DonationCauses.Where(c => c.isActive).OrderBy(c => c.CauseName).ToList();
 
@@ -32,7 +36,7 @@ public class ProgrammesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AddProgramme(Programme programme)
+    public async Task<IActionResult> AddProgramme(Programme programme, IFormFile? ImageFile)
     {
         if (!ModelState.IsValid)
         {
@@ -46,6 +50,17 @@ public class ProgrammesController : Controller
             return RedirectToAction("Index");
         }
 
+        programme.ImagePath = null;
+        if (ImageFile != null)
+        {
+            try { programme.ImagePath = await _images.SaveAsync(ImageFile, ImageFolder); }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
         _context.Programmes.Add(programme);
         _context.SaveChanges();
         TempData["Success"] = "Programme added successfully.";
@@ -54,7 +69,7 @@ public class ProgrammesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult EditProgramme(Programme programme)
+    public async Task<IActionResult> EditProgramme(Programme programme, IFormFile? ImageFile, bool RemoveImage = false)
     {
         if (!ModelState.IsValid)
         {
@@ -75,9 +90,26 @@ public class ProgrammesController : Controller
             return RedirectToAction("Index");
         }
 
+        if (ImageFile != null)
+        {
+            string newPath;
+            try { newPath = await _images.SaveAsync(ImageFile, ImageFolder); }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+            _images.Delete(existing.ImagePath);
+            existing.ImagePath = newPath;
+        }
+        else if (RemoveImage)
+        {
+            _images.Delete(existing.ImagePath);
+            existing.ImagePath = null;
+        }
+
         existing.Title = programme.Title;
         existing.Description = programme.Description;
-        existing.ImagePath = programme.ImagePath;
         existing.StartDate = programme.StartDate;
         existing.EndDate = programme.EndDate;
         existing.Location = programme.Location;
@@ -103,6 +135,7 @@ public class ProgrammesController : Controller
 
         _context.Programmes.Remove(programme);
         _context.SaveChanges();
+        _images.Delete(programme.ImagePath);
         TempData["Success"] = "Programme deleted successfully.";
         return RedirectToAction("Index");
     }

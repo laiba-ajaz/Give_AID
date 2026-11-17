@@ -2,4 +2,18 @@
     ViewData["Title"] = "Donations";
 }
 
-<h1>Admin Donations</h1>
+<div class="page-header">
+    <div>
+        <h1>Donations</h1>
+        <p>Every donation made on the website, with amount, cause and donor.</p>
+    </div>
+</div>
+
+<section class="card">
+    <div class="empty">
+        <span class="material-symbols-outlined">payments</span>
+        <h3>Not connected yet</h3>
+        <p>Donations will be listed here once the website's Donate page saves payments to the database.</p>
+        <a class="btn btn-teal" asp-controller="DonationCauses" asp-action="Index">Manage donation causes</a>
+    </div>
+</section>

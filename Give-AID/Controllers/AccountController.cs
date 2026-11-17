@@ -31,6 +31,8 @@ namespace Give_AID.Controllers
                 return View("Register", user);
             }
 
+            user.Email = user.Email.Trim();
+
             if (_context.Users.Any(u => u.Email == user.Email))
             {
                 ModelState.AddModelError("Email", "This email is already registered.");

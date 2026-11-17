@@ -8,7 +8,7 @@ public class DonationCauses
     [ StringLength(50)]
      public required string CauseName{get;  set;}
    
-    [StringLength(100)]       
+    [StringLength(250)]
     public required string CauseDescription{get; set;}
     public string? imageURL{get; set;}
 

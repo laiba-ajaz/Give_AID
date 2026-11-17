@@ -1,5 +1,140 @@
+@model DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
+    var hour = DateTime.Now.Hour;
+    var greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+    var firstName = (User.Identity?.Name ?? "Admin").Split(' ')[0];
 }
 
-<h1>Admin Dashboard</h1>
+<section class="card welcome">
+    <div>
+        <h2>@greeting, @firstName</h2>
+        <p>Here's what's happening across Give-AID today. Keep causes, NGOs and programmes up to date so donors always see the latest.</p>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-primary" asp-controller="Programmes" asp-action="Index">
+            <span class="material-symbols-outlined">add</span> New programme
+        </a>
+        <a class="btn btn-ghost" asp-area="" asp-controller="Home" asp-action="Index" target="_blank">
+            <span class="material-symbols-outlined">open_in_new</span> View website
+        </a>
+    </div>
+</section>
+
+<section class="stats">
+    <a class="card stat" asp-controller="Users" asp-action="Index">
+        <span class="stat-icon teal"><span class="material-symbols-outlined">group</span></span>
+        <div>
+            <div class="stat-value">@Model.TotalMembers</div>
+            <div class="stat-label">Registered members</div>
+            <div class="stat-sub">+@Model.NewMembersThisMonth this month</div>
+        </div>
+    </a>
+    <a class="card stat" asp-controller="DonationCauses" asp-action="Index">
+        <span class="stat-icon coral"><span class="material-symbols-outlined">volunteer_activism</span></span>
+        <div>
+            <div class="stat-value">@Model.ActiveCauses</div>
+            <div class="stat-label">Active causes</div>
+            <div class="stat-sub">@Model.TotalCauses in total</div>
+        </div>
+    </a>
+    <a class="card stat" asp-controller="NGO" asp-action="Index">
+        <span class="stat-icon mint"><span class="material-symbols-outlined">diversity_3</span></span>
+        <div>
+            <div class="stat-value">@Model.ActiveNgos</div>
+            <div class="stat-label">Partner NGOs</div>
+            <div class="stat-sub">@Model.TotalNgos in total</div>
+        </div>
+    </a>
+    <a class="card stat" asp-controller="Programmes" asp-action="Index">
+        <span class="stat-icon sand"><span class="material-symbols-outlined">event</span></span>
+        <div>
+            <div class="stat-value">@Model.UpcomingProgrammes</div>
+            <div class="stat-label">Upcoming programmes</div>
+            <div class="stat-sub">@Model.TotalProgrammes in total</div>
+        </div>
+    </a>
+</section>
+
+<div class="grid-2">
+    <section class="card">
+        <div class="card-head">
+            <h2>Newest members</h2>
+            <a asp-controller="Users" asp-action="Index">View all →</a>
+        </div>
+        @if (Model.RecentMembers.Count == 0)
+        {
+            <div class="empty">
+                <span class="material-symbols-outlined">person_off</span>
+                <p>No one has registered yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Member</th><th>City</th><th>Joined</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var m in Model.RecentMembers)
+                    {
+                        <tr>
+                            <td>
+                                <div class="cell-main">
+                                    <span class="avatar">@(string.IsNullOrEmpty(m.FullName) ? "?" : m.FullName.Substring(0, 1).ToUpper())</span>
+                                    <div>
+                                        <div class="cell-title">@m.FullName</div>
+                                        <div class="cell-sub">@m.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@(m.City ?? "—")</td>
+                            <td class="nowrap muted">@m.CreatedAt.ToString("dd MMM yyyy")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    <section class="card">
+        <div class="card-head">
+            <h2>Coming up</h2>
+            <a asp-controller="Programmes" asp-action="Index">All programmes →</a>
+        </div>
+        @if (Model.NextProgrammes.Count == 0)
+        {
+            <div class="empty">
+                <span class="material-symbols-outlined">event_busy</span>
+                <p>No upcoming programmes scheduled.</p>
+            </div>
+        }
+        else
+        {
+            <ul class="list">
+            @foreach (var p in Model.NextProgrammes)
+            {
+                <li>
+                    <div class="date-tile">
+                        <b>@p.StartDate.Day</b>
+                        <span>@p.StartDate.ToString("MMM")</span>
+                    </div>
+                    <div class="list-main">
+                        <div class="list-title">@p.Title</div>
+                        <div class="list-sub">
+                            @p.NGO?.NGOName
+                            @if (!string.IsNullOrEmpty(p.Location)) { <text> · @p.Location</text> }
+                        </div>
+                    </div>
+                    @if (p.StartDate <= DateTime.Today)
+                    {
+                        <span class="badge badge-green">Running</span>
+                    }
+                </li>
+            }
+            </ul>
+        }
+    </section>
+</div>
