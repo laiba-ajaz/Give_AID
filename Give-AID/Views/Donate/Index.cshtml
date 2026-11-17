@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Give_AID.Models.DonationViewModel
+@{
     ViewData["Title"] = "Donate";
 }
 
@@ -39,72 +40,26 @@
 </div>
 <!-- Cause Selector Chips -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-space-sm" id="causeSelector">
-<!-- Children (Selected Active) -->
-<button data-key="children" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-lowest shadow-sm text-left transition-all duration-150 bg-secondary/10" data-cause="Children Welfare &amp; Early Education" data-partner="St. Jude Hope Alliance" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">child_care</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-primary font-semibold leading-tight">Children</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Education &amp; care</span>
-</button>
-<!-- Education -->
-<button data-key="education" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Universal Literacy &amp; Classrooms" data-partner="Global Book Trust" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">menu_book</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Education</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Schools &amp; tech</span>
-</button>
-<!-- Disabled Persons -->
-<button data-key="disabled" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Mobility &amp; Adaptive Welfare" data-partner="All-Ability Foundation" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">accessible</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Disabled</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Mobility &amp; aids</span>
-</button>
-<!-- Women -->
-<button data-key="women" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Women Empowerment &amp; Health" data-partner="Sisterhood Global Micro" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">female</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Women</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Empowerment</span>
-</button>
-<!-- Youth -->
-<button data-key="youth" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Youth Vocational Academy" data-partner="NextGen Skill Labs" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">psychology</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Youth</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Mentorship</span>
-</button>
-<!-- Elderly -->
-<button data-key="elderly" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Elderly Nutrition &amp; Care" data-partner="Silver Years Sanctuary" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">elderly</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Elderly</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Nutritional care</span>
-</button>
-<!-- Emergency Disaster Relief (Span 2) -->
-<button data-key="disaster" class="cause-btn group col-span-2 flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Emergency Disaster Relief Taskforce" data-partner="UN Rapid Response Team" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">medical_services</span>
-<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-error-container text-on-error-container uppercase font-bold">Urgent</span>
-</div>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Disaster Relief</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Immediate medical kits &amp; field shelter</span>
-</button>
+@if (Model.ActiveCauses != null && Model.ActiveCauses.Any())
+{
+    @for (int i = 0; i < Model.ActiveCauses.Count; i++)
+    {
+        var cause = Model.ActiveCauses[i];
+        bool isSelected = (Model.Cause == cause.DonationCausesID.ToString()) || (string.IsNullOrEmpty(Model.Cause) && i == 0);
+        <button data-key="@cause.DonationCausesID" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg @(isSelected ? "bg-secondary/10" : "bg-surface-container-low hover:bg-surface-container") text-left transition-all duration-150" data-cause="@cause.CauseName" data-partner="@cause.CauseDescription" type="button">
+            <div class="w-full flex items-center justify-between mb-space-xs">
+                <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+                <span class="material-symbols-outlined text-secondary text-[18px] check-icon @(isSelected ? "" : "hidden")" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <span class="font-title-sm text-title-sm text-primary font-semibold leading-tight">@cause.CauseName</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 line-clamp-1">@cause.CauseDescription</span>
+        </button>
+    }
+}
+else
+{
+    <p class="col-span-full font-body-sm text-on-surface-variant p-space-sm">No active causes currently available.</p>
+}
 </div>
 </section>
 <!-- STEP 2: Choose an Amount -->
@@ -205,12 +160,20 @@
 </div>
 <!-- Donation form: field names are ready for model binding (DonationViewModel) -->
 <form class="flex flex-col gap-space-md" id="donationForm" method="post" asp-controller="Donate" asp-action="Index" novalidate>
-<input type="hidden" name="Cause" id="fCause" value="children"/>
-<input type="hidden" name="Amount" id="fAmount" value="50"/>
-<input type="hidden" name="Frequency" id="fFrequency" value="OneTime"/>
-<input type="hidden" name="CoverFees" id="fCoverFees" value="true"/>
-<input type="hidden" name="TotalAmount" id="fTotal" value="51.50"/>
-<input type="hidden" name="CardType" id="fCardType" value="Credit"/>
+@Html.AntiForgeryToken()
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="p-space-sm rounded-lg bg-error-container/30 border border-error/40 text-error font-body-sm text-body-sm flex items-start gap-space-xs">
+        <span class="material-symbols-outlined text-[20px] text-error shrink-0">error</span>
+        <div asp-validation-summary="All" class="flex flex-col gap-0.5"></div>
+    </div>
+}
+<input type="hidden" name="Cause" id="fCause" value="@(Model.Cause ?? (Model.ActiveCauses != null && Model.ActiveCauses.Any() ? Model.ActiveCauses[0].DonationCausesID.ToString() : "children"))"/>
+<input type="hidden" name="Amount" id="fAmount" value="@Model.Amount.ToString("0.00")"/>
+<input type="hidden" name="Frequency" id="fFrequency" value="@Model.Frequency"/>
+<input type="hidden" name="CoverFees" id="fCoverFees" value="@Model.CoverFees.ToString().ToLower()"/>
+<input type="hidden" name="TotalAmount" id="fTotal" value="@Model.TotalAmount.ToString("0.00")"/>
+<input type="hidden" name="CardType" id="fCardType" value="@Model.CardType"/>
 <!-- Name on Card -->
 <div class="flex flex-col gap-space-xs">
 <label class="font-label-lg text-label-lg text-primary font-semibold flex items-center justify-between" for="cardName">
@@ -220,7 +183,7 @@
                 </span>
 </label>
 <div class="relative">
-<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none focus:bg-surface-container-low" id="cardName" name="CardHolderName" autocomplete="cc-name" placeholder="As printed on the card" type="text"/>
+<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none focus:bg-surface-container-low" id="cardName" name="CardHolderName" value="@Model.CardHolderName" autocomplete="cc-name" placeholder="As printed on the card" type="text"/>
 <span class="valid-icon hidden absolute right-space-md top-1/2 -translate-y-1/2 material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
 </div>
 <p class="field-error hidden font-label-md text-label-md text-error"></p>
@@ -230,7 +193,7 @@
 <label class="font-label-lg text-label-lg text-primary font-semibold" for="cardNumber">Card Number</label>
 <div class="relative flex items-center">
 <span class="absolute left-space-md font-label-sm text-label-sm font-bold bg-primary text-on-primary px-1.5 py-0.5 rounded tracking-wider" id="cardBrand">CARD</span>
-<input class="card-field w-full pl-16 pr-space-xl py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm tracking-widest focus:outline-none" id="cardNumber" name="CardNumber" autocomplete="cc-number" inputmode="numeric" maxlength="23" placeholder="1234 5678 9012 3456" type="text"/>
+<input class="card-field w-full pl-16 pr-space-xl py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm tracking-widest focus:outline-none" id="cardNumber" name="CardNumber" value="@Model.CardNumber" autocomplete="cc-number" inputmode="numeric" maxlength="23" placeholder="1234 5678 9012 3456" type="text"/>
 <span class="valid-icon hidden absolute right-space-md material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
 </div>
 <p class="field-error hidden font-label-md text-label-md text-error"></p>
@@ -239,7 +202,7 @@
 <div class="grid grid-cols-2 gap-space-md">
 <div class="flex flex-col gap-space-xs">
 <label class="font-label-lg text-label-lg text-primary font-semibold" for="cardExpiry">Expiration (MM/YY)</label>
-<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none" id="cardExpiry" name="ExpiryDate" autocomplete="cc-exp" inputmode="numeric" maxlength="5" placeholder="MM/YY" type="text"/>
+<input class="card-field w-full px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm focus:outline-none" id="cardExpiry" name="ExpiryDate" value="@Model.ExpiryDate" autocomplete="cc-exp" inputmode="numeric" maxlength="5" placeholder="MM/YY" type="text"/>
 <p class="field-error hidden font-label-md text-label-md text-error"></p>
 </div>
 <div class="flex flex-col gap-space-xs">
@@ -421,4 +384,30 @@
 
 @section Scripts {
 <script src="~/js/donate.js" asp-append-version="true"></script>
+@if (Model.IsSuccess)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById("successModal");
+            var modalCard = document.getElementById("modalCard");
+            var modalTxnId = document.getElementById("modalTxnId");
+            var modalCause = document.getElementById("modalCause");
+            var modalDonorName = document.getElementById("modalDonorName");
+            var modalAmount = document.getElementById("modalAmount");
+
+            if (modalTxnId) modalTxnId.textContent = "@Model.TransactionId";
+            if (modalCause) modalCause.textContent = "@Html.Raw(Model.ConfirmedCauseName)";
+            if (modalDonorName) modalDonorName.textContent = ", @Html.Raw(Model.DonorName)";
+            if (modalAmount) modalAmount.textContent = "$@Model.ConfirmedTotalAmount.ToString("0.00") donation";
+
+            if (modal) {
+                modal.classList.remove("hidden");
+                requestAnimationFrame(function () {
+                    modal.classList.remove("opacity-0");
+                    if (modalCard) modalCard.classList.remove("scale-95");
+                });
+            }
+        });
+    </script>
+}
 }

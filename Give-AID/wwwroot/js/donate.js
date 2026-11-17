@@ -242,9 +242,7 @@
       return;
     }
 
-    // TODO (backend): remove the next two lines to post the form to DonateController.
-    e.preventDefault();
-    openSuccessModal();
+    // Form validated successfully - allow standard POST submission to DonateController.
   });
 
   // ---------- Success modal ----------
