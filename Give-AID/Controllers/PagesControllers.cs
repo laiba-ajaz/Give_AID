@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
@@ -250,10 +251,131 @@ public class DonateController : Controller
     }
 }
 
-// GET: /Programmes  — upcoming programmes & events + participation form
+// GET & POST: /Programmes — upcoming programmes & events + user participation interest form
 public class ProgrammesController : Controller
 {
-    public IActionResult Index() => View();
+    // Database context for querying Programmes and saving ProgrammeInterest
+    private readonly AppDBContext _context;
+
+    // Constructor to inject the database context
+    public ProgrammesController(AppDBContext context)
+    {
+        _context = context;
+    }
+
+    // GET: /Programmes - Loads active programmes from the database and renders the programmes directory
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        // 1. Fetch active programmes including related NGO and Cause data
+        var programmes = await _context.Programmes
+            .Include(p => p.NGO)
+            .Include(p => p.Cause)
+            .Where(p => p.isActive)
+            .OrderBy(p => p.StartDate)
+            .ToListAsync();
+
+        // 2. Pre-fill name and email if the current user is logged in
+        string defaultName = string.Empty;
+        string defaultEmail = string.Empty;
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            defaultName = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+            defaultEmail = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+        }
+
+        // 3. Build the view model with active programmes and default selection
+        var model = new ProgrammeIndexViewModel
+        {
+            ActiveProgrammes = programmes,
+            ProgrammeId = programmes.FirstOrDefault()?.ProgrammeId ?? 0,
+            FullName = defaultName,
+            Email = defaultEmail,
+            ParticipationRole = "Volunteer"
+        };
+
+        return View(model);
+    }
+
+    // POST: /Programmes/Interest - Handles registration of interest for a programme by an authenticated user
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Interest(ProgrammeIndexViewModel model)
+    {
+        // 1. Reload active programmes for view re-rendering in case of validation errors
+        model.ActiveProgrammes = await _context.Programmes
+            .Include(p => p.NGO)
+            .Include(p => p.Cause)
+            .Where(p => p.isActive)
+            .OrderBy(p => p.StartDate)
+            .ToListAsync();
+
+        // 2. Validate participant name
+        if (string.IsNullOrWhiteSpace(model.FullName) || model.FullName.Trim().Length < 2)
+        {
+            ModelState.AddModelError("FullName", "Please enter your full name (at least 2 characters).");
+        }
+
+        // 3. Validate participant email address
+        if (string.IsNullOrWhiteSpace(model.Email) || !new EmailAddressAttribute().IsValid(model.Email))
+        {
+            ModelState.AddModelError("Email", "Please enter a valid email address.");
+        }
+
+        // 4. Validate targeted programme exists and is active
+        var programme = model.ActiveProgrammes.FirstOrDefault(p => p.ProgrammeId == model.ProgrammeId);
+        if (programme == null)
+        {
+            ModelState.AddModelError("ProgrammeId", "The selected programme does not exist or is inactive.");
+        }
+
+        // 5. Get authenticated user's ID
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+        {
+            return RedirectToAction("Login", "Account", new { returnUrl = "/Programmes" });
+        }
+
+        // 6. Prevent the same user from registering interest twice for the same programme
+        bool alreadyRegistered = await _context.ProgrammeInterests
+            .AnyAsync(pi => pi.ProgrammeId == model.ProgrammeId && pi.UserId == userId);
+
+        if (alreadyRegistered)
+        {
+            model.ErrorMessage = "You have already registered your interest for this programme.";
+            ModelState.AddModelError("", model.ErrorMessage);
+            return View("Index", model);
+        }
+
+        // 7. If model validation fails, re-render the index view with errors
+        if (!ModelState.IsValid)
+        {
+            return View("Index", model);
+        }
+
+        // 8. Save the user's programme interest record to the database
+        var interest = new ProgrammeInterest
+        {
+            ProgrammeId = model.ProgrammeId,
+            UserId = userId,
+            Name = model.FullName.Trim(),
+            Email = model.Email.Trim(),
+            Phone = model.Phone?.Trim(),
+            ParticipationRole = model.ParticipationRole ?? "Volunteer",
+            Message = model.Message?.Trim(),
+            CreatedAt = DateTime.Now
+        };
+
+        _context.ProgrammeInterests.Add(interest);
+        await _context.SaveChangesAsync();
+
+        // 9. Mark view as successful and provide feedback
+        model.IsSuccess = true;
+        model.SuccessMessage = $"Your interest for \"{programme!.Title}\" has been registered successfully! The coordinator will be in touch.";
+
+        return View("Index", model);
+    }
 }
 
 // GET: /HelpCentre  — FAQs, raise a query, contact us

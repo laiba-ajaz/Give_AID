@@ -99,9 +99,7 @@
     }
     err.classList.add('hidden');
 
-    // TODO (backend): remove the next lines to post to ProgrammesController.Interest.
-    e.preventDefault();
-    success.classList.remove('hidden');
-    success.classList.add('flex');
+    // Backend submission: allow normal POST to /Programmes/Interest
+    // e.preventDefault() was removed so the form submits to the server
   });
 })();

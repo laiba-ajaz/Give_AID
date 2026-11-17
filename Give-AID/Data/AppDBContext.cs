@@ -15,6 +15,8 @@ namespace Give_AID.Data
         public DbSet<Programme> Programmes { get; set; }
         // Stores all financial contributions submitted by donors
         public DbSet<Donation> Donations { get; set; }
+        // Stores volunteer and sponsor participation interest for welfare programmes
+        public DbSet<ProgrammeInterest> ProgrammeInterests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
