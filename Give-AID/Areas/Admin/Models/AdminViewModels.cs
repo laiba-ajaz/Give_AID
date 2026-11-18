@@ -17,7 +17,6 @@ public class DashboardViewModel
     public List<Programme> NextProgrammes { get; set; } = new();
 }
 
-// Members list ke liye sirf zaroori columns (password hash kabhi view tak nahi jata)
 public class MemberRow
 {
     public int Id { get; set; }

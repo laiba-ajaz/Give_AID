@@ -558,6 +558,7 @@ dialog input:focus, dialog select:focus, dialog textarea:focus {
     -webkit-box-orient: vertical;
     overflow: hidden;
     max-width: 380px;
+    overflow-wrap: anywhere;
     color: var(--on-surface-variant);
 }
 

@@ -13,6 +13,8 @@ namespace Give_AID.Data
         public DbSet<DonationCauses> DonationCauses { get; set; }
         public DbSet<NGO> NGOs { get; set; }
         public DbSet<Programme> Programmes { get; set; }
+        
+        public DbSet<Partner> Partners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

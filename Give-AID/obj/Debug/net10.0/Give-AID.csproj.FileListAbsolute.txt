@@ -274,5 +274,5 @@ C:\Users\HP\AppData\Local\Temp\claude\d13dc4f5628e3ad0\61ffb278-d0e7-4722-8b7c-6
 C:\Users\HP\AppData\Local\Temp\claude\d13dc4f5628e3ad0\61ffb278-d0e7-4722-8b7c-6a20df7756e0\scratchpad\buildcheck\Give-AID.runtimeconfig.json
 C:\Users\HP\AppData\Local\Temp\claude\d13dc4f5628e3ad0\61ffb278-d0e7-4722-8b7c-6a20df7756e0\scratchpad\buildcheck\Give-AID.dll
 C:\Users\HP\AppData\Local\Temp\claude\d13dc4f5628e3ad0\61ffb278-d0e7-4722-8b7c-6a20df7756e0\scratchpad\buildcheck\Give-AID.pdb
-C:\Users\HP\Give-AID\Give-AID\obj\Debug\net10.0\compressed\g8txtfzycr-{0}-un7dmu8mwd-un7dmu8mwd.gz
 C:\Users\HP\Give-AID\Give-AID\obj\Debug\net10.0\compressed\ijmisn26gp-{0}-1wynio07bq-1wynio07bq.gz
+C:\Users\HP\Give-AID\Give-AID\obj\Debug\net10.0\compressed\g8txtfzycr-{0}-gqpvj93hir-gqpvj93hir.gz
