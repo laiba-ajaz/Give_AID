@@ -378,10 +378,96 @@ public class ProgrammesController : Controller
     }
 }
 
-// GET: /HelpCentre  — FAQs, raise a query, contact us
+// GET & POST: /HelpCentre — FAQs, contact directory, and raise a query support desk
 public class HelpCentreController : Controller
 {
-    public IActionResult Index() => View();
+    // Database context for storing queries
+    private readonly AppDBContext _context;
+
+    // Constructor to inject the database context
+    public HelpCentreController(AppDBContext context)
+    {
+        _context = context;
+    }
+
+    // GET: /HelpCentre - Displays the help desk, FAQs, and query submission form
+    [HttpGet]
+    public IActionResult Index()
+    {
+        // 1. Initialize view model
+        var model = new HelpCentreViewModel();
+
+        // 2. Pre-fill name and email if the current user is logged in
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            model.FullName = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+            model.Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+        }
+
+        return View(model);
+    }
+
+    // POST: /HelpCentre/Query - Receives, validates, and records public or donor support queries
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Query(HelpCentreViewModel model)
+    {
+        // 1. Validate participant name
+        if (string.IsNullOrWhiteSpace(model.FullName) || model.FullName.Trim().Length < 2)
+        {
+            ModelState.AddModelError("FullName", "Please enter your full name (at least 2 characters).");
+        }
+
+        // 2. Validate participant email
+        if (string.IsNullOrWhiteSpace(model.Email) || !new EmailAddressAttribute().IsValid(model.Email))
+        {
+            ModelState.AddModelError("Email", "Please enter a valid email address.");
+        }
+
+        // 3. Validate inquiry message length (minimum 10 characters required)
+        if (string.IsNullOrWhiteSpace(model.Message) || model.Message.Trim().Length < 10)
+        {
+            ModelState.AddModelError("Message", "Your inquiry message must be at least 10 characters.");
+        }
+
+        // 4. Return view with validation errors if any check fails
+        if (!ModelState.IsValid)
+        {
+            return View("Index", model);
+        }
+
+        // 5. Retrieve logged-in user ID if authenticated (nullable for guest inquiries)
+        int? userId = null;
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!string.IsNullOrEmpty(userIdClaim) && int.TryParse(userIdClaim, out int parsedId))
+        {
+            userId = parsedId;
+        }
+
+        // 6. Map and create the Query entity with default Status "New"
+        var query = new Query
+        {
+            UserId = userId,
+            Name = model.FullName.Trim(),
+            Email = model.Email.Trim(),
+            Topic = string.IsNullOrWhiteSpace(model.Topic) ? "donation" : model.Topic.Trim(),
+            Message = model.Message.Trim(),
+            Status = "New",
+            CreatedAt = DateTime.Now
+        };
+
+        // 7. Save query record to the database
+        _context.Queries.Add(query);
+        await _context.SaveChangesAsync();
+
+        // 8. Generate inquiry reference number and provide user feedback
+        string refNumber = $"#GA-{query.QueryId:D4}";
+        model.IsSuccess = true;
+        model.ReferenceNumber = refNumber;
+        model.SuccessMessage = $"Your query has been dispatched under reference {refNumber}. A welfare coordinator will review your request.";
+
+        return View("Index", model);
+    }
 }
 
 // GET: /Invite  — invite friends by email

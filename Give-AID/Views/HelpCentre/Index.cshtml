@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Give_AID.Models.HelpCentreViewModel
+@{
     ViewData["Title"] = "Help Centre & Contact Us";
 }
 
@@ -256,14 +257,37 @@
                 </p>
 </div>
 <!-- Interactive Form -->
+@if (Model != null && Model.IsSuccess)
+{
+    <div class="bg-tertiary-fixed/30 p-space-md rounded-xl flex items-center gap-space-sm text-tertiary animate-fadeIn mb-space-md" id="querySuccessMessage">
+        <span class="material-symbols-outlined text-[24px]">task_alt</span>
+        <div>
+            <h4 class="font-title-sm text-title-sm font-bold">Query Dispatched (@Model.ReferenceNumber)</h4>
+            <p class="font-body-sm text-body-sm">@Model.SuccessMessage</p>
+        </div>
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="p-space-md rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm mb-space-md">
+        <div class="flex items-center gap-2 font-bold mb-1">
+            <span class="material-symbols-outlined text-[18px]">error</span>
+            <span>Please correct the errors below:</span>
+        </div>
+        <div asp-validation-summary="All" class="text-xs list-disc list-inside"></div>
+    </div>
+}
+
 <form class="flex flex-col gap-space-md" id="supportQueryForm" method="post" asp-controller="HelpCentre" asp-action="Query">
+@Html.AntiForgeryToken()
 <!-- Full Name Field -->
 <div class="flex flex-col gap-1.5">
 <label class="font-label-md text-label-md text-on-surface font-semibold" for="fullName">
                     Full Name <span class="text-secondary">*</span>
 </label>
 <div class="relative">
-<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="fullName" name="FullName" autocomplete="name" placeholder="Your full name" minlength="2" required type="text"/>
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="fullName" name="FullName" value="@Model?.FullName" autocomplete="name" placeholder="Your full name" minlength="2" required type="text"/>
 <span class="material-symbols-outlined absolute right-3 top-3 text-[18px] text-outline">badge</span>
 </div>
 </div>
@@ -273,7 +297,7 @@
                     Email Address <span class="text-secondary">*</span>
 </label>
 <div class="relative">
-<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="emailAddress" name="Email" autocomplete="email" placeholder="you@@example.com" required type="email"/>
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="emailAddress" name="Email" value="@Model?.Email" autocomplete="email" placeholder="you@@example.com" required type="email"/>
 <span class="material-symbols-outlined absolute right-3 top-3 text-[18px] text-outline">mail</span>
 </div>
 </div>
@@ -284,18 +308,18 @@
 </label>
 <div class="relative">
 <select class="w-full appearance-none bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="topicSelect" name="Topic" required>
-<option selected="" value="donation">Donation &amp; Tax Inquiries</option>
-<option value="volunteer">Volunteer Verification</option>
-<option value="corporate">Corporate Partnership</option>
-<option value="technical">Technical Support</option>
-<option value="issue">Report an Issue / Fraud Alert</option>
+<option value="donation" selected="@(Model?.Topic == "donation" ? "selected" : null)">Donation &amp; Tax Inquiries</option>
+<option value="volunteer" selected="@(Model?.Topic == "volunteer" ? "selected" : null)">Volunteer Verification</option>
+<option value="corporate" selected="@(Model?.Topic == "corporate" ? "selected" : null)">Corporate Partnership</option>
+<option value="technical" selected="@(Model?.Topic == "technical" ? "selected" : null)">Technical Support</option>
+<option value="issue" selected="@(Model?.Topic == "issue" ? "selected" : null)">Report an Issue / Fraud Alert</option>
 </select>
 <span class="material-symbols-outlined absolute right-3 top-3 text-[20px] text-outline pointer-events-none">expand_more</span>
 </div>
 </div>
 <!-- Urgent Priority Toggle Checkbox -->
 <div class="bg-surface-container-low p-space-sm rounded-lg flex items-start gap-space-sm">
-<input class="mt-1 w-4 h-4 rounded text-secondary focus:ring-secondary cursor-pointer" id="urgentToggle" name="IsUrgent" value="true" type="checkbox"/>
+<input class="mt-1 w-4 h-4 rounded text-secondary focus:ring-secondary cursor-pointer" id="urgentToggle" name="IsUrgent" value="true" type="checkbox" @(Model != null && Model.IsUrgent ? "checked" : "")/>
 <label class="cursor-pointer" for="urgentToggle">
 <div class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1">
 <span>Mark as urgent</span>
@@ -309,7 +333,7 @@
 <label class="font-label-md text-label-md text-on-surface font-semibold" for="messageBox">
                     Detailed Message <span class="text-secondary">*</span>
 </label>
-<textarea class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none" id="messageBox" name="Message" minlength="10" maxlength="2000" placeholder="Describe your inquiry or request in detail..." required="" rows="4"></textarea>
+<textarea class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none" id="messageBox" name="Message" minlength="10" maxlength="2000" placeholder="Describe your inquiry or request in detail..." required="" rows="4">@Model?.Message</textarea>
 </div>
 <!-- Submit Button -->
 <button class="w-full bg-secondary hover:bg-secondary-container text-on-secondary py-space-sm rounded-lg font-label-lg text-label-lg uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-space-xs" id="submitQueryBtn" type="submit">
@@ -555,7 +579,7 @@
       if (faqSearchButton) faqSearchButton.addEventListener('click', filterFaqs);
       pills.forEach(pill => pill.addEventListener('click', filterFaqs));
 
-      // Raise a Query — validate, then show confirmation
+      // Raise a Query — validate on client, then post to HelpCentreController.Query
       const queryForm = document.getElementById('supportQueryForm');
       queryForm.addEventListener('submit', (e) => {
         if (!queryForm.checkValidity()) {
@@ -563,9 +587,7 @@
           queryForm.reportValidity();
           return;
         }
-        // TODO (backend): remove the next two lines to post to HelpCentreController.Query.
-        e.preventDefault();
-        handleFormSubmit();
+        // Submits directly to HelpCentreController.Query
       });
 
       // Live Chat Modal Feedback

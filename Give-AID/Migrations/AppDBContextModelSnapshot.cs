@@ -208,6 +208,55 @@ namespace Give_AID.Migrations
                     b.ToTable("ProgrammeInterests");
                 });
 
+            modelBuilder.Entity("Give_AID.Models.Query", b =>
+                {
+                    b.Property<int>("QueryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QueryId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Reply")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("QueryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Queries");
+                });
+
             modelBuilder.Entity("NGO", b =>
                 {
                     b.Property<int>("NGOID")
@@ -328,6 +377,15 @@ namespace Give_AID.Migrations
                         .IsRequired();
 
                     b.Navigation("Programme");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Give_AID.Models.Query", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
