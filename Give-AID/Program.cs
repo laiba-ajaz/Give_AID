@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Give_AID.Data;
+using Give_AID.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register Email sender service (fake console logger for development, easily replaceable with SMTP)
+builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
 
 
 builder.Services.AddDbContext<AppDBContext>(options =>

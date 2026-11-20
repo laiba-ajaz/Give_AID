@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Give_AID.Models.InviteViewModel
+@{
     ViewData["Title"] = "Invite Friends";
 }
 
@@ -79,7 +80,7 @@
 </div>
 <div class="flex items-center gap-space-xs bg-surface-container-low p-1.5 rounded-lg">
 <span class="material-symbols-outlined text-outline text-[20px] ml-2">link</span>
-<input class="w-full bg-transparent px-2 font-body-sm text-body-sm text-on-surface focus:outline-none select-all" id="referral-input" readonly="" type="text" value="https://give-aid.org/invite/your-name"/>
+<input class="w-full bg-transparent px-2 font-body-sm text-body-sm text-on-surface focus:outline-none select-all" id="referral-input" readonly="" type="text" value="https://give-aid.org/invite/@(User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "friend")"/>
 <button class="shrink-0 bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-2 rounded-lg transition-colors flex items-center gap-1" id="copy-link-btn" type="button">
 <span class="material-symbols-outlined text-[16px]">content_copy</span>
 <span id="copy-btn-text">Copy Link</span>
@@ -110,8 +111,55 @@
 </div>
 <!-- Right Column: Interactive Invitation Card & Success Confirmation (approx 55% -> 7 cols lg) -->
 <div class="lg:col-span-7 flex flex-col gap-space-xl">
+
+<!-- Success State Preview Container / Card Overlay -->
+<div class="bg-surface-container-lowest p-space-xl rounded-[16px] shadow-sm @(Model != null && Model.IsSuccess ? "flex ring-2 ring-primary" : "hidden") flex-col gap-space-md transition-all duration-300" id="dispatch-success-panel">
+<div class="flex items-start gap-space-md">
+<div class="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[32px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Confirmation Receipt</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold" id="dispatch-title">@(Model != null && Model.IsSuccess ? $"{Model.SentCount} Invitation{(Model.SentCount == 1 ? "" : "s")} Dispatched!" : "Invitations Dispatched!")</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+@(Model != null && !string.IsNullOrEmpty(Model.SuccessMessage) ? Model.SuccessMessage : "Your friends will receive an invitation email with instructions to view your favorite programmes and join your giving circle.")
+</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-md mt-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]">volunteer_activism</span>
+<a class="font-label-lg text-label-lg font-semibold hover:underline" href="~/Programmes">Browse Active Programmes →</a>
+</div>
+<button class="px-space-md py-space-xs rounded-lg font-label-md text-label-md text-primary bg-primary/10 hover:bg-primary/20 transition-colors uppercase tracking-wider font-bold" id="invite-more-btn" type="button">
+Invite more friends
+</button>
+</div>
+</div>
+
+@if (!ViewData.ModelState.IsValid || !string.IsNullOrEmpty(Model?.ErrorMessage))
+{
+<div class="bg-error/10 border border-error/20 rounded-xl p-space-md flex items-start gap-space-sm text-error">
+<span class="material-symbols-outlined shrink-0 text-[20px]">error</span>
+<div class="font-body-sm text-body-sm">
+@if (!string.IsNullOrEmpty(Model?.ErrorMessage))
+{
+<p>@Model.ErrorMessage</p>
+}
+@foreach (var modelState in ViewData.ModelState.Values)
+{
+foreach (var err in modelState.Errors)
+{
+<p>@err.ErrorMessage</p>
+}
+}
+</div>
+</div>
+}
+
 <!-- Primary Management Card -->
 <form id="inviteForm" method="post" asp-controller="Invite" asp-action="Index" novalidate class="bg-surface-container-lowest p-space-xl rounded-[16px] shadow-sm flex flex-col gap-space-lg">
+@Html.AntiForgeryToken()
 <div class="flex flex-col gap-1">
 <span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-widest">Multi-Recipient Dispatch</span>
 <h2 class="font-headline-sm text-headline-sm text-primary font-bold">Invite friends via email</h2>
@@ -161,30 +209,6 @@
 <span id="send-btn-label">Send invitations (0)</span>
 </button>
 </form>
-<!-- Success State Preview Container / Card Overlay -->
-<div class="bg-surface-container-lowest p-space-xl rounded-[16px] shadow-sm hidden flex-col gap-space-md transition-all duration-300" id="dispatch-success-panel">
-<div class="flex items-start gap-space-md">
-<div class="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[32px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<div class="flex flex-col gap-1">
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Confirmation Receipt</span>
-<h3 class="font-headline-sm text-headline-sm text-primary font-bold" id="dispatch-title">3 Invitations Dispatched!</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                  Your friends will receive an invitation email with instructions to view your favorite programmes and join your giving circle.
-                </p>
-</div>
-</div>
-<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-md mt-space-xs">
-<div class="flex items-center gap-space-xs text-primary font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-[18px]">query_stats</span>
-<a class="font-label-lg text-label-lg font-semibold hover:underline" href="~/Account/Register">Track invitation status in your Member Dashboard →</a>
-</div>
-<button class="px-space-md py-space-xs rounded-lg font-label-md text-label-md text-primary bg-primary/10 hover:bg-primary/20 transition-colors uppercase tracking-wider font-bold" id="invite-more-btn" type="button">
-                Invite more friends
-              </button>
-</div>
-</div>
 </div>
 </div>
 </div>

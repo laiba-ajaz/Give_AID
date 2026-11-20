@@ -97,25 +97,24 @@
 
   form.addEventListener('submit', (e) => {
     const n = staged().length;
-    if (n === 0) { e.preventDefault(); return showError('Add at least one email address.'); }
+    if (n === 0) {
+      e.preventDefault();
+      return showError('Add at least one email address.');
+    }
 
-    // TODO (backend): remove the lines below to post the form to InviteController (Emails + Message).
-    e.preventDefault();
-    $('dispatch-title').textContent = n + ' Invitation' + (n === 1 ? '' : 's') + ' Dispatched!';
-    successPanel.classList.remove('hidden');
-    successPanel.classList.add('flex');
-    successPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    successPanel.classList.add('ring-2', 'ring-primary');
-    setTimeout(() => successPanel.classList.remove('ring-2', 'ring-primary'), 1500);
-    staged().forEach((c) => c.remove());
-    updateStagedCount();
+    // Submit form to InviteController (POST /Invite/Index)
+    submitBtn.classList.add('opacity-50', 'pointer-events-none');
+    $('send-btn-label').textContent = 'Sending...';
   });
 
-  $('invite-more-btn').addEventListener('click', () => {
-    successPanel.classList.add('hidden');
-    successPanel.classList.remove('flex');
-    input.focus();
-  });
+  const inviteMoreBtn = $('invite-more-btn');
+  if (inviteMoreBtn) {
+    inviteMoreBtn.addEventListener('click', () => {
+      successPanel.classList.add('hidden');
+      successPanel.classList.remove('flex');
+      input.focus();
+    });
+  }
 
   updateStagedCount();
 })();

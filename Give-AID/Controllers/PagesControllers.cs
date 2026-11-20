@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Give_AID.Data;
 using Give_AID.Models;
+using Give_AID.Services;
 
 namespace Give_AID.Controllers;
 
@@ -470,9 +471,102 @@ public class HelpCentreController : Controller
     }
 }
 
-// GET: /Invite  — invite friends by email
+// GET & POST: /Invite — invite friends via email and share referral link
 public class InviteController : Controller
 {
-    public IActionResult Index() => View();
+    // Database context for recording invitations
+    private readonly AppDBContext _context;
+
+    // Email service interface for dispatching notifications
+    private readonly IEmailSender _emailSender;
+
+    // Constructor injecting DbContext and EmailSender service
+    public InviteController(AppDBContext context, IEmailSender emailSender)
+    {
+        _context = context;
+        _emailSender = emailSender;
+    }
+
+    // GET: /Invite - Displays referral links and recipient invitation staging form
+    [HttpGet]
+    public IActionResult Index()
+    {
+        return View(new InviteViewModel());
+    }
+
+    // POST: /Invite/Index - Receives staged recipient emails, validates, removes duplicates, and saves invitations
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Index(InviteViewModel model)
+    {
+        // 1. Check if any emails were provided
+        if (model.Emails == null || !model.Emails.Any())
+        {
+            model.ErrorMessage = "Please add at least one recipient email address.";
+            ModelState.AddModelError("Emails", model.ErrorMessage);
+            return View(model);
+        }
+
+        // 2. Normalize and remove duplicate email entries
+        var emailValidator = new EmailAddressAttribute();
+        var uniqueCleanEmails = model.Emails
+            .Where(e => !string.IsNullOrWhiteSpace(e))
+            .Select(e => e.Trim().ToLower())
+            .Distinct()
+            .Where(e => emailValidator.IsValid(e))
+            .ToList();
+
+        // 3. Ensure at least one valid recipient remains
+        if (!uniqueCleanEmails.Any())
+        {
+            model.ErrorMessage = "Please provide valid email address formats.";
+            ModelState.AddModelError("Emails", model.ErrorMessage);
+            return View(model);
+        }
+
+        // 4. Retrieve logged-in user ID from claims
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+        {
+            return RedirectToAction("Login", "Account", new { returnUrl = "/Invite" });
+        }
+
+        string defaultMessage = !string.IsNullOrWhiteSpace(model.Message)
+            ? model.Message.Trim()
+            : "Hey! Join me on Give-AID to support verified grassroots welfare programs.";
+
+        // 5. Save one invitation record per unique recipient
+        foreach (var email in uniqueCleanEmails)
+        {
+            var invitation = new Invitation
+            {
+                UserId = userId,
+                FriendEmail = email,
+                Message = defaultMessage,
+                SentAt = DateTime.Now
+            };
+
+            _context.Invitations.Add(invitation);
+
+            // 6. Simulate email dispatch via the configured IEmailSender service
+            await _emailSender.SendEmailAsync(
+                email,
+                "You have been invited to join Give-AID!",
+                defaultMessage
+            );
+        }
+
+        // 7. Commit changes to the database
+        await _context.SaveChangesAsync();
+
+        // 8. Provide confirmation feedback to the view
+        model.IsSuccess = true;
+        model.SentCount = uniqueCleanEmails.Count;
+        model.SuccessMessage = $"{uniqueCleanEmails.Count} Invitation{(uniqueCleanEmails.Count == 1 ? "" : "s")} Dispatched!";
+        model.Emails.Clear(); // Clear staged recipients upon successful send
+
+        return View(model);
+    }
 }
 

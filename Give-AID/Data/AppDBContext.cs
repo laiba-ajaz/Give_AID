@@ -19,6 +19,8 @@ namespace Give_AID.Data
         public DbSet<ProgrammeInterest> ProgrammeInterests { get; set; }
         // Stores donor and public support inquiries raised in the Help Centre
         public DbSet<Query> Queries { get; set; }
+        // Stores friend invitations dispatched by registered members
+        public DbSet<Invitation> Invitations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

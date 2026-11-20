@@ -111,6 +111,36 @@ namespace Give_AID.Migrations
                     b.ToTable("Donations");
                 });
 
+            modelBuilder.Entity("Give_AID.Models.Invitation", b =>
+                {
+                    b.Property<int>("InvitationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvitationId"));
+
+                    b.Property<string>("FriendEmail")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("InvitationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Invitations");
+                });
+
             modelBuilder.Entity("Give_AID.Models.Programme", b =>
                 {
                     b.Property<int>("ProgrammeId")
@@ -339,6 +369,17 @@ namespace Give_AID.Migrations
                         .IsRequired();
 
                     b.Navigation("DonationCause");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Give_AID.Models.Invitation", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
