@@ -1,4 +1,4 @@
-﻿@model Give_AID.Models.InviteViewModel
+@model Give_AID.Models.InviteViewModel
 @{
     ViewData["Title"] = "Invite Friends";
 }
@@ -173,7 +173,7 @@ foreach (var err in modelState.Errors)
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
 <input class="w-full pl-10 pr-space-md py-space-sm bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="email-field" placeholder="colleague@@organization.org" type="email"/>
 </div>
-<button class="bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-lg font-label-lg text-label-lg transition-colors shrink-0 uppercase tracking-wide flex items-center gap-1 shadow-sm" id="add-email-btn" type="button">
+<button class="bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-lg font-label-lg text-label-lg transition-colors shrink-0 uppercase tracking-wide flex items-center gap-1 shadow-sm" id="add-email-btn" type="button" onclick="window.addRecipientEmail && window.addRecipientEmail()">
 <span class="material-symbols-outlined text-[18px]">add</span>
 <span>Add</span>
 </button>
