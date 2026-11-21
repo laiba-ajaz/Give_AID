@@ -55,5 +55,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Seed default administrative data on startup if not present
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    await DbSeeder.SeedAsync(context);
+}
 
 app.Run();
