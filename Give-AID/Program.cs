@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Give_AID.Data;
 using Give_AID.Services;
+using Give_AID.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Register Email sender service (fake console logger for development, easily replaceable with SMTP)
-builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
+// Configure Brevo SMTP email settings and register BrevoEmailSender service
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddScoped<IEmailSender, BrevoEmailSender>();
 
 
 builder.Services.AddDbContext<AppDBContext>(options =>
