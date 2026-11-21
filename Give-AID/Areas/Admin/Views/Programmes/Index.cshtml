@@ -3,192 +3,349 @@
     ViewData["Title"] = "Programmes";
     var ngos = ViewBag.NGOs as List<NGO> ?? new List<NGO>();
     var causes = ViewBag.Causes as List<DonationCauses> ?? new List<DonationCauses>();
+    var canAdd = ngos.Count > 0 && causes.Count > 0;
+    var today = DateTime.Today;
 }
 
-<h1>Programmes</h1>
-
-@if (TempData["Success"] != null) { <p class="alert-success">@TempData["Success"]</p> }
-@if (TempData["Error"] != null)   { <p class="alert-error">@TempData["Error"]</p> }
-
-@if (ngos.Count == 0 || causes.Count == 0)
-{
-    <p class="alert-error">For adding the programme , one donation Cause and one NGO is necessary.</p>
-}
-else
-{
-    <button type="button" onclick="document.getElementById('addProgrammeModal').showModal()">
-        + Add Programme
-    </button>
-}
-
-<table>
-    <thead>
-        <tr><th>ID</th><th>Title</th><th>NGO</th><th>Cause</th><th>Location</th><th>Dates</th><th>Active</th><th>Actions</th></tr>
-    </thead>
-    <tbody>
-    @foreach (var p in Model)
+<div class="page-header">
+    <div>
+        <h1>Programmes</h1>
+        <p>Events and activities run by NGOs — education, health care, specially-abled children and more.</p>
+    </div>
+    @if (canAdd)
     {
-        <tr>
-            <td>@p.ProgrammeId</td>
-            <td>@p.Title</td>
-            <td>@p.NGO?.NGOName</td>
-            <td>@p.Cause?.CauseName</td>
-            <td>@p.Location</td>
-            <td>
-                @p.StartDate.ToString("dd MMM yyyy")
-                @if (p.EndDate != null) { <text> – @p.EndDate.Value.ToString("dd MMM yyyy")</text> }
-            </td>
-            <td>
-                <form asp-action="ToggleActive" asp-route-id="@p.ProgrammeId" method="post" class="toggle-form">
-                    <label class="switch" title="@(p.isActive ? "Active — click to deactivate" : "Inactive — click to activate")">
-                        <input type="checkbox" @(p.isActive ? "checked" : "") onchange="this.form.submit()" />
-                        <span class="slider"></span>
-                    </label>
-                </form>
-            </td>
-            <td class="actions">
-                <button type="button" class="btn-edit"
-                        data-id="@p.ProgrammeId"
-                        data-title="@p.Title"
-                        data-description="@p.Description"
-                        data-image="@p.ImagePath"
-                        data-location="@p.Location"
-                        data-start="@p.StartDate.ToString("yyyy-MM-dd")"
-                        data-end="@(p.EndDate?.ToString("yyyy-MM-dd"))"
-                        data-ngo="@p.NGOID"
-                        data-cause="@p.DonationCausesID"
-                        data-active="@(p.isActive ? "true" : "false")"
-                        onclick="openEditModal(this)">
-                    Edit
-                </button>
-
-                <form asp-action="DltProgramme" asp-route-id="@p.ProgrammeId" method="post"
-                      data-name="@p.Title"
-                      onsubmit="return confirm('Delete &quot;' + this.dataset.name + '&quot;? This cannot be undone.');">
-                    <button type="submit" class="btn-delete">Delete</button>
-                </form>
-            </td>
-        </tr>
+        <button type="button" class="btn btn-primary" onclick="openCreate()">
+            <span class="material-symbols-outlined">add</span> Add programme
+        </button>
     }
+</div>
+
+@if (!canAdd)
+{
+    <div class="alert alert-error" role="alert">
+        <span class="material-symbols-outlined icon-fill">info</span>
+        <span>
+            To add a programme you first need
+            @if (ngos.Count == 0) { <a asp-controller="NGO" asp-action="Index">an active NGO</a> }
+            @if (ngos.Count == 0 && causes.Count == 0) { <text> and </text> }
+            @if (causes.Count == 0) { <a asp-controller="DonationCauses" asp-action="Index">an active donation cause</a> }.
+        </span>
+    </div>
+}
+
+<section class="card">
+    <div class="toolbar">
+        <div class="search">
+            <span class="material-symbols-outlined">search</span>
+            <input class="input" type="search" placeholder="Search title, NGO, cause, location…" aria-label="Search programmes"
+                   oninput="filterRows()" id="searchBox" />
+        </div>
+        <select class="select" id="timeFilter" aria-label="Filter by date" onchange="filterRows()">
+            <option value="">All dates</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="running">Running now</option>
+            <option value="past">Completed</option>
+        </select>
+        <span class="toolbar-count">@Model.Count programme@(Model.Count == 1 ? "" : "s")</span>
+    </div>
+
     @if (Model.Count == 0)
     {
-        <tr><td colspan="8">No programmes added yet.</td></tr>
-    }
-    </tbody>
-</table>
-
-<!-- ===== Add Programme Modal ===== -->
-<dialog id="addProgrammeModal">
-    <form asp-action="AddProgramme" method="post">
-        <h2>Add Programme</h2>
-
-        <label>Title</label>
-        <input name="Title" maxlength="100" required />
-
-        <label>Description</label>
-        <textarea name="Description" maxlength="500" required></textarea>
-
-        <label>NGO</label>
-        <select name="NGOID" required>
-            <option value="">-- Select NGO --</option>
-            @foreach (var n in ngos) { <option value="@n.NGOID">@n.NGOName</option> }
-        </select>
-
-        <label>Donation Cause</label>
-        <select name="DonationCausesID" required>
-            <option value="">-- Select Cause --</option>
-            @foreach (var c in causes) { <option value="@c.DonationCausesID">@c.CauseName</option> }
-        </select>
-
-        <label>Location</label>
-        <input name="Location" maxlength="100" />
-
-        <label>Start Date</label>
-        <input type="date" name="StartDate" required />
-
-        <label>End Date</label>
-        <input type="date" name="EndDate" />
-
-        <label>Image Path</label>
-        <input name="ImagePath" />
-
-        <label><input type="checkbox" name="isActive" value="true" checked /> Active</label>
-
-        <div>
-            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
-            <button type="submit">Save</button>
+        <div class="empty">
+            <span class="material-symbols-outlined">event</span>
+            <h3>No programmes yet</h3>
+            <p>Programmes you add here are shown on the website's Programmes page.</p>
+            @if (canAdd)
+            {
+                <button type="button" class="btn btn-primary" onclick="openCreate()">
+                    <span class="material-symbols-outlined">add</span> Add programme
+                </button>
+            }
         </div>
-    </form>
-</dialog>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="col-id">#</th>
+                        <th>Programme</th>
+                        <th>NGO</th>
+                        <th>Cause</th>
+                        <th>Dates</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var p in Model)
+                {
+                    var end = p.EndDate ?? p.StartDate;
+                    var timing = p.StartDate > today ? "upcoming" : end < today ? "past" : "running";
+                    var timingLabel = timing == "upcoming" ? "Upcoming" : timing == "running" ? "Running" : "Completed";
+                    var timingClass = timing == "upcoming" ? "badge-teal" : timing == "running" ? "badge-green" : "badge-grey";
+                    <tr data-timing="@timing">
+                        <td class="col-id">@p.ProgrammeId</td>
+                        <td>
+                            <div class="cell-main">
+                                @if (!string.IsNullOrEmpty(p.ImagePath))
+                                {
+                                    <img src="@p.ImagePath" alt="" class="thumb" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="thumb-empty"><span class="material-symbols-outlined">image</span></span>
+                                }
+                                <div>
+                                    <div class="cell-title">@p.Title</div>
+                                    @if (!string.IsNullOrEmpty(p.Location))
+                                    {
+                                        <div class="cell-sub">
+                                            <span class="material-symbols-outlined" style="font-size:14px">location_on</span> @p.Location
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td>@(p.NGO?.NGOName ?? "—")</td>
+                        <td><span class="badge plain badge-coral">@(p.Cause?.CauseName ?? "—")</span></td>
+                        <td class="nowrap">
+                            <div>@p.StartDate.ToString("dd MMM yyyy")</div>
+                            @if (p.EndDate != null && p.EndDate.Value.Date != p.StartDate.Date)
+                            {
+                                <div class="cell-sub">to @p.EndDate.Value.ToString("dd MMM yyyy")</div>
+                            }
+                            <span class="badge @timingClass" style="margin-top:4px">@timingLabel</span>
+                        </td>
+                        <td>
+                            <form asp-action="ToggleActive" asp-route-id="@p.ProgrammeId" method="post" class="toggle-form">
+                                <label class="switch" title="@(p.isActive ? "Click to deactivate" : "Click to activate")">
+                                    <input type="checkbox" @(p.isActive ? "checked" : "") onchange="this.form.submit()"
+                                           aria-label="Active: @p.Title" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-text @(p.isActive ? "on" : "")">@(p.isActive ? "Active" : "Hidden")</span>
+                            </form>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button type="button" class="icon-btn edit" title="Edit" aria-label="Edit @p.Title"
+                                        data-id="@p.ProgrammeId"
+                                        data-title="@p.Title"
+                                        data-description="@p.Description"
+                                        data-image="@p.ImagePath"
+                                        data-location="@p.Location"
+                                        data-start="@p.StartDate.ToString("yyyy-MM-dd")"
+                                        data-end="@(p.EndDate?.ToString("yyyy-MM-dd"))"
+                                        data-ngo="@p.NGOID"
+                                        data-ngo-name="@p.NGO?.NGOName"
+                                        data-cause="@p.DonationCausesID"
+                                        data-cause-name="@p.Cause?.CauseName"
+                                        data-active="@(p.isActive ? "true" : "false")"
+                                        onclick="openEdit(this)">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <form asp-action="DltProgramme" asp-route-id="@p.ProgrammeId" method="post"
+                                      data-confirm="Delete the programme &quot;@p.Title&quot;? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete @p.Title">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
 
-<!-- ===== Edit Programme Modal ===== -->
-<dialog id="editProgrammeModal">
-    <form asp-action="EditProgramme" method="post">
-        <h2>Edit Programme</h2>
+<!-- ===== Add / Edit Programme Modal ===== -->
+<dialog id="programmeModal" class="modal" aria-labelledby="programmeModalTitle" style="width:min(720px, calc(100vw - 32px))">
+    <form method="post" enctype="multipart/form-data" id="programmeForm"
+          data-add-url="@Url.Action("AddProgramme")" data-edit-url="@Url.Action("EditProgramme")">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ProgrammeId" id="fId" value="0" />
 
-        <input type="hidden" name="ProgrammeId" id="editId" />
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined" id="modalIcon">add</span></span>
+            <div>
+                <h2 id="programmeModalTitle">Add programme</h2>
+                <p id="modalSub">Shown on the website's Programmes page.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
 
-        <label>Title</label>
-        <input name="Title" id="editTitle" maxlength="100" required />
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="section-label">Details</div>
 
-        <label>Description</label>
-        <textarea name="Description" id="editDescription" maxlength="500" required></textarea>
+                <div class="field full">
+                    <label for="fTitle">Title <span class="req">*</span></label>
+                    <input id="fTitle" name="Title" maxlength="100" required placeholder="e.g. Free Eye Camp for Children" />
+                </div>
 
-        <label>NGO</label>
-        <select name="NGOID" id="editNgo" required>
-            @foreach (var n in ngos) { <option value="@n.NGOID">@n.NGOName</option> }
-        </select>
+                <div class="field full">
+                    <label for="fDescription">Description <span class="req">*</span></label>
+                    <textarea id="fDescription" name="Description" maxlength="500" required data-count="fDescCount"
+                              placeholder="What will happen, who it is for, and how people can help."></textarea>
+                    <div class="char-count" id="fDescCount">0 / 500</div>
+                </div>
 
-        <label>Donation Cause</label>
-        <select name="DonationCausesID" id="editCause" required>
-            @foreach (var c in causes) { <option value="@c.DonationCausesID">@c.CauseName</option> }
-        </select>
+                <div class="field">
+                    <label for="fNgo">NGO <span class="req">*</span></label>
+                    <select id="fNgo" name="NGOID" required>
+                        <option value="">Select NGO</option>
+                        @foreach (var n in ngos) { <option value="@n.NGOID">@n.NGOName</option> }
+                    </select>
+                </div>
 
-        <label>Location</label>
-        <input name="Location" id="editLocation" maxlength="100" />
+                <div class="field">
+                    <label for="fCause">Donation cause <span class="req">*</span></label>
+                    <select id="fCause" name="DonationCausesID" required>
+                        <option value="">Select cause</option>
+                        @foreach (var c in causes) { <option value="@c.DonationCausesID">@c.CauseName</option> }
+                    </select>
+                </div>
 
-        <label>Start Date</label>
-        <input type="date" name="StartDate" id="editStart" required />
+                <div class="section-label">When &amp; where</div>
 
-        <label>End Date</label>
-        <input type="date" name="EndDate" id="editEnd" />
+                <div class="field">
+                    <label for="fStart">Start date <span class="req">*</span></label>
+                    <input id="fStart" type="date" name="StartDate" required onchange="syncEndMin()" />
+                </div>
 
-        <label>Image Path</label>
-        <input name="ImagePath" id="editImage" />
+                <div class="field">
+                    <label for="fEnd">End date</label>
+                    <input id="fEnd" type="date" name="EndDate" />
+                    <span class="field-hint">Leave empty for a one-day programme</span>
+                </div>
 
-        <label><input type="checkbox" name="isActive" id="editActive" value="true" /> Active</label>
+                <div class="field full">
+                    <label for="fLocation">Location</label>
+                    <input id="fLocation" name="Location" maxlength="100" placeholder="e.g. Community Hall, Karachi" />
+                </div>
 
-        <div>
-            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
-            <button type="submit">Update</button>
+                <div class="section-label">Image &amp; visibility</div>
+
+                <div class="field full">
+                    <div class="uploader">
+                        <div class="uploader-preview">
+                            <img id="fPreview" alt="Image preview" hidden />
+                            <span class="material-symbols-outlined">add_photo_alternate</span>
+                        </div>
+                        <div class="uploader-info">
+                            <input type="file" name="ImageFile" id="fImageFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="fPreview" />
+                            <span class="field-hint" id="fImageHint">JPG, PNG, WEBP or GIF · max 2 MB</span>
+                            <label class="check danger" id="fRemoveWrap" hidden>
+                                <input type="checkbox" name="RemoveImage" id="fRemove" value="true" /> Remove current image
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <div class="active-row">
+                        <div>
+                            <b>Show on website</b>
+                            <span>Inactive programmes are hidden from visitors.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="isActive" id="fActive" value="true" checked aria-label="Show on website" />
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="isActive" value="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="fSubmit">
+                <span class="material-symbols-outlined">check</span> <span>Save programme</span>
+            </button>
         </div>
     </form>
 </dialog>
 
 @section Scripts {
+<script src="~/js/image-preview.js" asp-append-version="true"></script>
 <script>
-    // Agar programme ka NGO/Cause ab inactive hai to woh dropdown mein nahi hoga,
-    // is liye usay temporary option ke taur par add kar dete hain taake data change na ho.
+    const form = document.getElementById('programmeForm');
+
+    function setMode(isEdit) {
+        form.action = isEdit ? form.dataset.editUrl : form.dataset.addUrl;
+        document.getElementById('programmeModalTitle').textContent = isEdit ? 'Edit programme' : 'Add programme';
+        document.getElementById('modalIcon').textContent = isEdit ? 'edit' : 'add';
+        document.getElementById('modalSub').textContent = isEdit
+            ? 'Changes appear on the website straight away.'
+            : "Shown on the website's Programmes page.";
+        document.querySelector('#fSubmit span:last-child').textContent = isEdit ? 'Update programme' : 'Save programme';
+        document.getElementById('fImageHint').textContent = isEdit
+            ? 'Leave empty to keep the current image · max 2 MB'
+            : 'JPG, PNG, WEBP or GIF · max 2 MB';
+    }
+
+    // An inactive NGO/cause is not in the dropdown; add it temporarily so editing doesn't change it.
     function selectOrAdd(select, value, label) {
-        if (![...select.options].some(o => o.value === value)) {
-            select.add(new Option(label + ' (inactive)', value));
+        select.querySelectorAll('option[data-temp]').forEach(function (o) { o.remove(); });
+        if (value && ![...select.options].some(function (o) { return o.value === value; })) {
+            const opt = new Option((label || 'Unknown') + ' (inactive)', value);
+            opt.dataset.temp = '1';
+            select.add(opt);
         }
         select.value = value;
     }
 
-    function openEditModal(btn) {
-        const row = btn.closest('tr');
-        document.getElementById('editId').value = btn.dataset.id;
-        document.getElementById('editTitle').value = btn.dataset.title;
-        document.getElementById('editDescription').value = btn.dataset.description;
-        document.getElementById('editLocation').value = btn.dataset.location || '';
-        document.getElementById('editStart').value = btn.dataset.start;
-        document.getElementById('editEnd').value = btn.dataset.end || '';
-        document.getElementById('editImage').value = btn.dataset.image || '';
-        selectOrAdd(document.getElementById('editNgo'), btn.dataset.ngo, row.cells[2].textContent.trim());
-        selectOrAdd(document.getElementById('editCause'), btn.dataset.cause, row.cells[3].textContent.trim());
-        document.getElementById('editActive').checked = btn.dataset.active === 'true';
-        document.getElementById('editProgrammeModal').showModal();
+    function syncEndMin() {
+        document.getElementById('fEnd').min = document.getElementById('fStart').value;
+    }
+
+    function openCreate() {
+        setMode(false);
+        document.getElementById('fId').value = 0;
+        document.getElementById('fRemoveWrap').hidden = true;
+        openAddModal('programmeModal');
+        selectOrAdd(document.getElementById('fNgo'), '', '');
+        selectOrAdd(document.getElementById('fCause'), '', '');
+        document.getElementById('fActive').checked = true;
+        syncEndMin();
+    }
+
+    function openEdit(btn) {
+        form.reset();
+        setMode(true);
+        const d = btn.dataset;
+        document.getElementById('fId').value = d.id;
+        document.getElementById('fTitle').value = d.title;
+        document.getElementById('fDescription').value = d.description;
+        document.getElementById('fLocation').value = d.location || '';
+        document.getElementById('fStart').value = d.start;
+        document.getElementById('fEnd').value = d.end || '';
+        selectOrAdd(document.getElementById('fNgo'), d.ngo, d.ngoName);
+        selectOrAdd(document.getElementById('fCause'), d.cause, d.causeName);
+        document.getElementById('fActive').checked = d.active === 'true';
+        setCurrentImage('fPreview', 'fImageFile', d.image);
+        document.getElementById('fRemove').checked = false;
+        document.getElementById('fRemoveWrap').hidden = !d.image;
+        syncEndMin();
+        updateCharCounts(form);
+        document.getElementById('programmeModal').showModal();
+    }
+
+    function filterRows() {
+        const term = document.getElementById('searchBox').value.trim().toLowerCase();
+        const timing = document.getElementById('timeFilter').value;
+        document.querySelectorAll('#dataTable tbody tr').forEach(function (tr) {
+            const textOk = !term || tr.textContent.toLowerCase().includes(term);
+            const timeOk = !timing || tr.dataset.timing === timing;
+            tr.hidden = !(textOk && timeOk);
+        });
     }
 </script>
 }

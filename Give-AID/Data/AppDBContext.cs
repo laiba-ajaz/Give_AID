@@ -13,6 +13,7 @@ namespace Give_AID.Data
         public DbSet<DonationCauses> DonationCauses { get; set; }
         public DbSet<NGO> NGOs { get; set; }
         public DbSet<Programme> Programmes { get; set; }
+        public DbSet<Partner> Partners { get; set; }
         // Stores all financial contributions submitted by donors
         public DbSet<Donation> Donations { get; set; }
         // Stores volunteer and sponsor participation interest for welfare programmes
@@ -25,6 +26,11 @@ namespace Give_AID.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Ek email se sirf ek account
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
             // NGO ya Cause delete karne par uske programmes khud delete na hon
             modelBuilder.Entity<Programme>()

@@ -1,5 +1,118 @@
+@model MembersListViewModel
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "Registered Members";
+    var from = Model.TotalCount == 0 ? 0 : (Model.Page - 1) * Model.PageSize + 1;
+    var to = Math.Min(Model.Page * Model.PageSize, Model.TotalCount);
+    var filtered = !string.IsNullOrWhiteSpace(Model.Search) || !string.IsNullOrWhiteSpace(Model.Role);
 }
 
-<h1>Admin Users</h1>
+<div class="page-header">
+    <div>
+        <h1>Registered Members</h1>
+        <p>Everyone who has created an account on the Give-AID website.</p>
+    </div>
+</div>
+
+<section class="card">
+    <div class="toolbar">
+        <form method="get" asp-action="Index">
+            <div class="search">
+                <span class="material-symbols-outlined">search</span>
+                <input class="input" type="search" name="q" value="@Model.Search"
+                       placeholder="Search name, email, phone, city…" aria-label="Search members" />
+            </div>
+            <select class="select" name="role" aria-label="Filter by role" onchange="this.form.submit()">
+                <option value="">All roles</option>
+                @foreach (var r in Model.Roles)
+                {
+                    <option value="@r" selected="@(r == Model.Role)">@r</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-teal">Search</button>
+            @if (filtered)
+            {
+                <a class="btn btn-ghost" asp-action="Index">Clear</a>
+            }
+        </form>
+        <span class="toolbar-count">@Model.TotalCount member@(Model.TotalCount == 1 ? "" : "s")</span>
+    </div>
+
+    @if (Model.Members.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">@(filtered ? "search_off" : "group_off")</span>
+            <h3>@(filtered ? "No matching members" : "No members yet")</h3>
+            <p>@(filtered ? "Try a different name, email or city." : "Members will appear here once they register on the website.")</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="col-id">#</th>
+                        <th>Member</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th>Occupation</th>
+                        <th>Organisation</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var m in Model.Members)
+                {
+                    <tr>
+                        <td class="col-id">@m.Id</td>
+                        <td>
+                            <div class="cell-main">
+                                <span class="avatar">@(string.IsNullOrEmpty(m.FullName) ? "?" : m.FullName.Substring(0, 1).ToUpper())</span>
+                                <div>
+                                    <div class="cell-title">@m.FullName</div>
+                                    <a class="cell-sub" href="mailto:@m.Email">@m.Email</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="nowrap">@(m.PhoneNumber ?? "—")</td>
+                        <td>@(m.City ?? "—")</td>
+                        <td>@(m.Occupation ?? "—")</td>
+                        <td>@(m.Organisation ?? "—")</td>
+                        <td>
+                            <span class="badge plain @(m.Role == "Admin" ? "badge-coral" : "badge-teal")">@(m.Role ?? "Donor")</span>
+                        </td>
+                        <td class="nowrap muted">@m.CreatedAt.ToString("dd MMM yyyy")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pager">
+                <span>Showing @from–@to of @Model.TotalCount</span>
+                <div class="pager-links">
+                    @if (Model.Page > 1)
+                    {
+                        <a asp-action="Index" asp-route-q="@Model.Search" asp-route-role="@Model.Role" asp-route-page="@(Model.Page - 1)" aria-label="Previous page">‹</a>
+                    }
+                    else { <span class="disabled">‹</span> }
+
+                    @for (var i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
+                    {
+                        if (i == Model.Page) { <span class="current">@i</span> }
+                        else { <a asp-action="Index" asp-route-q="@Model.Search" asp-route-role="@Model.Role" asp-route-page="@i">@i</a> }
+                    }
+
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <a asp-action="Index" asp-route-q="@Model.Search" asp-route-role="@Model.Role" asp-route-page="@(Model.Page + 1)" aria-label="Next page">›</a>
+                    }
+                    else { <span class="disabled">›</span> }
+                </div>
+            </div>
+        }
+    }
+</section>

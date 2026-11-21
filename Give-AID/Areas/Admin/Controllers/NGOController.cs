@@ -1,18 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Give_AID.Data;
 using Give_AID.Models;
+using Give_AID.Services;
 
 namespace Give_AID.Areas.Admin.Controllers;
 
 [Area("Admin")]
 public class NGOController : Controller
 {
-   
-    private readonly AppDBContext _context;
+    private const string ImageFolder = "ngos";
 
-    public NGOController(AppDBContext context)
+    private readonly AppDBContext _context;
+    private readonly ImageService _images;
+
+    public NGOController(AppDBContext context, ImageService images)
     {
         _context = context;
+        _images = images;
     }
 
     public IActionResult Index()
@@ -24,12 +28,23 @@ public class NGOController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AddNgo(NGO nGO)
+    public async Task<IActionResult> AddNgo(NGO nGO, IFormFile? LogoFile)
     {
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Please fill all required fields.";
             return RedirectToAction("Index");
+        }
+
+        nGO.LogoPath = null;
+        if (LogoFile != null)
+        {
+            try { nGO.LogoPath = await _images.SaveAsync(LogoFile, ImageFolder); }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
         }
 
         _context.NGOs.Add(nGO);
@@ -38,17 +53,16 @@ public class NGOController : Controller
         return RedirectToAction("Index");
     }
 
-   
-     [HttpPost]
+
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(NGO nGO)
+    public async Task<IActionResult> Edit(NGO nGO, IFormFile? LogoFile, bool RemoveImage = false)
     {
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Please fill all required fields.";
             return RedirectToAction("Index");
         }
-
 
         var existing = _context.NGOs.Find(nGO.NGOID);
         if (existing == null)
@@ -57,16 +71,35 @@ public class NGOController : Controller
             return RedirectToAction("Index");
         }
 
+        if (LogoFile != null)
+        {
+            string newPath;
+            try { newPath = await _images.SaveAsync(LogoFile, ImageFolder); }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+            _images.Delete(existing.LogoPath);
+            existing.LogoPath = newPath;
+        }
+        else if (RemoveImage)
+        {
+            _images.Delete(existing.LogoPath);
+            existing.LogoPath = null;
+        }
+
         existing.NGOName = nGO.NGOName;
+        existing.Description = nGO.Description;
+        existing.Website = nGO.Website;
         existing.isActive = nGO.isActive;
 
         _context.SaveChanges();
         TempData["Success"] = "NGO updated successfully.";
         return RedirectToAction("Index");
-
     }
 
-   [HttpPost]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult DltNGO(int id)
     {
@@ -85,6 +118,7 @@ public class NGOController : Controller
 
         _context.NGOs.Remove(ngo);
         _context.SaveChanges();
+        _images.Delete(ngo.LogoPath);
         TempData["Success"] = "NGO deleted successfully.";
         return RedirectToAction("Index");
     }

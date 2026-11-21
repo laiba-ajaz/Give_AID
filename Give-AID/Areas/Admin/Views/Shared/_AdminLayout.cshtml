@@ -1,14 +1,148 @@
+@{
+    // Sidebar mein current page highlight karne ke liye
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    var manageItems = new[]
+    {
+        new { Text = "Dashboard",          Icon = "space_dashboard",    Controller = "Dashboard" },
+        new { Text = "Registered Members", Icon = "group",              Controller = "Users" },
+        new { Text = "Donation Causes",    Icon = "volunteer_activism", Controller = "DonationCauses" },
+        new { Text = "NGOs",               Icon = "diversity_3",        Controller = "NGO" },
+        new { Text = "Programmes",         Icon = "event",              Controller = "Programmes" },
+        new { Text = "Our Partners",       Icon = "handshake",          Controller = "Partners" },
+        new { Text = "Donations",          Icon = "payments",           Controller = "Donations" },
+    };
+
+    // Requirement document ke baqi features: abhi bane nahi, is liye disabled
+    var upcomingItems = new[]
+    {
+        new { Text = "Gallery",      Icon = "photo_library" },
+        new { Text = "About Us",     Icon = "info" },
+        new { Text = "Queries",      Icon = "forum" },
+        new { Text = "Contact Us",   Icon = "contact_mail" },
+    };
+
+    var userName = User.Identity?.IsAuthenticated == true ? User.Identity.Name ?? "Admin" : "Admin";
+    var initial = string.IsNullOrEmpty(userName) ? "A" : userName.Substring(0, 1).ToUpper();
+    var pageTitle = ViewData["Title"]?.ToString() ?? "Dashboard";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Give-AID Admin</title>
+    <title>@pageTitle | Give-AID Admin</title>
+    <link rel="icon" href="~/favicon.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 </head>
 <body>
-    @RenderBody()
-    <script src="~/js/admin.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<div class="admin-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <a class="brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+            <span class="brand-mark">
+                <span class="material-symbols-outlined icon-fill">volunteer_activism</span>
+            </span>
+            <span>
+                <span class="brand-name">Give<span>-AID</span></span>
+                <span class="brand-sub">Management</span>
+            </span>
+        </a>
+
+        <nav class="nav-group">
+            <div class="nav-label">Manage</div>
+            @foreach (var item in manageItems)
+            {
+                var active = string.Equals(item.Controller, controller, StringComparison.OrdinalIgnoreCase);
+                <a class="nav-link @(active ? "active" : "")"
+                   asp-area="Admin" asp-controller="@item.Controller" asp-action="Index"
+                   aria-current="@(active ? "page" : null)">
+                    <span class="material-symbols-outlined">@item.Icon</span>
+                    @item.Text
+                </a>
+            }
+        </nav>
+
+        <nav class="nav-group">
+            <div class="nav-label">Coming soon</div>
+            @foreach (var item in upcomingItems)
+            {
+                <span class="nav-link disabled" aria-disabled="true">
+                    <span class="material-symbols-outlined">@item.Icon</span>
+                    @item.Text
+                    <span class="nav-soon">Soon</span>
+                </span>
+            }
+        </nav>
+
+        <div class="sidebar-foot">
+            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" target="_blank">
+                <span class="material-symbols-outlined">open_in_new</span>
+                View website
+            </a>
+            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="nav-link">
+                    <span class="material-symbols-outlined">logout</span>
+                    Log out
+                </button>
+            </form>
+        </div>
+    </aside>
+    <div class="sidebar-backdrop" onclick="document.body.classList.remove('nav-open')"></div>
+
+    <!-- ===== MAIN ===== -->
+    <div class="admin-main">
+        <header class="topbar">
+            <button type="button" class="icon-btn menu-toggle" aria-label="Open menu"
+                    onclick="document.body.classList.toggle('nav-open')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="topbar-title">Admin &nbsp;/&nbsp; <b>@pageTitle</b></div>
+            <div class="topbar-spacer"></div>
+            <div class="user-chip">
+                <span class="avatar">@initial</span>
+                <span class="user-chip-text">
+                    <div class="user-chip-name">@userName</div>
+                    <div class="user-chip-role">Administrator</div>
+                </span>
+            </div>
+        </header>
+
+        <main class="content">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success" role="status">
+                    <span class="material-symbols-outlined icon-fill">check_circle</span>
+                    @TempData["Success"]
+                    <button type="button" class="icon-btn alert-close" aria-label="Dismiss" onclick="this.parentElement.remove()">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-error" role="alert">
+                    <span class="material-symbols-outlined icon-fill">error</span>
+                    @TempData["Error"]
+                    <button type="button" class="icon-btn alert-close" aria-label="Dismiss" onclick="this.parentElement.remove()">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+</div>
+
+<script src="~/js/admin.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

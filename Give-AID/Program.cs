@@ -16,6 +16,8 @@ builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<ImageService>();
+
 // Cookie-based login
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -43,6 +45,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Runtime par upload hone wali images (wwwroot/uploads) serve karne ke liye.
+// MapStaticAssets sirf build-time files serve karta hai.
+app.UseStaticFiles();
 app.MapStaticAssets();
 
 app.MapControllerRoute(

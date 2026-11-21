@@ -1,117 +1,228 @@
 @model List<DonationCauses>
-@{ ViewData["Title"] = "Donation Causes"; }
+@{
+    ViewData["Title"] = "Donation Causes";
+    var activeCount = Model.Count(c => c.isActive);
+}
 
-<h1>Donation Causes</h1>
+<div class="page-header">
+    <div>
+        <h1>Donation Causes</h1>
+        <p>The causes donors can choose from on the Donate page — e.g. Children, Education, Disabled, Women, Elderly.</p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="openCreate()">
+        <span class="material-symbols-outlined">add</span> Add cause
+    </button>
+</div>
 
-@if (TempData["Success"] != null) { <p class="alert-success">@TempData["Success"]</p> }
-@if (TempData["Error"] != null)   { <p class="alert-error">@TempData["Error"]</p> }
+<section class="card">
+    <div class="toolbar">
+        <div class="search">
+            <span class="material-symbols-outlined">search</span>
+            <input class="input" type="search" placeholder="Search causes…" aria-label="Search causes"
+                   oninput="filterRows(this.value)" />
+        </div>
+        <span class="toolbar-count">@Model.Count cause@(Model.Count == 1 ? "" : "s") · @activeCount active</span>
+    </div>
 
-<button type="button" onclick="document.getElementById('addCauseModal').showModal()">
-    + Add Cause
-</button>
-
-<table>
-    <thead>
-        <tr><th>ID</th><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr>
-    </thead>
-    <tbody>
-    @foreach (var c in Model)
-    {
-        <tr>
-            <td>@c.DonationCausesID</td>
-            <td>@c.CauseName</td>
-            <td>@c.CauseDescription</td>
-            <td>
-                <form asp-action="ToggleActive" asp-route-id="@c.DonationCausesID" method="post" class="toggle-form">
-                    <label class="switch" title="@(c.isActive ? "Active — click to deactivate" : "Inactive — click to activate")">
-                        <input type="checkbox" @(c.isActive ? "checked" : "") onchange="this.form.submit()" />
-                        <span class="slider"></span>
-                    </label>
-                </form>
-            </td>
-            <td class="actions">
-                <button type="button" class="btn-edit"
-                        data-id="@c.DonationCausesID"
-                        data-name="@c.CauseName"
-                        data-description="@c.CauseDescription"
-                        data-image="@c.imageURL"
-                        data-active="@(c.isActive ? "true" : "false")"
-                        onclick="openEditModal(this)">
-                    Edit
-                </button>
-
-                <form asp-action="DltCause" asp-route-id="@c.DonationCausesID" method="post"
-                      data-name="@c.CauseName"
-                      onsubmit="return confirm('Delete &quot;' + this.dataset.name + '&quot;? This cannot be undone.');">
-                    <button type="submit" class="btn-delete">Delete</button>
-                </form>
-            </td>
-        </tr>
-    }
     @if (Model.Count == 0)
     {
-        <tr><td colspan="5">No causes added yet.</td></tr>
-    }
-    </tbody>
-</table>
-
-<!-- ===== Add Cause Modal ===== -->
-<dialog id="addCauseModal">
-    <form asp-action="AddCause" method="post">
-        <h2>Add Cause</h2>
-
-        <label>Cause Name</label>
-        <input name="CauseName" maxlength="50" required />
-
-        <label>Description</label>
-        <textarea name="CauseDescription" maxlength="100" required></textarea>
-
-        <label>Image URL</label>
-        <input name="imageURL" />
-
-        <label><input type="checkbox" name="isActive" value="true" checked /> Active</label>
-
-        <div>
-            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
-            <button type="submit">Save</button>
+        <div class="empty">
+            <span class="material-symbols-outlined">volunteer_activism</span>
+            <h3>No causes yet</h3>
+            <p>Add your first cause so donors can choose where their money goes.</p>
+            <button type="button" class="btn btn-primary" onclick="openCreate()">
+                <span class="material-symbols-outlined">add</span> Add cause
+            </button>
         </div>
-    </form>
-</dialog>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="col-id">#</th>
+                        <th>Cause</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td class="col-id">@c.DonationCausesID</td>
+                        <td>
+                            <div class="cell-main">
+                                @if (!string.IsNullOrEmpty(c.imageURL))
+                                {
+                                    <img src="@c.imageURL" alt="" class="thumb" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="thumb-empty"><span class="material-symbols-outlined">image</span></span>
+                                }
+                                <div class="cell-title">@c.CauseName</div>
+                            </div>
+                        </td>
+                        <td><div class="clamp" title="@c.CauseDescription">@c.CauseDescription</div></td>
+                        <td>
+                            <form asp-action="ToggleActive" asp-route-id="@c.DonationCausesID" method="post" class="toggle-form">
+                                <label class="switch" title="@(c.isActive ? "Click to deactivate" : "Click to activate")">
+                                    <input type="checkbox" @(c.isActive ? "checked" : "") onchange="this.form.submit()"
+                                           aria-label="Active: @c.CauseName" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-text @(c.isActive ? "on" : "")">@(c.isActive ? "Active" : "Hidden")</span>
+                            </form>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button type="button" class="icon-btn edit" title="Edit" aria-label="Edit @c.CauseName"
+                                        data-id="@c.DonationCausesID"
+                                        data-name="@c.CauseName"
+                                        data-description="@c.CauseDescription"
+                                        data-image="@c.imageURL"
+                                        data-active="@(c.isActive ? "true" : "false")"
+                                        onclick="openEdit(this)">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <form asp-action="DltCause" asp-route-id="@c.DonationCausesID" method="post"
+                                      data-confirm="Delete the cause &quot;@c.CauseName&quot;? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete @c.CauseName">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
 
-<!-- ===== Edit Cause Modal ===== -->
-<dialog id="editCauseModal">
-    <form asp-action="EditCause" method="post">
-        <h2>Edit Cause</h2>
+<!-- ===== Add / Edit Cause Modal ===== -->
+<dialog id="causeModal" class="modal" aria-labelledby="causeModalTitle">
+    <form method="post" enctype="multipart/form-data" id="causeForm"
+          data-add-url="@Url.Action("AddCause")" data-edit-url="@Url.Action("EditCause")">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="DonationCausesID" id="fId" value="0" />
 
-        <input type="hidden" name="DonationCausesID" id="editId" />
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined" id="modalIcon">add</span></span>
+            <div>
+                <h2 id="causeModalTitle">Add cause</h2>
+                <p id="modalSub">Donors will see this on the Donate page.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
 
-        <label>Cause Name</label>
-        <input name="CauseName" id="editName" maxlength="50" required />
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="field full">
+                    <label for="fName">Cause name <span class="req">*</span></label>
+                    <input id="fName" name="CauseName" maxlength="50" required placeholder="e.g. Children Welfare" />
+                </div>
 
-        <label>Description</label>
-        <textarea name="CauseDescription" id="editDescription" maxlength="100" required></textarea>
+                <div class="field full">
+                    <label for="fDescription">Description <span class="req">*</span></label>
+                    <textarea id="fDescription" name="CauseDescription" maxlength="250" required data-count="fDescCount"
+                              placeholder="A short line explaining what donations to this cause are used for."></textarea>
+                    <div class="char-count" id="fDescCount">0 / 250</div>
+                </div>
 
-        <label>Image URL</label>
-        <input name="imageURL" id="editImage" />
+                <div class="field full">
+                    <span class="field-label">Cover image</span>
+                    <div class="uploader">
+                        <div class="uploader-preview">
+                            <img id="fPreview" alt="Image preview" hidden />
+                            <span class="material-symbols-outlined">add_photo_alternate</span>
+                        </div>
+                        <div class="uploader-info">
+                            <input type="file" name="ImageFile" id="fImageFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="fPreview" />
+                            <span class="field-hint" id="fImageHint">JPG, PNG, WEBP or GIF · max 2 MB</span>
+                            <label class="check danger" id="fRemoveWrap" hidden>
+                                <input type="checkbox" name="RemoveImage" id="fRemove" value="true" /> Remove current image
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-        <label><input type="checkbox" name="isActive" id="editActive" value="true" /> Active</label>
+                <div class="field full">
+                    <div class="active-row">
+                        <div>
+                            <b>Show on website</b>
+                            <span>Inactive causes are hidden from donors.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="isActive" id="fActive" value="true" checked aria-label="Show on website" />
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="isActive" value="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div>
-            <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
-            <button type="submit">Update</button>
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="fSubmit">
+                <span class="material-symbols-outlined">check</span> <span>Save cause</span>
+            </button>
         </div>
     </form>
 </dialog>
 
 @section Scripts {
+<script src="~/js/image-preview.js" asp-append-version="true"></script>
 <script>
-    function openEditModal(btn) {
-        document.getElementById('editId').value = btn.dataset.id;
-        document.getElementById('editName').value = btn.dataset.name;
-        document.getElementById('editDescription').value = btn.dataset.description;
-        document.getElementById('editImage').value = btn.dataset.image || '';
-        document.getElementById('editActive').checked = btn.dataset.active === 'true';
-        document.getElementById('editCauseModal').showModal();
+    const form = document.getElementById('causeForm');
+
+    function setMode(isEdit) {
+        form.action = isEdit ? form.dataset.editUrl : form.dataset.addUrl;
+        document.getElementById('causeModalTitle').textContent = isEdit ? 'Edit cause' : 'Add cause';
+        document.getElementById('modalIcon').textContent = isEdit ? 'edit' : 'add';
+        document.getElementById('modalSub').textContent = isEdit
+            ? 'Changes appear on the website straight away.'
+            : 'Donors will see this on the Donate page.';
+        document.querySelector('#fSubmit span:last-child').textContent = isEdit ? 'Update cause' : 'Save cause';
+        document.getElementById('fImageHint').textContent = isEdit
+            ? 'Leave empty to keep the current image · max 2 MB'
+            : 'JPG, PNG, WEBP or GIF · max 2 MB';
+    }
+
+    function openCreate() {
+        setMode(false);
+        document.getElementById('fId').value = 0;
+        document.getElementById('fRemoveWrap').hidden = true;
+        openAddModal('causeModal');
+        document.getElementById('fActive').checked = true;
+    }
+
+    function openEdit(btn) {
+        form.reset();
+        setMode(true);
+        document.getElementById('fId').value = btn.dataset.id;
+        document.getElementById('fName').value = btn.dataset.name;
+        document.getElementById('fDescription').value = btn.dataset.description;
+        document.getElementById('fActive').checked = btn.dataset.active === 'true';
+        setCurrentImage('fPreview', 'fImageFile', btn.dataset.image);
+        document.getElementById('fRemove').checked = false;
+        document.getElementById('fRemoveWrap').hidden = !btn.dataset.image;
+        updateCharCounts(form);
+        document.getElementById('causeModal').showModal();
+    }
+
+    function filterRows(term) {
+        term = term.trim().toLowerCase();
+        document.querySelectorAll('#dataTable tbody tr').forEach(function (tr) {
+            tr.hidden = term && !tr.textContent.toLowerCase().includes(term);
+        });
     }
 </script>
 }

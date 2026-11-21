@@ -1,0 +1,250 @@
+@model List<Partner>
+@{
+    ViewData["Title"] = "Our Partners";
+    var activeCount = Model.Count(p => p.IsActive);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Our Partners</h1>
+        <p>Companies that support Give-AID. Their logos are shown in the Our Partners section of the website.</p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="openCreate()">
+        <span class="material-symbols-outlined">add</span> Add partner
+    </button>
+</div>
+
+<section class="card">
+    <div class="toolbar">
+        <div class="search">
+            <span class="material-symbols-outlined">search</span>
+            <input class="input" type="search" placeholder="Search partners…" aria-label="Search partners"
+                   oninput="filterRows(this.value)" />
+        </div>
+        <span class="toolbar-count">@Model.Count partner@(Model.Count == 1 ? "" : "s") · @activeCount active</span>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">handshake</span>
+            <h3>No partners yet</h3>
+            <p>Add the companies that support Give-AID, with their logos.</p>
+            <button type="button" class="btn btn-primary" onclick="openCreate()">
+                <span class="material-symbols-outlined">add</span> Add partner
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="col-id">#</th>
+                        <th>Partner</th>
+                        <th>About</th>
+                        <th>Website</th>
+                        <th>Added</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td class="col-id">@p.PartnerId</td>
+                        <td>
+                            <div class="cell-main">
+                                @if (!string.IsNullOrEmpty(p.LogoPath))
+                                {
+                                    <img src="@p.LogoPath" alt="" class="thumb logo" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="thumb-empty"><span class="material-symbols-outlined">business</span></span>
+                                }
+                                <div class="cell-title">@p.PartnerName</div>
+                            </div>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(p.Description)) { <div class="clamp" title="@p.Description">@p.Description</div> }
+                            else { <span class="muted">—</span> }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(p.WebsiteUrl))
+                            {
+                                <a href="@p.WebsiteUrl" target="_blank" rel="noopener" class="small">
+                                    @p.WebsiteUrl.Replace("https://", "").Replace("http://", "").TrimEnd('/')
+                                </a>
+                            }
+                            else { <span class="muted">—</span> }
+                        </td>
+                        <td class="nowrap muted">@p.CreatedAt.ToString("dd MMM yyyy")</td>
+                        <td>
+                            <form asp-action="ToggleActive" asp-route-id="@p.PartnerId" method="post" class="toggle-form">
+                                <label class="switch" title="@(p.IsActive ? "Click to deactivate" : "Click to activate")">
+                                    <input type="checkbox" @(p.IsActive ? "checked" : "") onchange="this.form.submit()"
+                                           aria-label="Active: @p.PartnerName" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-text @(p.IsActive ? "on" : "")">@(p.IsActive ? "Active" : "Hidden")</span>
+                            </form>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button type="button" class="icon-btn edit" title="Edit" aria-label="Edit @p.PartnerName"
+                                        data-id="@p.PartnerId"
+                                        data-name="@p.PartnerName"
+                                        data-description="@p.Description"
+                                        data-website="@p.WebsiteUrl"
+                                        data-image="@p.LogoPath"
+                                        data-active="@(p.IsActive ? "true" : "false")"
+                                        onclick="openEdit(this)">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <form asp-action="DltPartner" asp-route-id="@p.PartnerId" method="post"
+                                      data-confirm="Delete the partner &quot;@p.PartnerName&quot;? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete @p.PartnerName">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
+
+<!-- ===== Add / Edit Partner Modal ===== -->
+<dialog id="partnerModal" class="modal" aria-labelledby="partnerModalTitle">
+    <form method="post" enctype="multipart/form-data" id="partnerForm"
+          data-add-url="@Url.Action("AddPartner")" data-edit-url="@Url.Action("Edit")">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="PartnerId" id="fId" value="0" />
+
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined" id="modalIcon">add</span></span>
+            <div>
+                <h2 id="partnerModalTitle">Add partner</h2>
+                <p id="modalSub">Shown in the Our Partners section of the website.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="fName">Company name <span class="req">*</span></label>
+                    <input id="fName" name="PartnerName" maxlength="100" required placeholder="e.g. Acme Corporation" />
+                </div>
+
+                <div class="field">
+                    <label for="fWebsite">Website</label>
+                    <input id="fWebsite" type="url" name="WebsiteUrl" maxlength="200" placeholder="https://example.com" />
+                </div>
+
+                <div class="field full">
+                    <label for="fDescription">About the partner</label>
+                    <textarea id="fDescription" name="Description" maxlength="250" data-count="fDescCount"
+                              placeholder="How this company supports Give-AID."></textarea>
+                    <div class="char-count" id="fDescCount">0 / 250</div>
+                </div>
+
+                <div class="field full">
+                    <span class="field-label">Logo</span>
+                    <div class="uploader logo">
+                        <div class="uploader-preview">
+                            <img id="fPreview" alt="Logo preview" hidden />
+                            <span class="material-symbols-outlined">add_photo_alternate</span>
+                        </div>
+                        <div class="uploader-info">
+                            <input type="file" name="LogoFile" id="fImageFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="fPreview" />
+                            <span class="field-hint" id="fImageHint">PNG with transparent background works best · max 2 MB</span>
+                            <label class="check danger" id="fRemoveWrap" hidden>
+                                <input type="checkbox" name="RemoveImage" id="fRemove" value="true" /> Remove current logo
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <div class="active-row">
+                        <div>
+                            <b>Show on website</b>
+                            <span>Inactive partners are hidden from the Our Partners section.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="IsActive" id="fActive" value="true" checked aria-label="Show on website" />
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="IsActive" value="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="fSubmit">
+                <span class="material-symbols-outlined">check</span> <span>Save partner</span>
+            </button>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+<script src="~/js/image-preview.js" asp-append-version="true"></script>
+<script>
+    const form = document.getElementById('partnerForm');
+
+    function setMode(isEdit) {
+        form.action = isEdit ? form.dataset.editUrl : form.dataset.addUrl;
+        document.getElementById('partnerModalTitle').textContent = isEdit ? 'Edit partner' : 'Add partner';
+        document.getElementById('modalIcon').textContent = isEdit ? 'edit' : 'add';
+        document.getElementById('modalSub').textContent = isEdit
+            ? 'Changes appear on the website straight away.'
+            : 'Shown in the Our Partners section of the website.';
+        document.querySelector('#fSubmit span:last-child').textContent = isEdit ? 'Update partner' : 'Save partner';
+        document.getElementById('fImageHint').textContent = isEdit
+            ? 'Leave empty to keep the current logo · max 2 MB'
+            : 'PNG with transparent background works best · max 2 MB';
+    }
+
+    function openCreate() {
+        setMode(false);
+        document.getElementById('fId').value = 0;
+        document.getElementById('fRemoveWrap').hidden = true;
+        openAddModal('partnerModal');
+        document.getElementById('fActive').checked = true;
+    }
+
+    function openEdit(btn) {
+        form.reset();
+        setMode(true);
+        document.getElementById('fId').value = btn.dataset.id;
+        document.getElementById('fName').value = btn.dataset.name;
+        document.getElementById('fWebsite').value = btn.dataset.website || '';
+        document.getElementById('fDescription').value = btn.dataset.description || '';
+        document.getElementById('fActive').checked = btn.dataset.active === 'true';
+        setCurrentImage('fPreview', 'fImageFile', btn.dataset.image);
+        document.getElementById('fRemove').checked = false;
+        document.getElementById('fRemoveWrap').hidden = !btn.dataset.image;
+        updateCharCounts(form);
+        document.getElementById('partnerModal').showModal();
+    }
+
+    function filterRows(term) {
+        term = term.trim().toLowerCase();
+        document.querySelectorAll('#dataTable tbody tr').forEach(function (tr) {
+            tr.hidden = term && !tr.textContent.toLowerCase().includes(term);
+        });
+    }
+</script>
+}
