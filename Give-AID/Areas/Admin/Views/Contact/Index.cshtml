@@ -1,0 +1,148 @@
+@model ContactInboxViewModel
+@{
+    ViewData["Title"] = "Contact Us";
+    var filtered = Model.Filter != "all" || !string.IsNullOrWhiteSpace(Model.Search);
+
+    var tabs = new[]
+    {
+        new { Key = "all",     Text = "All",           Count = Model.TotalCount },
+        new { Key = "unread",  Text = "Unread",        Count = Model.UnreadCount },
+        new { Key = "pending", Text = "Needs reply",   Count = Model.PendingCount },
+        new { Key = "replied", Text = "Replied",       Count = Model.TotalCount - Model.PendingCount },
+    };
+}
+
+<div class="page-header">
+    <div>
+        <h1>Contact Us</h1>
+        <p>Messages sent from the Contact Us page of the website.</p>
+    </div>
+    <a class="btn btn-ghost" asp-action="Details">
+        <span class="material-symbols-outlined">contact_phone</span> Edit contact details
+    </a>
+</div>
+
+<section class="stats">
+    <a class="card stat" asp-action="Index" asp-route-filter="all">
+        <span class="stat-icon teal"><span class="material-symbols-outlined">inbox</span></span>
+        <div>
+            <div class="stat-value">@Model.TotalCount</div>
+            <div class="stat-label">Total messages</div>
+        </div>
+    </a>
+    <a class="card stat" asp-action="Index" asp-route-filter="unread">
+        <span class="stat-icon coral"><span class="material-symbols-outlined">mark_email_unread</span></span>
+        <div>
+            <div class="stat-value">@Model.UnreadCount</div>
+            <div class="stat-label">Unread</div>
+        </div>
+    </a>
+    <a class="card stat" asp-action="Index" asp-route-filter="pending">
+        <span class="stat-icon sand"><span class="material-symbols-outlined">pending_actions</span></span>
+        <div>
+            <div class="stat-value">@Model.PendingCount</div>
+            <div class="stat-label">Waiting for a reply</div>
+        </div>
+    </a>
+</section>
+
+<section class="card">
+    <div class="toolbar">
+        <div class="filter-tabs" role="tablist">
+            @foreach (var t in tabs)
+            {
+                <a asp-action="Index" asp-route-filter="@t.Key" asp-route-q="@Model.Search"
+                   class="filter-tab @(Model.Filter == t.Key ? "active" : "")" aria-current="@(Model.Filter == t.Key ? "page" : null)">
+                    @t.Text <span>@t.Count</span>
+                </a>
+            }
+        </div>
+        <form method="get" asp-action="Index">
+            <input type="hidden" name="filter" value="@Model.Filter" />
+            <div class="search">
+                <span class="material-symbols-outlined">search</span>
+                <input class="input" type="search" name="q" value="@Model.Search"
+                       placeholder="Search name, email, subject…" aria-label="Search messages" />
+            </div>
+            <button type="submit" class="btn btn-teal">Search</button>
+            @if (filtered)
+            {
+                <a class="btn btn-ghost" asp-action="Index">Clear</a>
+            }
+        </form>
+    </div>
+
+    @if (Model.Messages.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">@(filtered ? "search_off" : "inbox")</span>
+            <h3>@(filtered ? "No matching messages" : "No messages yet")</h3>
+            <p>@(filtered ? "Try another filter or search term." : "Messages sent from the website's Contact Us page will appear here.")</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Received</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var m in Model.Messages)
+                {
+                    <tr class="@(m.IsRead ? "" : "row-unread")">
+                        <td>
+                            <div class="cell-main">
+                                <span class="avatar">@m.FullName.Substring(0, 1).ToUpper()</span>
+                                <div>
+                                    <div class="cell-title">@m.FullName</div>
+                                    <div class="cell-sub">@m.Email</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="cell-link" asp-action="Message" asp-route-id="@m.ContactMessageId">@m.Subject</a>
+                            <div class="clamp small muted">@m.Message</div>
+                        </td>
+                        <td class="nowrap muted">@m.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</td>
+                        <td>
+                            @if (m.IsReplied)
+                            {
+                                <span class="badge badge-green">Replied</span>
+                            }
+                            else if (!m.IsRead)
+                            {
+                                <span class="badge badge-coral">New</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-grey">Needs reply</span>
+                            }
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <a class="icon-btn edit" title="Open" aria-label="Open message from @m.FullName"
+                                   asp-action="Message" asp-route-id="@m.ContactMessageId">
+                                    <span class="material-symbols-outlined">open_in_full</span>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@m.ContactMessageId" method="post"
+                                      data-confirm="Delete the message from @m.FullName? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete message from @m.FullName">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

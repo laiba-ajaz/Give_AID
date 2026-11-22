@@ -1,6 +1,10 @@
-﻿@{
+﻿@inject Give_AID.Data.AppDBContext Db
+@{
     // Highlights the current page in the navbar.
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    // Footer ki contact details admin panel (Contact Us) se aati hain
+    var contact = Db.ContactInfos.FirstOrDefault() ?? new ContactInfo();
 
     var navItems = new[]
     {
@@ -9,7 +13,7 @@
         new { Text = "Programmes",     Url = Url.Action("Index", "Programmes"), Key = "Programmes" },
         new { Text = "Help Centre",    Url = Url.Action("Index", "HelpCentre"), Key = "HelpCentre" },
         new { Text = "Invite Friends", Url = Url.Action("Index", "Invite"),     Key = "Invite" },
-        new { Text = "About Us",       Url = (string?)(Url.Action("Index", "Home") + "#about-section"),    Key = "-" },
+        new { Text = "About Us",       Url = Url.Action("Index", "AboutUs"),    Key = "AboutUs" },
         new { Text = "Our Partners",   Url = (string?)(Url.Action("Index", "Home") + "#partners-section"), Key = "-" },
     };
 
@@ -98,25 +102,32 @@
                         <li><a asp-controller="Donate" asp-action="Index" class="hover:text-on-primary transition-colors">Donate to a Cause</a></li>
                         <li><a asp-controller="Programmes" asp-action="Index" class="hover:text-on-primary transition-colors">Browse Programmes</a></li>
                         <li><a asp-controller="Invite" asp-action="Index" class="hover:text-on-primary transition-colors">Invite a Friend</a></li>
+                        <li><a asp-controller="PhotoGallery" asp-action="Index" class="hover:text-on-primary transition-colors">Gallery</a></li>
+                        <li><a asp-controller="AboutUs" asp-action="Index" class="hover:text-on-primary transition-colors">About Us</a></li>
                         <li><a asp-controller="HelpCentre" asp-action="Index" class="hover:text-on-primary transition-colors">Help &amp; FAQs</a></li>
                     </ul>
                 </div>
 
                 <div class="lg:col-span-3 flex flex-col gap-space-sm">
-                    <h3 class="font-title-sm text-title-sm text-on-primary font-semibold tracking-normal uppercase">Contact Us</h3>
+                    <h3 class="font-title-sm text-title-sm text-on-primary font-semibold tracking-normal uppercase">
+                        <a asp-controller="ContactUs" asp-action="Index" class="hover:text-secondary-fixed transition-colors">Contact Us</a>
+                    </h3>
                     <div class="flex flex-col gap-space-xs">
                         <div class="flex items-start gap-space-xs">
                             <span class="material-symbols-outlined text-secondary-fixed text-[18px] mt-0.5">call</span>
-                            <span class="font-body-sm text-body-sm text-on-primary-container">+1 (800) 448-3243</span>
+                            <a href="tel:@(contact.Phone.Replace(" ", ""))" class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors">@contact.Phone</a>
                         </div>
                         <div class="flex items-start gap-space-xs">
                             <span class="material-symbols-outlined text-secondary-fixed text-[18px] mt-0.5">mail</span>
-                            <span class="font-body-sm text-body-sm text-on-primary-container">support@@give-aid.org</span>
+                            <a href="mailto:@contact.Email" class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors">@contact.Email</a>
                         </div>
                         <div class="flex items-start gap-space-xs">
                             <span class="material-symbols-outlined text-secondary-fixed text-[18px] mt-0.5">location_on</span>
-                            <span class="font-body-sm text-body-sm text-on-primary-container">Global HQ: 240 Welfare Way, Suite 400</span>
+                            <span class="font-body-sm text-body-sm text-on-primary-container">@contact.Address@(string.IsNullOrEmpty(contact.City) ? "" : ", " + contact.City)</span>
                         </div>
+                        <a asp-controller="ContactUs" asp-action="Index" class="inline-flex items-center gap-1 mt-1 font-label-md text-label-md text-secondary-fixed hover:text-on-primary uppercase tracking-wider font-bold transition-colors">
+                            Send us a message <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        </a>
                     </div>
                 </div>
 

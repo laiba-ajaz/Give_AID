@@ -65,14 +65,17 @@
     selectInGroup(causeButtons, btn);
     summaryHeadline.textContent = btn.dataset.cause;
     summaryCategory.textContent = btn.dataset.partner;
+    // Causes ab database se aate hain: un ki description aur photo bhi summary mein dikhao
+    if (btn.dataset.description) summaryImpact.textContent = btn.dataset.description;
+    if (btn.dataset.image && $('summaryImage')) $('summaryImage').src = btn.dataset.image;
     $('modalCause').textContent = btn.dataset.cause;
     fCause.value = btn.dataset.key;
   }
   causeButtons.forEach((btn) => btn.addEventListener('click', () => selectCause(btn)));
 
-  // Pre-select the cause from the URL, e.g. /Donate?cause=education (used by Home page cards).
+  // Pre-select the cause from the URL, e.g. /Donate?cause=3 (used by Home page cards; key = cause id).
   const urlCause = new URLSearchParams(location.search).get('cause');
-  const preset = urlCause && document.querySelector('.cause-btn[data-key="' + urlCause.toLowerCase() + '"]');
+  const preset = urlCause && document.querySelector('.cause-btn[data-key="' + CSS.escape(urlCause.toLowerCase()) + '"]');
   if (preset) selectCause(preset);
 
   // ---------- Amount ----------

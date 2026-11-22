@@ -1,25 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
+using Give_AID.Data;
 
 namespace Give_AID.Controllers;
 
 // UI-only controllers for the Stitch screens. Add POST actions / models here when wiring the backend.
 
 // GET: /Donate  — choose cause, amount, card payment
+// Causes admin panel (Donation Causes) se aate hain; payment abhi save nahi hoti.
 public class DonateController : Controller
 {
-    public IActionResult Index() => View();
-}
+    private readonly AppDBContext _context;
 
-// GET: /Programmes  — upcoming programmes & events + participation form
-public class ProgrammesController : Controller
-{
-    public IActionResult Index() => View();
-}
+    public DonateController(AppDBContext context)
+    {
+        _context = context;
+    }
 
-// GET: /HelpCentre  — FAQs, raise a query, contact us
-public class HelpCentreController : Controller
-{
-    public IActionResult Index() => View();
+    public IActionResult Index()
+    {
+        var causes = _context.DonationCauses
+            .Where(c => c.isActive)
+            .OrderBy(c => c.CauseName)
+            .ToList();
+        return View(causes);
+    }
 }
 
 // GET: /Invite  — invite friends by email

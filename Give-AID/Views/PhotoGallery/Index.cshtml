@@ -1,0 +1,178 @@
+@model List<GalleryImage>
+@{
+    ViewData["Title"] = "Gallery";
+    var categories = (List<string>)ViewBag.Categories;
+    var current = ViewBag.Category as string;
+    var total = (int)ViewBag.TotalCount;
+
+    const string pillActive = "px-space-md py-space-xs rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold whitespace-nowrap";
+    const string pillIdle = "px-space-md py-space-xs rounded-full font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-colors";
+}
+
+<div class="flex flex-col w-full">
+
+<!-- ===== PAGE INTRO ===== -->
+<section class="w-full bg-primary text-on-primary py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+    <nav class="flex items-center gap-space-xs text-on-primary-container font-label-md text-label-md mb-space-md">
+        <a class="hover:text-on-primary transition-colors" asp-controller="Home" asp-action="Index">Home</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-on-primary font-semibold">Gallery</span>
+    </nav>
+    <h1 class="font-headline-lg text-headline-lg font-normal max-w-3xl">Moments from the field</h1>
+    <p class="font-body-md text-body-md text-on-primary-container mt-space-xs max-w-2xl">
+        Photos from the programmes our partner NGOs have run – school drives, medical camps, food distribution and more.
+    </p>
+</div>
+</section>
+
+<section class="w-full bg-surface py-space-xl min-h-[50vh]">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+
+    @if (categories.Count > 0)
+    {
+        <div class="flex items-center gap-space-xs p-1 rounded-full bg-surface-container-low overflow-x-auto w-fit max-w-full mb-space-lg">
+            <a asp-controller="PhotoGallery" asp-action="Index" class="@(string.IsNullOrEmpty(current) ? pillActive : pillIdle)">All (@total)</a>
+            @foreach (var c in categories)
+            {
+                <a asp-controller="PhotoGallery" asp-action="Index" asp-route-category="@c" class="@(c == current ? pillActive : pillIdle)">@c</a>
+            }
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="bg-surface-container-low rounded-full p-space-xl text-center flex flex-col items-center gap-space-sm">
+            <span class="material-symbols-outlined text-secondary text-[44px]">photo_library</span>
+            <h2 class="font-title-lg text-title-lg text-primary">No photos here yet</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">Photos from our programmes will be added soon. Take a look at what's coming up meanwhile.</p>
+            <a asp-controller="Programmes" asp-action="Index" class="mt-space-xs bg-primary hover:bg-primary-container text-on-primary px-space-lg py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors">View programmes</a>
+        </div>
+    }
+    else
+    {
+        <!-- Har card ek hi size (4:3); photo card ke hisaab se crop hoti hai -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-space-md">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var p = Model[i];
+                var label = p.Category ?? p.Programme?.Title;
+                <button type="button" class="gallery-tile group relative block w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm bg-surface-container text-left focus:outline-none focus:ring-2 focus:ring-secondary"
+                        data-index="@i"
+                        data-src="@p.ImagePath"
+                        data-title="@p.Title"
+                        data-caption="@p.Caption"
+                        data-label="@label"
+                        data-programme="@(p.Programme == null ? "" : p.Programme.Title + (string.IsNullOrEmpty(p.Programme.Location) ? "" : " · " + p.Programme.Location))"
+                        data-date="@((p.TakenOn ?? p.CreatedAt).ToString("dd MMMM yyyy"))"
+                        aria-label="Open photo: @p.Title">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="@p.ImagePath" alt="@p.Title" loading="lazy" />
+                    <span class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/10 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></span>
+                    <span class="absolute bottom-3 left-3 right-3 text-on-primary flex flex-col">
+                        @if (!string.IsNullOrEmpty(label))
+                        {
+                            <span class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">@label</span>
+                        }
+                        <span class="font-title-sm text-title-sm leading-snug">@p.Title</span>
+                    </span>
+                </button>
+            }
+        </div>
+    }
+</div>
+</section>
+
+</div>
+
+<!-- ===== LIGHTBOX (photo bari karke dekhna) ===== -->
+@* Dialog poori screen leta hai aur andar wala box beech mein rehta hai (browser ki default jagah par bharosa nahi) *@
+<dialog id="lightbox" class="fixed inset-0 m-0 p-0 w-screen h-screen max-w-none max-h-none bg-primary/90 backdrop:bg-transparent" aria-label="Photo viewer">
+<div id="lbBackdrop" class="w-full h-full flex items-center justify-center p-space-md sm:p-space-xl">
+    <div class="relative w-full max-w-5xl max-h-full bg-surface-container-lowest rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+        <div class="relative bg-primary flex items-center justify-center">
+            <img id="lbImage" class="block w-full h-[45vh] sm:h-[60vh] max-h-[680px] object-contain" alt="" />
+            <button type="button" id="lbPrev" class="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-surface-container-lowest/90 text-primary hover:bg-surface-container-lowest flex items-center justify-center shadow" aria-label="Previous photo">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button type="button" id="lbNext" class="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-surface-container-lowest/90 text-primary hover:bg-surface-container-lowest flex items-center justify-center shadow" aria-label="Next photo">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+            <button type="button" id="lbClose" class="absolute right-3 top-3 w-10 h-10 rounded-full bg-surface-container-lowest/90 text-primary hover:bg-surface-container-lowest flex items-center justify-center shadow" aria-label="Close">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="px-space-lg py-space-lg flex flex-col sm:flex-row sm:items-start justify-between gap-space-md overflow-y-auto">
+            <div class="flex flex-col gap-space-xs min-w-0">
+                <span id="lbLabel" class="font-label-md text-label-md text-secondary uppercase tracking-wider font-bold"></span>
+                <h2 id="lbTitle" class="font-headline-sm text-headline-sm text-primary font-normal"></h2>
+                <p id="lbCaption" class="font-body-md text-body-md text-on-surface-variant"></p>
+                <p id="lbProgramme" class="hidden mt-space-xs inline-flex items-center gap-1 font-label-md text-label-md text-primary font-semibold">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">event</span>
+                    <span>Programme: <span id="lbProgrammeName"></span></span>
+                </p>
+            </div>
+            <div class="shrink-0 sm:text-right flex sm:flex-col gap-space-sm sm:gap-1">
+                <div id="lbDate" class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">calendar_month</span>
+                    <span id="lbDateText"></span>
+                </div>
+                <div id="lbCount" class="font-label-sm text-label-sm text-outline"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</dialog>
+
+@section Scripts {
+<script>
+    (function () {
+        const tiles = Array.from(document.querySelectorAll('.gallery-tile'));
+        if (tiles.length === 0) return;
+
+        const box = document.getElementById('lightbox');
+        const el = function (id) { return document.getElementById(id); };
+        let index = 0;
+
+        function show(i) {
+            index = (i + tiles.length) % tiles.length;
+            const t = tiles[index].dataset;
+            el('lbImage').src = t.src;
+            el('lbImage').alt = t.title;
+            el('lbTitle').textContent = t.title;
+            el('lbCaption').textContent = t.caption || '';
+            el('lbLabel').textContent = t.label || '';
+            el('lbProgrammeName').textContent = t.programme || '';
+            el('lbProgramme').classList.toggle('hidden', !t.programme);
+            el('lbDateText').textContent = t.date;
+            el('lbCount').textContent = (index + 1) + ' of ' + tiles.length;
+        }
+
+        tiles.forEach(function (tile, i) {
+            tile.addEventListener('click', function () {
+                show(i);
+                box.showModal();
+                document.body.style.overflow = 'hidden';   // peeche wala page scroll na ho
+            });
+        });
+        box.addEventListener('close', function () { document.body.style.overflow = ''; });
+
+        el('lbPrev').addEventListener('click', function () { show(index - 1); });
+        el('lbNext').addEventListener('click', function () { show(index + 1); });
+        el('lbClose').addEventListener('click', function () { box.close(); });
+
+        // Photo ke bahar (andhere hisse par) click se band
+        box.addEventListener('click', function (e) {
+            if (e.target === box || e.target === el('lbBackdrop')) box.close();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (!box.open) return;
+            if (e.key === 'ArrowLeft') show(index - 1);
+            if (e.key === 'ArrowRight') show(index + 1);
+        });
+
+        // Ek hi photo ho to aage/peeche ke buttons ki zaroorat nahi
+        if (tiles.length === 1) { el('lbPrev').hidden = true; el('lbNext').hidden = true; }
+    })();
+</script>
+}

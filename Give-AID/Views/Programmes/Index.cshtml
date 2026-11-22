@@ -1,5 +1,31 @@
-﻿@{
+﻿@model List<Programme>
+@{
     ViewData["Title"] = "Programmes & Events";
+
+    var today = DateTime.Today;
+    var selected = ViewBag.Selected as Programme;
+    var ngoCount = ViewBag.NgoCount as int? ?? 0;
+    var upcomingCount = Model.Count(p => !Give_AID.Controllers.ProgrammesController.IsFinished(p, today));
+
+    // Filter chips: jin causes ke programmes maujood hain
+    var causeChips = Model.Where(p => p.Cause != null)
+        .GroupBy(p => p.DonationCausesID)
+        .Select(g => new { Key = "c" + g.Key, Name = g.First().Cause!.CauseName, Count = g.Count() })
+        .OrderBy(c => c.Name)
+        .ToList();
+}
+
+@functions {
+    static string DateText(Programme p) =>
+        p.EndDate != null && p.EndDate.Value.Date != p.StartDate.Date
+            ? (p.StartDate.Year == p.EndDate.Value.Year
+                ? $"{p.StartDate:MMM dd} – {p.EndDate.Value:MMM dd, yyyy}"
+                : $"{p.StartDate:MMM dd, yyyy} – {p.EndDate.Value:MMM dd, yyyy}")
+            : p.StartDate.ToString("dddd, MMM dd, yyyy");
+
+    static string Thumb(Programme p) => string.IsNullOrEmpty(p.ImagePath) ? CauseLook.DefaultImage(p.Cause?.CauseName) : p.ImagePath;
+
+    static string Meta(Programme p) => DateText(p) + (string.IsNullOrEmpty(p.Location) ? "" : " • " + p.Location);
 }
 
 <div class="flex flex-col w-full">
@@ -18,81 +44,48 @@
 <span class="material-symbols-outlined text-[14px]">volunteer_activism</span>
             Grassroots Action Framework
           </div>
-<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Active Grassroots Programmes</h1>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Welfare Programmes &amp; Events</h1>
 <p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
-            Explore vetted on-the-ground welfare initiatives. Volunteer your time, mentor participants, or attend upcoming NGO community events backed by transparent stewardship.
+            Programmes run by our partner NGOs for education, health care and specially challenged people. Volunteer your time or register your interest in an upcoming event.
           </p>
 </div>
-<!-- Live metrics bar -->
+<!-- Live metrics bar (database se) -->
 <div class="flex items-center gap-space-md sm:gap-space-lg bg-surface-container-lowest p-space-md rounded-xl shadow-sm shrink-0 self-start max-w-full">
 <div class="flex flex-col">
-<span class="font-headline-sm text-headline-sm text-primary font-semibold leading-none">38</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Active Projects</span>
+<span class="font-headline-sm text-headline-sm text-primary font-semibold leading-none">@upcomingCount</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Upcoming</span>
 </div>
 <div class="w-px h-8 bg-surface-container-high"></div>
 <div class="flex flex-col">
-<span class="font-headline-sm text-headline-sm text-secondary font-semibold leading-none">142</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Open Volunteer Roles</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-semibold leading-none">@Model.Count</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Total Programmes</span>
 </div>
 <div class="w-px h-8 bg-surface-container-high"></div>
 <div class="flex flex-col">
-<span class="font-headline-sm text-headline-sm text-primary font-semibold leading-none">100%</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Audited Compliance</span>
+<span class="font-headline-sm text-headline-sm text-primary font-semibold leading-none">@ngoCount</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Partner NGOs</span>
 </div>
 </div>
 </div>
-<!-- Search, Filters, and Sorting Controls -->
+<!-- Search & Filters -->
 <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-md">
-<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
-<!-- Main Search Field -->
-<div class="md:col-span-6 relative">
+<div class="relative">
 <span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-<input class="w-full pl-11 pr-space-md py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" id="programmeSearch" name="q" placeholder="Search by keyword, city, or NGO name..." type="search"/>
+<input class="w-full pl-11 pr-space-md py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" id="programmeSearch" name="q" placeholder="Search by programme, city or NGO name..." type="search"/>
 </div>
-<!-- Location Dropdown -->
-<div class="md:col-span-3 relative">
-<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">near_me</span>
-<select class="w-full appearance-none pl-11 pr-space-lg py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary cursor-pointer">
-<option selected="">All Locations / Nationwide</option>
-<option>Austin, TX (Southwest)</option>
-<option>Appalachian Region, KY</option>
-<option>Seattle, WA (Pacific Northwest)</option>
-<option>Chicago, IL (Midwest)</option>
-</select>
-<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
-</div>
-<!-- Sort Dropdown -->
-<div class="md:col-span-3 relative">
-<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">sort</span>
-<select class="w-full appearance-none pl-11 pr-space-lg py-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary cursor-pointer">
-<option selected="">Sort by: Nearest Date</option>
-<option>Sort by: Most Urgent Need</option>
-<option>Sort by: Volunteer Slots Needed</option>
-<option>Sort by: Alphabetical</option>
-</select>
-<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
-</div>
-</div>
-<!-- Filter Chips with active indicators -->
-<div class="flex flex-wrap items-center gap-space-xs pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs">
 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mr-space-xs">Category:</span>
 <button type="button" data-filter="all" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm">
 <span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>
-            All Programmes (38)
+            All Programmes (@Model.Count)
           </button>
-<button type="button" data-filter="education" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
-            Education (14)
+@foreach (var chip in causeChips)
+{
+<button type="button" data-filter="@chip.Key" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
+            @chip.Name (@chip.Count)
           </button>
-<button type="button" data-filter="health" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
-            Health Care (9)
-          </button>
-<button type="button" data-filter="special" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
-            Special Children (8)
-          </button>
-<button type="button" data-filter="women" class="filter-chip inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">
-            Women Empowerment (7)
-          </button>
-<div class="ml-auto hidden xl:flex items-center gap-space-xs text-outline font-label-sm text-label-sm">
+}
+<div class="ml-auto flex items-center gap-space-xs text-outline font-label-sm text-label-sm">
 <span class="material-symbols-outlined text-[16px]">tune</span>
 <button type="button" id="resetFilters" class="hover:text-primary">Reset filters</button>
 </div>
@@ -100,247 +93,114 @@
 </div>
 </div>
 </div>
-<!-- Primary Program Canvas: 2-Column Grid + Slide-in Drawer Container -->
+<!-- Programme cards + interest form -->
 <div class="w-full max-w-[1440px] mx-auto px-margin-mobile md:px-margin py-space-xl relative">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
-<!-- 2-Column Programme Cards Section (Span 7 when drawer is visible) -->
-<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<div class="@(Model.Count == 0 ? "lg:col-span-12" : "lg:col-span-7") flex flex-col gap-space-lg">
+@if (Model.Count == 0)
+{
+<div class="bg-surface-container-low rounded-xl p-space-xl text-center flex flex-col items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[44px]">event_busy</span>
+<h2 class="font-title-lg text-title-lg text-primary">No programmes yet</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">New programmes from our partner NGOs will be listed here. Meanwhile you can support a cause directly.</p>
+<a href="~/Donate" class="mt-space-xs bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-lg font-label-lg text-label-lg uppercase tracking-wider transition-colors">Donate now</a>
+</div>
+}
+else
+{
 <div class="flex items-center justify-between">
-<span class="font-title-sm text-title-sm text-primary">Displaying 4 Featured Programmes in Texas &amp; Nationwide</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Live volunteer registrations open</span>
+<span class="font-title-sm text-title-sm text-primary">@upcomingCount upcoming · @(Model.Count - upcomingCount) completed</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Choose a programme to register your interest</span>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
-<!-- Card 1 (Selected State) -->
-<div data-id="1" data-category="education" data-meta="Nov 15, 2025 • Austin, TX" data-thumb="/images/programmes-27.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-md p-space-md flex flex-col justify-between group transition-all duration-300 relative ring-2 ring-secondary/30">
-<!-- Active indicator ribbon -->
+@foreach (var p in Model)
+{
+    var isSelected = selected != null && selected.ProgrammeId == p.ProgrammeId;
+    var finished = Give_AID.Controllers.ProgrammesController.IsFinished(p, today);
+<div data-id="@p.ProgrammeId" data-category="@(p.Cause == null ? "" : "c" + p.DonationCausesID)" data-meta="@Meta(p)" data-thumb="@Thumb(p)"
+     class="programme-card bg-surface-container-lowest rounded-xl @(isSelected ? "shadow-md ring-2 ring-secondary/30 relative" : "shadow-sm hover:shadow-md") p-space-md flex flex-col justify-between group transition-all duration-300">
+@if (isSelected)
+{
 <div id="selectedRibbon" class="absolute -top-3 left-space-md bg-secondary text-on-secondary px-space-sm py-0.5 rounded font-label-sm text-label-sm shadow-sm flex items-center gap-1">
 <span class="material-symbols-outlined text-[14px]">edit_note</span>
               Selected for Registration
             </div>
+}
 <div>
-<!-- Photo Container -->
-<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md mt-1">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Group of diverse middle school children in an educational STEM laboratory smiling and collaborating over robotic circuits, laptop coding screens, and science test equipment under bright classroom lighting with deep teal uniforms." src="/images/programmes-23.jpg"/>
+<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md mt-1 bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 @(finished ? "grayscale-[40%]" : "")" src="@Thumb(p)" alt="@p.Title" loading="lazy"/>
 <div class="absolute top-2 left-2 flex flex-wrap gap-1">
-<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
-                    Education &amp; STEM
+@if (p.Cause != null)
+{
+<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">@p.Cause.CauseName</span>
+}
+@if (finished)
+{
+<span class="bg-surface-container-lowest/90 text-on-surface-variant font-semibold px-space-xs py-0.5 rounded font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[13px]">task_alt</span> Completed
                   </span>
+}
+else if (p.StartDate <= today)
+{
 <span class="bg-secondary-container text-on-secondary-container font-semibold px-space-xs py-0.5 rounded font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-0.5 shadow-sm">
-<span class="material-symbols-outlined text-[13px]">alarm</span> Urgent Need
+<span class="material-symbols-outlined text-[13px]">play_circle</span> Happening now
                   </span>
+}
 </div>
 </div>
-<!-- Metadata & Title -->
-<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
-                Future Innovators: Rural STEM &amp; Coding Lab
-              </h2>
+<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">@p.Title</h2>
+@if (p.NGO != null)
+{
 <div class="flex items-center gap-space-xs mb-space-sm">
 <span class="material-symbols-outlined text-secondary text-[16px]">verified</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By OpenDoors Youth Foundation • 501(c)(3)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By @p.NGO.NGOName</span>
 </div>
+}
 <div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
 <div class="flex items-center gap-space-xs">
 <span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
-<span class="font-medium text-on-surface">Saturday, Nov 15, 2025</span>
-<span>• 9:00 AM - 2:00 PM</span>
+<span class="font-medium text-on-surface">@DateText(p)</span>
 </div>
+@if (!string.IsNullOrEmpty(p.Location))
+{
 <div class="flex items-center gap-space-xs">
 <span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
-<span>East Valley Community Center, Austin TX</span>
+<span>@p.Location</span>
 </div>
+}
 </div>
-<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
-                Providing 85 underprivileged middle-schoolers with laptop kits, robotics supplies, and hands-on coding mentors for a 6-month certified syllabus.
-              </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">@p.Description</p>
 </div>
 <div>
-<!-- Progress bar of spots left -->
-<div class="mb-space-md">
-<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
-<span class="text-on-surface font-semibold">18 of 25 Volunteer Mentors Registered</span>
-<span class="text-secondary font-bold">7 Slots Open</span>
-</div>
-<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-<div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: 72%;"></div>
-</div>
-</div>
-<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-secondary hover:bg-secondary-container text-on-secondary font-label-lg text-label-lg flex items-center justify-center gap-space-xs shadow-sm transition-all">
+@if (finished)
+{
+<a href="@Url.Action("Index", "PhotoGallery")" class="w-full py-space-sm px-space-md rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
+<span class="material-symbols-outlined text-[18px]">photo_library</span>
+<span>See photos in gallery</span>
+</a>
+<button type="button" class="interest-btn hidden" aria-hidden="true" tabindex="-1"></button>
+}
+else
+{
+<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded @(isSelected ? "bg-secondary hover:bg-secondary-container text-on-secondary" : "bg-primary hover:bg-primary-container text-on-primary") font-label-lg text-label-lg flex items-center justify-center gap-space-xs shadow-sm transition-all">
 <span>I'm interested</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
 </button>
+}
 </div>
 </div>
-<!-- Card 2 -->
-<div data-id="2" data-category="health" data-meta="Nov 20 – 22, 2025 • Appalachian Region, KY" data-thumb="/images/programmes-24.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-space-md flex flex-col justify-between group transition-all duration-300">
-<div>
-<!-- Photo Container -->
-<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Mobile health clinic truck parked in a rural hillside village with doctor and nurse examining an elderly patient's eyesight using professional vision charts and medical diagnostic tools." src="/images/programmes-24.jpg"/>
-<div class="absolute top-2 left-2">
-<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
-                    Health Care
-                  </span>
+}
 </div>
-</div>
-<!-- Metadata & Title -->
-<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
-                Mobile Vision &amp; Dental Clinic for Remote Elders
-              </h2>
-<div class="flex items-center gap-space-xs mb-space-sm">
-<span class="material-symbols-outlined text-outline text-[16px]">domain</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By CareWave Health Alliance</span>
-</div>
-<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
-<span class="font-medium text-on-surface">Nov 20 – Nov 22, 2025</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
-<span>Appalachian Rural Clinics, KY</span>
-</div>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
-                Deploying medical volunteer teams to conduct free cataract screening, eyeglasses distribution, and restorative dental treatments for seniors in remote hollows.
-              </p>
-</div>
-<div>
-<!-- Progress / Need summary -->
-<div class="mb-space-md">
-<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
-<span class="text-on-surface font-semibold">6 Specialists • 12 Aides Needed</span>
-<span class="text-primary font-bold">18 Open Positions</span>
-</div>
-<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 45%;"></div>
-</div>
-</div>
-<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
-<span>I'm interested</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</button>
-</div>
-</div>
-<!-- Card 3 -->
-<div data-id="3" data-category="special" data-meta="Dec 06, 2025 • Seattle, WA" data-thumb="/images/programmes-25.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-space-md flex flex-col justify-between group transition-all duration-300">
-<div>
-<!-- Photo Container -->
-<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Joyful child in an adaptive pediatric wheelchair smiling with an art mentor while holding paintbrushes in front of a colorful large canvas inside a light-filled conservatory pavilion." src="/images/programmes-25.jpg"/>
-<div class="absolute top-2 left-2">
-<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
-                    Special Children
-                  </span>
-</div>
-</div>
-<!-- Metadata & Title -->
-<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
-                Sensory Art &amp; Inclusive Play Day
-              </h2>
-<div class="flex items-center gap-space-xs mb-space-sm">
-<span class="material-symbols-outlined text-outline text-[16px]">domain</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By BrightWings Children's Trust</span>
-</div>
-<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
-<span class="font-medium text-on-surface">Dec 06, 2025</span>
-<span>• 10:00 AM - 3:30 PM</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
-<span>Botanical Pavilion, Seattle WA</span>
-</div>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
-                An adaptive recreational day for children with neurodivergence and mobility challenges featuring sensory arts, animal therapy, and family respite.
-              </p>
-</div>
-<div>
-<!-- Progress indicator -->
-<div class="mb-space-md">
-<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
-<span class="text-on-surface font-semibold">14 Buddy Volunteers Needed</span>
-<span class="text-primary font-bold">Registration Live</span>
-</div>
-<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 58%;"></div>
-</div>
-</div>
-<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
-<span>I'm interested</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</button>
-</div>
-</div>
-<!-- Card 4 -->
-<div data-id="4" data-category="women" data-meta="Dec 10, 2025 • Chicago, IL" data-thumb="/images/programmes-26.jpg" class="programme-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-space-md flex flex-col justify-between group transition-all duration-300">
-<div>
-<!-- Photo Container -->
-<div class="relative w-full h-48 rounded-lg overflow-hidden mb-space-md">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Determined woman learning precision textile tailoring on modern industrial sewing machines alongside a digital tablet displaying online marketplace listings in a creative workshop studio." src="/images/programmes-26.jpg"/>
-<div class="absolute top-2 left-2">
-<span class="bg-primary/90 backdrop-blur-sm text-on-primary px-space-xs py-0.5 rounded font-label-sm text-label-sm tracking-wide">
-                    Women Empowerment
-                  </span>
-</div>
-</div>
-<!-- Metadata & Title -->
-<h2 class="programme-title font-headline-sm text-headline-sm text-primary tracking-tight font-semibold mb-space-xs group-hover:text-secondary transition-colors">
-                Artisan Micro-Enterprise &amp; Digital Skills Guild
-              </h2>
-<div class="flex items-center gap-space-xs mb-space-sm">
-<span class="material-symbols-outlined text-outline text-[16px]">domain</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">By HerFuture Global</span>
-</div>
-<div class="bg-surface-container-low rounded-lg p-space-xs mb-space-sm flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
-<span class="font-medium text-on-surface">Dec 10, 2025</span>
-<span>• Cohort Kickoff</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
-<span>Downtown Maker Hub, Chicago IL</span>
-</div>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-space-md">
-                Equipping 40 women transitioning from shelters with textile equipment, digital store management skills, and seed grants.
-              </p>
-</div>
-<div>
-<!-- Progress indicator -->
-<div class="mb-space-md">
-<div class="flex justify-between items-center text-label-sm font-label-sm mb-1">
-<span class="text-on-surface font-semibold">4 Business Mentors Needed</span>
-<span class="text-primary font-bold">Final Call</span>
-</div>
-<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-<div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: 80%;"></div>
-</div>
-</div>
-<button type="button" class="interest-btn w-full py-space-sm px-space-md rounded bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-all">
-<span>I'm interested</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Pagination & Direct NGO submission note -->
 <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md">
 <div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
-<span>Showing <strong class="text-primary">1 – 4</strong> of 38 initiatives</span>
-</div>
-<div class="flex items-center gap-space-xs">
-<button type="button" class="px-space-md py-space-xs rounded bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Previous</button>
-<button type="button" class="px-space-md py-space-xs rounded bg-primary text-on-primary font-label-md text-label-md">1</button>
-<button type="button" class="px-space-md py-space-xs rounded bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">2</button>
-<button type="button" class="px-space-md py-space-xs rounded bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">3</button>
-<button type="button" class="px-space-md py-space-xs rounded bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Next</button>
+<span>Showing <strong class="text-primary" id="shownCount">1 – @Model.Count</strong> of @Model.Count programmes</span>
 </div>
 </div>
+}
 </div>
 <!-- Slide-in Modal Drawer / Interactive Registration Panel (Span 5) -->
+@if (selected != null)
+{
 <div class="lg:col-span-5 sticky top-24" id="interestPanel">
 <div class="bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden">
 <!-- Drawer Header -->
@@ -359,19 +219,19 @@
 <!-- Active Programme Selected Context Banner -->
 <div class="p-space-md bg-surface-container-low flex items-center gap-space-md">
 <div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
-<img id="selThumb" alt="" class="w-full h-full object-cover" data-alt="Close up of miniature electronics robotics kit assembled by students in rural coding workshop." src="/images/programmes-27.jpg"/>
+<img id="selThumb" alt="" class="w-full h-full object-cover" src="@Thumb(selected)"/>
 </div>
 <div class="flex flex-col min-w-0">
 <span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Active Selection</span>
-<span class="font-title-sm text-title-sm text-primary font-bold truncate" id="selTitle">Future Innovators: Rural STEM &amp; Coding Lab</span>
+<span class="font-title-sm text-title-sm text-primary font-bold truncate" id="selTitle">@selected.Title</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">event</span> <span id="selMeta">Nov 15, 2025 • Austin, TX</span>
+<span class="material-symbols-outlined text-[14px]">event</span> <span id="selMeta">@Meta(selected)</span>
               </span>
 </div>
 </div>
 <!-- Registration Form Body -->
 <form class="p-space-lg flex flex-col gap-space-md" id="interestForm" method="post" asp-controller="Programmes" asp-action="Interest" novalidate>
-<input type="hidden" name="ProgrammeId" id="selProgrammeId" value="1"/>
+<input type="hidden" name="ProgrammeId" id="selProgrammeId" value="@selected.ProgrammeId"/>
 <!-- Full Name -->
 <div class="flex flex-col gap-1">
 <label class="font-label-md text-label-md text-on-surface font-semibold" for="piName">Full Name *</label>
@@ -400,7 +260,7 @@
 <input type="radio" name="ParticipationRole" value="Volunteer" class="w-4 h-4 accent-primary shrink-0 cursor-pointer" checked/>
 <div class="flex flex-col">
 <span class="font-label-md text-label-md text-primary font-bold">Volunteer In-Person</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Be present at East Valley Community Center for hands-on mentoring.</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Help on the day at the programme location.</span>
 </div>
 </label>
 <!-- Option 2 -->
@@ -408,15 +268,15 @@
 <input type="radio" name="ParticipationRole" value="Sponsor" class="w-4 h-4 accent-primary shrink-0 cursor-pointer"/>
 <div class="flex flex-col">
 <span class="font-label-md text-label-md text-on-surface font-semibold">Sponsor Materials</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Fund 1 or more Arduino/Raspberry Pi learner kits ($65 each).</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Fund supplies such as books, medicines or learning kits.</span>
 </div>
 </label>
 <!-- Option 3 -->
 <label class="flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container-low has-[:checked]:bg-surface-container-low cursor-pointer transition-colors">
 <input type="radio" name="ParticipationRole" value="OnlineMentor" class="w-4 h-4 accent-primary shrink-0 cursor-pointer"/>
 <div class="flex flex-col">
-<span class="font-label-md text-label-md text-on-surface font-semibold">Online Mentor</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Review weekly code submissions remotely via GitHub classroom.</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Remote Support</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px] leading-tight">Help with planning, outreach or online tasks from home.</span>
 </div>
 </label>
 </div>
@@ -445,13 +305,14 @@
 <div class="flex flex-col">
 <span class="font-title-sm text-title-sm text-tertiary font-bold">Interest Sent Successfully!</span>
 <p class="font-body-sm text-body-sm text-on-surface-variant text-[12px] mt-0.5">
-                  You'll receive event logistics, background clearance links, and orientation materials from coordinator Sarah Lin within 24 hours.
+                  The programme coordinator will contact you by email with the next steps.
                 </p>
 </div>
 </div>
 </form>
 </div>
 </div>
+}
 </div>
 </div>
 <!-- Corporate / Alliance Welfare Banner -->
@@ -470,7 +331,7 @@
 </div>
 </div>
 <div class="flex flex-wrap items-center gap-space-sm shrink-0">
-<a href="~/HelpCentre#contact" class="px-space-lg py-space-sm rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors">
+<a href="~/contact-us?subject=Corporate%20partnership" class="px-space-lg py-space-sm rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors">
             Inquire for Enterprise
           </a>
 <button type="button" class="px-space-lg py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors">
@@ -483,5 +344,8 @@
 </div>
 
 @section Scripts {
+@if (Model.Count > 0)
+{
 <script src="~/js/programmes.js" asp-append-version="true"></script>
+}
 }

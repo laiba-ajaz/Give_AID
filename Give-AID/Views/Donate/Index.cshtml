@@ -1,5 +1,7 @@
-﻿@{
+﻿@model List<DonationCauses>
+@{
     ViewData["Title"] = "Donate";
+    var firstCause = Model.FirstOrDefault();
 }
 
 <div class="flex flex-col w-full">
@@ -37,75 +39,30 @@
 </div>
 <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline px-space-sm py-space-xs rounded bg-surface-container-low">Step 1 of 3</span>
 </div>
-<!-- Cause Selector Chips -->
+<!-- Cause Selector Chips (admin panel ke Donation Causes se) -->
+@if (Model.Count == 0)
+{
+<p class="font-body-sm text-body-sm text-on-surface-variant">No causes are open for donations right now. Please check back soon.</p>
+}
+else
+{
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-space-sm" id="causeSelector">
-<!-- Children (Selected Active) -->
-<button data-key="children" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-lowest shadow-sm text-left transition-all duration-150 bg-secondary/10" data-cause="Children Welfare &amp; Early Education" data-partner="St. Jude Hope Alliance" type="button">
+@for (int i = 0; i < Model.Count; i++)
+{
+    var cause = Model[i];
+    var first = i == 0;
+<button data-key="@cause.DonationCausesID" data-cause="@cause.CauseName" data-partner="Give-AID verified cause" data-description="@cause.CauseDescription" data-image="@(string.IsNullOrEmpty(cause.imageURL) ? CauseLook.DefaultImage(cause.CauseName) : cause.imageURL)"
+        class="cause-btn group flex flex-col items-start p-space-sm rounded-lg @(first ? "bg-surface-container-lowest shadow-sm bg-secondary/10" : "bg-surface-container-low hover:bg-surface-container") text-left transition-all duration-150" type="button">
 <div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">child_care</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="material-symbols-outlined @(first ? "text-secondary" : "text-on-surface-variant group-hover:text-primary") text-[22px]">@CauseLook.Icon(cause.CauseName)</span>
+<span class="material-symbols-outlined text-secondary text-[18px] check-icon @(first ? "" : "hidden")" style="font-variation-settings: 'FILL' 1;">check_circle</span>
 </div>
-<span class="font-title-sm text-title-sm text-primary font-semibold leading-tight">Children</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Education &amp; care</span>
+<span class="font-title-sm text-title-sm @(first ? "text-primary" : "text-on-surface") font-semibold leading-tight">@cause.CauseName</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 line-clamp-2">@cause.CauseDescription</span>
 </button>
-<!-- Education -->
-<button data-key="education" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Universal Literacy &amp; Classrooms" data-partner="Global Book Trust" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">menu_book</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+}
 </div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Education</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Schools &amp; tech</span>
-</button>
-<!-- Disabled Persons -->
-<button data-key="disabled" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Mobility &amp; Adaptive Welfare" data-partner="All-Ability Foundation" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">accessible</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Disabled</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Mobility &amp; aids</span>
-</button>
-<!-- Women -->
-<button data-key="women" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Women Empowerment &amp; Health" data-partner="Sisterhood Global Micro" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">female</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Women</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Empowerment</span>
-</button>
-<!-- Youth -->
-<button data-key="youth" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Youth Vocational Academy" data-partner="NextGen Skill Labs" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">psychology</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Youth</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Mentorship</span>
-</button>
-<!-- Elderly -->
-<button data-key="elderly" class="cause-btn group flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Elderly Nutrition &amp; Care" data-partner="Silver Years Sanctuary" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-[22px]">elderly</span>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Elderly</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Nutritional care</span>
-</button>
-<!-- Emergency Disaster Relief (Span 2) -->
-<button data-key="disaster" class="cause-btn group col-span-2 flex flex-col items-start p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-left transition-all duration-150" data-cause="Emergency Disaster Relief Taskforce" data-partner="UN Rapid Response Team" type="button">
-<div class="w-full flex items-center justify-between mb-space-xs">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">medical_services</span>
-<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-error-container text-on-error-container uppercase font-bold">Urgent</span>
-</div>
-<span class="material-symbols-outlined text-secondary text-[18px] check-icon hidden" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<span class="font-title-sm text-title-sm text-on-surface font-semibold leading-tight">Disaster Relief</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Immediate medical kits &amp; field shelter</span>
-</button>
-</div>
+}
 </section>
 <!-- STEP 2: Choose an Amount -->
 <section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
@@ -205,7 +162,7 @@
 </div>
 <!-- Donation form: field names are ready for model binding (DonationViewModel) -->
 <form class="flex flex-col gap-space-md" id="donationForm" method="post" asp-controller="Donate" asp-action="Index" novalidate>
-<input type="hidden" name="Cause" id="fCause" value="children"/>
+<input type="hidden" name="Cause" id="fCause" value="@firstCause?.DonationCausesID"/>
 <input type="hidden" name="Amount" id="fAmount" value="50"/>
 <input type="hidden" name="Frequency" id="fFrequency" value="OneTime"/>
 <input type="hidden" name="CoverFees" id="fCoverFees" value="true"/>
@@ -269,21 +226,21 @@
 <div class="bg-surface-container-lowest rounded-xl shadow-md p-space-lg flex flex-col gap-space-md relative overflow-hidden">
 <!-- Cause Image & Badge Header -->
 <div class="relative w-full h-44 rounded-lg overflow-hidden bg-primary-container">
-<img class="w-full h-full object-cover" data-alt="A warm, emotionally uplifting documentary portrait of happy children and a compassionate female teacher smiling together in an educational workshop filled with natural morning light and vibrant classroom supplies, shot on 35mm film with warm terracotta and sage tones." src="/images/donate-30.jpg"/>
+<img id="summaryImage" class="w-full h-full object-cover" alt="" src="@(firstCause == null ? "/images/donate-30.jpg" : string.IsNullOrEmpty(firstCause.imageURL) ? CauseLook.DefaultImage(firstCause.CauseName) : firstCause.imageURL)"/>
 <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
 <div class="absolute bottom-space-sm left-space-sm right-space-sm flex items-center justify-between text-on-primary">
 <div class="flex items-center gap-space-xs bg-surface/90 backdrop-blur-md px-space-sm py-1 rounded-full text-primary">
 <span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
 <span class="font-label-sm text-label-sm font-bold tracking-tight">Verified 501(c)(3)</span>
 </div>
-<span class="font-label-sm text-label-sm text-on-primary/90 font-medium">St. Jude Hope Alliance</span>
+<span class="font-label-sm text-label-sm text-on-primary/90 font-medium">Give-AID</span>
 </div>
 </div>
 <!-- Cause Title & Metadata -->
 <div class="flex flex-col gap-1">
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold" id="summaryCategory">Children Welfare &amp; Early Education</span>
-<h3 class="font-headline-sm text-headline-sm text-primary leading-tight font-medium" id="summaryHeadline">Primary Education Support &amp; Meal Kits</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant" id="summaryImpactStatement">Provides school books, geometry sets, and 2 full uniforms for 2 children.</p>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold" id="summaryCategory">Give-AID verified cause</span>
+<h3 class="font-headline-sm text-headline-sm text-primary leading-tight font-medium" id="summaryHeadline">@(firstCause?.CauseName ?? "Choose a cause")</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="summaryImpactStatement">@firstCause?.CauseDescription</p>
 </div>
 <!-- Corporate Match Callout Banner -->
 <div class="bg-secondary-fixed/50 rounded-lg p-space-sm flex items-start gap-space-sm">
@@ -373,7 +330,7 @@
 <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Contribution Confirmed</span>
 <h2 class="font-headline-md text-headline-md text-primary font-medium tracking-tight">Thank You<span id="modalDonorName"></span>! Your Gift is on its Way.</h2>
 <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-            Because of your <strong class="text-primary font-bold" id="modalAmount">$51.50 donation</strong>, 2 children will receive complete educational uniforms and essential textbooks this school semester.
+            Because of your <strong class="text-primary font-bold" id="modalAmount">$51.50 donation</strong>, our partner NGOs can keep this cause going for the people who need it most.
           </p>
 </div>
 <!-- Receipt Summary Box -->
@@ -384,7 +341,7 @@
 </div>
 <div class="flex items-center justify-between font-label-md text-label-md">
 <span class="text-on-surface-variant">Allocated Cause:</span>
-<span class="text-primary font-semibold" id="modalCause">Children Welfare &amp; Early Education</span>
+<span class="text-primary font-semibold" id="modalCause">@firstCause?.CauseName</span>
 </div>
 <div class="flex items-center justify-between font-label-md text-label-md">
 <span class="text-on-surface-variant">Matching Corporate Partner:</span>

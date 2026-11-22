@@ -1,0 +1,342 @@
+@model List<GalleryImage>
+@{
+    ViewData["Title"] = "Gallery";
+    var category = ViewBag.Category as string;
+    var categories = (List<string>)ViewBag.Categories;
+    var suggestions = (List<string>)ViewBag.Suggestions;
+    var programmes = (List<Programme>)ViewBag.Programmes;
+    var total = (int)ViewBag.TotalCount;
+    var shown = Model.Count(p => p.IsActive);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Gallery</h1>
+        <p>Photos of programmes and events. Visible photos appear on the website's Gallery page and the home page.</p>
+    </div>
+    <div class="row-actions">
+        <a class="btn btn-ghost" asp-area="" asp-controller="PhotoGallery" asp-action="Index" target="_blank">
+            <span class="material-symbols-outlined">open_in_new</span> View gallery
+        </a>
+        <button type="button" class="btn btn-primary" onclick="openAddModal('uploadModal')">
+            <span class="material-symbols-outlined">add_photo_alternate</span> Upload photos
+        </button>
+    </div>
+</div>
+
+<section class="card">
+    <div class="toolbar">
+        @if (categories.Count > 0)
+        {
+            <div class="filter-tabs">
+                <a asp-action="Index" class="filter-tab @(string.IsNullOrEmpty(category) ? "active" : "")">All <span>@total</span></a>
+                @foreach (var c in categories)
+                {
+                    <a asp-action="Index" asp-route-category="@c" class="filter-tab @(c == category ? "active" : "")">@c</a>
+                }
+            </div>
+        }
+        <span class="toolbar-count">@Model.Count photo@(Model.Count == 1 ? "" : "s") · @shown shown on website</span>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">photo_library</span>
+            <h3>@(string.IsNullOrEmpty(category) ? "No photos yet" : "No photos in this category")</h3>
+            <p>Upload photos from your programmes – school drives, medical camps, food distribution and more.</p>
+            <button type="button" class="btn btn-primary" onclick="openAddModal('uploadModal')">
+                <span class="material-symbols-outlined">add_photo_alternate</span> Upload photos
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="photo-grid">
+            @foreach (var p in Model)
+            {
+                <article class="photo-card @(p.IsActive ? "" : "is-hidden")">
+                    <div class="photo-thumb">
+                        <img src="@p.ImagePath" alt="@p.Title" loading="lazy" />
+                        @if (!p.IsActive)
+                        {
+                            <span class="badge badge-grey photo-flag">Hidden</span>
+                        }
+                    </div>
+                    <div class="photo-body">
+                        <div class="cell-title clamp-1" title="@p.Title">@p.Title</div>
+                        <div class="cell-sub clamp-1">
+                            @(p.Category ?? "No category")@(p.Programme != null ? " · " + p.Programme.Title : "")
+                        </div>
+                        <div class="cell-sub">@((p.TakenOn ?? p.CreatedAt).ToString("dd MMM yyyy"))</div>
+                    </div>
+                    <div class="photo-actions">
+                        <form asp-action="ToggleActive" asp-route-id="@p.GalleryImageId" method="post" class="toggle-form">
+                            <label class="switch" title="@(p.IsActive ? "Click to hide" : "Click to show")">
+                                <input type="checkbox" @(p.IsActive ? "checked" : "") onchange="this.form.submit()" aria-label="Shown: @p.Title" />
+                                <span class="slider"></span>
+                            </label>
+                        </form>
+                        <div class="row-actions">
+                            <button type="button" class="icon-btn edit" title="Edit" aria-label="Edit @p.Title"
+                                    data-id="@p.GalleryImageId"
+                                    data-title="@p.Title"
+                                    data-caption="@p.Caption"
+                                    data-category="@p.Category"
+                                    data-programme="@p.ProgrammeId"
+                                    data-taken="@(p.TakenOn?.ToString("yyyy-MM-dd"))"
+                                    data-image="@p.ImagePath"
+                                    data-active="@(p.IsActive ? "true" : "false")"
+                                    onclick="openEdit(this)">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+                            <form asp-action="Delete" asp-route-id="@p.GalleryImageId" method="post"
+                                  data-confirm="Delete the photo &quot;@p.Title&quot;? This cannot be undone.">
+                                <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete @p.Title">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>
+
+<datalist id="categoryList">
+    @foreach (var s in suggestions)
+    {
+        <option value="@s"></option>
+    }
+</datalist>
+
+<!-- ===== Upload modal ===== -->
+<dialog id="uploadModal" class="modal" aria-labelledby="uploadTitle">
+    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined">add_photo_alternate</span></span>
+            <div>
+                <h2 id="uploadTitle">Upload photos</h2>
+                <p>Select one or more photos. The details below are applied to all of them.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="field full">
+                    <span class="field-label">Photos <span class="req">*</span></span>
+                    <div class="uploader">
+                        <div class="uploader-info">
+                            <input type="file" name="ImageFiles" id="uFiles" multiple required accept=".jpg,.jpeg,.png,.webp,.gif" />
+                            <span class="field-hint" id="uHint">Up to 20 photos · JPG, PNG or WEBP · max 2 MB each</span>
+                        </div>
+                    </div>
+                    <div class="upload-previews" id="uPreviews"></div>
+                </div>
+
+                <div class="field full">
+                    <label for="uTitle">Title</label>
+                    <input id="uTitle" name="Title" maxlength="100" placeholder="Leave empty to use each file's name" />
+                </div>
+
+                <div class="field">
+                    <label for="uCategory">Category</label>
+                    <input id="uCategory" name="Category" maxlength="50" list="categoryList" placeholder="e.g. Education" />
+                </div>
+
+                <div class="field">
+                    <label for="uTaken">Date taken</label>
+                    <input id="uTaken" name="TakenOn" type="date" />
+                </div>
+
+                <div class="field full">
+                    <label for="uProgramme">Programme</label>
+                    <select id="uProgramme" name="ProgrammeId">
+                        <option value="">— General photo (no programme) —</option>
+                        @foreach (var pr in programmes)
+                        {
+                            <option value="@pr.ProgrammeId" data-cause="@pr.Cause?.CauseName" data-date="@pr.StartDate.ToString("yyyy-MM-dd")">@pr.Title (@pr.StartDate.ToString("dd MMM yyyy"))</option>
+                        }
+                    </select>
+                    @if (programmes.Count == 0)
+                    {
+                        <span class="field-hint">No programmes added yet. Add one under Programmes, then link photos from the Edit option.</span>
+                    }
+                    else
+                    {
+                        <span class="field-hint">Choosing a programme fills in the category and date for you.</span>
+                    }
+                </div>
+
+                <div class="field full">
+                    <label for="uCaption">Caption</label>
+                    <textarea id="uCaption" name="Caption" maxlength="250" data-count="uCaptionCount" placeholder="A short line about what is happening in the photo."></textarea>
+                    <div class="char-count" id="uCaptionCount">0 / 250</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+                <span class="material-symbols-outlined">upload</span> Upload
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<!-- ===== Edit modal ===== -->
+<dialog id="editModal" class="modal" aria-labelledby="editTitle">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" id="editForm">
+        <input type="hidden" name="GalleryImageId" id="eId" />
+
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined">edit</span></span>
+            <div>
+                <h2 id="editTitle">Edit photo</h2>
+                <p>Changes appear on the website straight away.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="field full">
+                    <span class="field-label">Photo</span>
+                    <div class="uploader">
+                        <div class="uploader-preview">
+                            <img id="ePreview" alt="Photo preview" hidden />
+                            <span class="material-symbols-outlined">image</span>
+                        </div>
+                        <div class="uploader-info">
+                            <input type="file" name="ImageFile" id="eFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="ePreview" />
+                            <span class="field-hint">Leave empty to keep the current photo · max 2 MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <label for="eTitleInput">Title <span class="req">*</span></label>
+                    <input id="eTitleInput" name="Title" maxlength="100" required />
+                </div>
+
+                <div class="field">
+                    <label for="eCategory">Category</label>
+                    <input id="eCategory" name="Category" maxlength="50" list="categoryList" />
+                </div>
+
+                <div class="field">
+                    <label for="eTaken">Date taken</label>
+                    <input id="eTaken" name="TakenOn" type="date" />
+                </div>
+
+                <div class="field full">
+                    <label for="eProgramme">Programme</label>
+                    <select id="eProgramme" name="ProgrammeId">
+                        <option value="">— General photo (no programme) —</option>
+                        @foreach (var pr in programmes)
+                        {
+                            <option value="@pr.ProgrammeId" data-cause="@pr.Cause?.CauseName" data-date="@pr.StartDate.ToString("yyyy-MM-dd")">@pr.Title (@pr.StartDate.ToString("dd MMM yyyy"))</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="field full">
+                    <label for="eCaption">Caption</label>
+                    <textarea id="eCaption" name="Caption" maxlength="250" data-count="eCaptionCount"></textarea>
+                    <div class="char-count" id="eCaptionCount">0 / 250</div>
+                </div>
+
+                <div class="field full">
+                    <div class="active-row">
+                        <div>
+                            <b>Show on website</b>
+                            <span>Hidden photos stay here but are not shown to visitors.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="IsActive" id="eActive" value="true" aria-label="Show on website" />
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="IsActive" value="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+                <span class="material-symbols-outlined">check</span> Update photo
+            </button>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+<script src="~/js/image-preview.js" asp-append-version="true"></script>
+<script>
+    // Upload: chuni hui photos ke chhote previews, aur 2 MB se bari photo par warning
+    document.getElementById('uFiles').addEventListener('change', function () {
+        const box = document.getElementById('uPreviews');
+        const hint = document.getElementById('uHint');
+        box.innerHTML = '';
+
+        const files = Array.from(this.files);
+        const tooBig = files.filter(function (f) { return f.size > 2 * 1024 * 1024; });
+
+        files.slice(0, 20).forEach(function (f) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(f);
+            img.alt = f.name;
+            img.title = f.name;
+            if (f.size > 2 * 1024 * 1024) img.className = 'too-big';
+            box.appendChild(img);
+        });
+
+        hint.textContent = files.length + ' photo' + (files.length === 1 ? '' : 's') + ' selected' +
+            (tooBig.length ? ' · ' + tooBig.length + ' larger than 2 MB will be skipped' : '') +
+            (files.length > 20 ? ' · only 20 can be uploaded at once' : '');
+    });
+
+    document.getElementById('uploadModal').addEventListener('close', function () {
+        document.getElementById('uPreviews').innerHTML = '';
+        document.getElementById('uHint').textContent = 'Up to 20 photos · JPG, PNG or WEBP · max 2 MB each';
+    });
+
+    // Programme chunne par us ke cause ka naam category mein, aur programme ki date "Date taken" mein
+    // (sirf tab jab admin ne woh field khud na bhari ho)
+    function linkProgramme(selectId, categoryId, dateId) {
+        document.getElementById(selectId).addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const category = document.getElementById(categoryId);
+            const date = document.getElementById(dateId);
+            if (!opt.value) return;
+            if (!category.value && opt.dataset.cause) category.value = opt.dataset.cause;
+            if (!date.value && opt.dataset.date) date.value = opt.dataset.date;
+        });
+    }
+    linkProgramme('uProgramme', 'uCategory', 'uTaken');
+    linkProgramme('eProgramme', 'eCategory', 'eTaken');
+
+    function openEdit(btn) {
+        const form = document.getElementById('editForm');
+        form.reset();
+        document.getElementById('eId').value = btn.dataset.id;
+        document.getElementById('eTitleInput').value = btn.dataset.title;
+        document.getElementById('eCaption').value = btn.dataset.caption || '';
+        document.getElementById('eCategory').value = btn.dataset.category || '';
+        document.getElementById('eProgramme').value = btn.dataset.programme || '';
+        document.getElementById('eTaken').value = btn.dataset.taken || '';
+        document.getElementById('eActive').checked = btn.dataset.active === 'true';
+        setCurrentImage('ePreview', 'eFile', btn.dataset.image);
+        updateCharCounts(form);
+        document.getElementById('editModal').showModal();
+    }
+</script>
+}

@@ -1,0 +1,81 @@
+@model ContactInfo
+@{
+    ViewData["Title"] = "Contact Details";
+}
+
+<div class="page-header">
+    <div>
+        <a class="back-link" asp-action="Index">
+            <span class="material-symbols-outlined">arrow_back</span> Contact messages
+        </a>
+        <h1>Contact details</h1>
+        <p>Shown on the Contact Us page, the Help Centre and the website footer.</p>
+    </div>
+    <a class="btn btn-ghost" asp-area="" asp-controller="ContactUs" asp-action="Index" target="_blank">
+        <span class="material-symbols-outlined">open_in_new</span> View on website
+    </a>
+</div>
+
+<section class="card">
+    <form asp-action="Details" method="post" class="card-body">
+        <div class="form-grid">
+            <div class="section-label">Address</div>
+
+            <div class="field">
+                <label asp-for="Address">Street address <span class="req">*</span></label>
+                <input asp-for="Address" class="input" maxlength="150" required />
+                <span asp-validation-for="Address" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="City">City &amp; country</label>
+                <input asp-for="City" class="input" maxlength="150" placeholder="e.g. Karachi, Pakistan" />
+            </div>
+
+            <div class="field full">
+                <label asp-for="MapLink">Google Maps link</label>
+                <input asp-for="MapLink" class="input" type="url" maxlength="300" placeholder="https://maps.google.com/?q=..." />
+                <span class="field-hint">Used for the "Get directions" button. Leave empty to hide it.</span>
+                <span asp-validation-for="MapLink" class="field-error"></span>
+            </div>
+
+            <div class="section-label">Phone &amp; email</div>
+
+            <div class="field">
+                <label asp-for="Phone">Phone number <span class="req">*</span></label>
+                <input asp-for="Phone" class="input" maxlength="30" required />
+                <span asp-validation-for="Phone" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Email">Main email <span class="req">*</span></label>
+                <input asp-for="Email" class="input" type="email" maxlength="100" required />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="SecondEmail">Second email</label>
+                <input asp-for="SecondEmail" class="input" type="email" maxlength="100" placeholder="e.g. partnerships@@give-aid.org" />
+                <span asp-validation-for="SecondEmail" class="field-error"></span>
+            </div>
+
+            <div class="section-label">Office hours</div>
+
+            <div class="field">
+                <label asp-for="OfficeHours">Weekdays</label>
+                <input asp-for="OfficeHours" class="input" maxlength="100" placeholder="Monday – Friday: 9:00 AM – 5:00 PM" />
+            </div>
+
+            <div class="field">
+                <label asp-for="WeekendHours">Weekend</label>
+                <input asp-for="WeekendHours" class="input" maxlength="100" placeholder="Saturday: 10:00 AM – 2:00 PM · Sunday: Closed" />
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <span class="material-symbols-outlined">check</span> Save details
+            </button>
+        </div>
+    </form>
+</section>

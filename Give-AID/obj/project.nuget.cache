@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "M/GfuM0FcHI=",
+  "dgSpecHash": "3Ktpe1ofkZA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\HP\\Give-AID\\Give-AID\\Give-AID.csproj",
+  "projectFilePath": "C:\\Users\\HP\\Give-AID\\Give_AID-master\\Give-AID\\Give-AID.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HP\\.nuget\\packages\\azure.core\\1.50.0\\azure.core.1.50.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\azure.identity\\1.17.1\\azure.identity.1.17.1.nupkg.sha512",

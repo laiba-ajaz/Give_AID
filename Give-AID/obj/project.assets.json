@@ -3155,11 +3155,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HP\\Give-AID\\Give-AID\\Give-AID.csproj",
+      "projectUniqueName": "C:\\Users\\HP\\Give-AID\\Give_AID-master\\Give-AID\\Give-AID.csproj",
       "projectName": "Give-AID",
-      "projectPath": "C:\\Users\\HP\\Give-AID\\Give-AID\\Give-AID.csproj",
+      "projectPath": "C:\\Users\\HP\\Give-AID\\Give_AID-master\\Give-AID\\Give-AID.csproj",
       "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HP\\Give-AID\\Give-AID\\obj\\",
+      "outputPath": "C:\\Users\\HP\\Give-AID\\Give_AID-master\\Give-AID\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

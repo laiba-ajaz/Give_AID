@@ -1,0 +1,141 @@
+@model UserQuery
+@{
+    ViewData["Title"] = "Query " + Model.Reference;
+    var hasReply = !string.IsNullOrEmpty(Model.AdminReply);
+
+    // Email se bhi bata dena ho to: subject aur jawab pehle se likha hua
+    var mailSubject = Uri.EscapeDataString($"Re: your query {Model.Reference} – {QueryTopics.Name(Model.Topic)}");
+    var mailBody = Uri.EscapeDataString($"Dear {Model.FullName},\n\n{Model.AdminReply ?? ""}\n\nKind regards,\nGive-AID Team");
+    var mailto = $"mailto:{Model.Email}?subject={mailSubject}&body={mailBody}";
+}
+
+<div class="page-header">
+    <div>
+        <a class="back-link" asp-action="Index">
+            <span class="material-symbols-outlined">arrow_back</span> All queries
+        </a>
+        <h1>@QueryTopics.Name(Model.Topic)</h1>
+        <p>@Model.Reference · received @Model.CreatedAt.ToString("dddd, dd MMM yyyy 'at' hh:mm tt")</p>
+    </div>
+    <div class="row-actions">
+        @if (Model.IsUrgent)
+        {
+            <span class="badge badge-coral">Urgent</span>
+        }
+        @if (Model.Status == QueryStatus.Answered)
+        {
+            <span class="badge badge-green">Answered</span>
+        }
+        else if (Model.Status == QueryStatus.Closed)
+        {
+            <span class="badge badge-teal">Closed</span>
+        }
+        else
+        {
+            <span class="badge badge-grey">Needs reply</span>
+        }
+    </div>
+</div>
+
+<div class="message-layout">
+    <div class="stack-cards">
+        <section class="card">
+            <div class="card-head">
+                <h2>Query</h2>
+            </div>
+            <div class="card-body">
+                <p class="message-text">@Model.Message</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2>@(hasReply ? "Your reply" : "Write a reply")</h2>
+                @if (hasReply && Model.RepliedAt != null)
+                {
+                    <span class="muted small">Sent @Model.RepliedAt.Value.ToString("dd MMM yyyy, hh:mm tt")</span>
+                }
+            </div>
+            <form asp-action="Reply" asp-route-id="@Model.UserQueryId" method="post" class="card-body">
+                <div class="field">
+                    <label for="reply" class="sr-only">Reply</label>
+                    <textarea id="reply" name="reply" class="textarea tall" maxlength="2000" minlength="5" required data-count="replyCount"
+                              placeholder="Write your answer to @Model.FullName…">@Model.AdminReply</textarea>
+                    <div class="char-count" id="replyCount">0 / 2000</div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="material-symbols-outlined">send</span> @(hasReply ? "Update reply" : "Send reply")
+                    </button>
+                </div>
+                <p class="field-hint">The user sees this reply on the website's "Track your query" page using @Model.Reference and their email.</p>
+            </form>
+        </section>
+    </div>
+
+    <aside class="card">
+        <div class="card-head">
+            <h2>Raised by</h2>
+        </div>
+        <div class="card-body">
+            <div class="cell-main">
+                <span class="avatar">@Model.FullName.Substring(0, 1).ToUpper()</span>
+                <div>
+                    <div class="cell-title">@Model.FullName</div>
+                    <a class="cell-sub" href="mailto:@Model.Email">@Model.Email</a>
+                </div>
+            </div>
+
+            <ul class="info-list">
+                <li>
+                    <span class="material-symbols-outlined">tag</span> @Model.Reference
+                </li>
+                <li>
+                    <span class="material-symbols-outlined">person</span>
+                    @(Model.UserId != null ? "Registered member" : "Guest (not logged in)")
+                </li>
+                <li>
+                    <span class="material-symbols-outlined">schedule</span>
+                    @Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                </li>
+            </ul>
+
+            <div class="stack-actions">
+                @if (hasReply)
+                {
+                    <a class="btn btn-teal" href="@mailto">
+                        <span class="material-symbols-outlined">forward_to_inbox</span> Also send by email
+                    </a>
+                }
+
+                <form asp-action="SetStatus" asp-route-id="@Model.UserQueryId" method="post">
+                    @if (Model.Status == QueryStatus.Closed)
+                    {
+                        <input type="hidden" name="status" value="@(hasReply ? QueryStatus.Answered : QueryStatus.Open)" />
+                        <button type="submit" class="btn btn-ghost">
+                            <span class="material-symbols-outlined">lock_open</span> Reopen query
+                        </button>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="status" value="@QueryStatus.Closed" />
+                        <button type="submit" class="btn btn-ghost">
+                            <span class="material-symbols-outlined">lock</span> Close query
+                        </button>
+                    }
+                </form>
+
+                <form asp-action="Delete" asp-route-id="@Model.UserQueryId" method="post"
+                      data-confirm="Delete query @Model.Reference? This cannot be undone.">
+                    <button type="submit" class="btn btn-ghost btn-danger-text">
+                        <span class="material-symbols-outlined">delete</span> Delete query
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+</div>
+
+@section Scripts {
+<script>updateCharCounts();</script>
+}

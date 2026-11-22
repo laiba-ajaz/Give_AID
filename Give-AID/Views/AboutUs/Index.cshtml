@@ -1,0 +1,73 @@
+@model List<AboutPage>
+@{
+    ViewData["Title"] = "About Us";
+
+    const string pillCls = "about-pill px-space-md py-space-xs rounded-full font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-colors";
+}
+
+<div class="flex flex-col w-full">
+
+<!-- ===== PAGE INTRO ===== -->
+<section class="w-full bg-primary text-on-primary py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+    <nav class="flex items-center gap-space-xs text-on-primary-container font-label-md text-label-md mb-space-md">
+        <a class="hover:text-on-primary transition-colors" asp-controller="Home" asp-action="Index">Home</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-on-primary font-semibold">About Us</span>
+    </nav>
+    <h1 class="font-headline-lg text-headline-lg font-normal max-w-3xl">Get to know Give-AID</h1>
+    <p class="font-body-md text-body-md text-on-primary-container mt-space-xs max-w-2xl">
+        Who we are, what we do, and the people and partners who make our work possible.
+    </p>
+</div>
+</section>
+
+<!-- ===== SECTION MENU (page ke andar) ===== -->
+<nav class="sticky top-20 z-40 w-full bg-surface/95 backdrop-blur-xl border-b border-outline-variant/40" aria-label="About Us sections">
+    <div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin py-space-sm flex items-center gap-space-xs overflow-x-auto">
+        @foreach (var p in Model)
+        {
+            <a href="#@p.Slug" class="@pillCls" data-target="@p.Slug">@p.Title</a>
+        }
+    </div>
+</nav>
+
+<!-- ===== ALL SECTIONS ===== -->
+@for (int i = 0; i < Model.Count; i++)
+{
+    <partial name="_AboutBlock" model="Model[i]" view-data='new ViewDataDictionary(ViewData) { ["Alt"] = i % 2 == 1 }' />
+}
+
+<partial name="_AboutCta" />
+
+</div>
+
+@section Scripts {
+<script>
+    // Scroll karte waqt jo section screen par hai uska menu button highlight karo
+    (function () {
+        const pills = document.querySelectorAll('.about-pill');
+        const activeCls = ['bg-primary-container', 'text-on-primary', 'font-semibold'];
+
+        function setActive(slug) {
+            pills.forEach(function (p) {
+                const on = p.dataset.target === slug;
+                activeCls.forEach(function (c) { p.classList.toggle(c, on); });
+                p.classList.toggle('text-on-surface-variant', !on);
+                if (on) p.setAttribute('aria-current', 'true'); else p.removeAttribute('aria-current');
+            });
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+
+        pills.forEach(function (p) {
+            const section = document.getElementById(p.dataset.target);
+            if (section) observer.observe(section);
+        });
+
+        if (pills.length) setActive(location.hash ? location.hash.substring(1) : pills[0].dataset.target);
+    })();
+</script>
+}

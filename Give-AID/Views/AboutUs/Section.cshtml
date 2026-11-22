@@ -1,0 +1,47 @@
+@model AboutPage
+@{
+    ViewData["Title"] = Model.Title;
+
+    var menu = (List<AboutPage>)ViewBag.Menu;
+
+    const string tabActive = "px-space-md py-space-xs rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold whitespace-nowrap";
+    const string tabIdle = "px-space-md py-space-xs rounded-full font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container whitespace-nowrap transition-colors";
+}
+
+<div class="flex flex-col w-full">
+
+<!-- ===== BREADCRUMB + ABOUT US SUB-LINKS ===== -->
+<div class="w-full bg-surface-container-low pt-space-lg">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+    <nav class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md mb-space-md">
+        <a class="hover:text-primary transition-colors" asp-controller="Home" asp-action="Index">Home</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <a class="hover:text-primary transition-colors" asp-controller="AboutUs" asp-action="Index">About Us</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-primary font-semibold">@Model.Title</span>
+    </nav>
+
+    <div class="flex items-center gap-space-xs p-1 rounded-full bg-surface-container-lowest shadow-sm overflow-x-auto w-fit max-w-full">
+        @foreach (var p in menu)
+        {
+            var current = p.Slug == Model.Slug;
+            <a asp-controller="AboutUs" asp-action="Section" asp-route-slug="@p.Slug"
+               class="@(current ? tabActive : tabIdle)" aria-current="@(current ? "page" : null)">@p.Title</a>
+        }
+    </div>
+</div>
+</div>
+
+<partial name="_AboutBlock" model="Model" view-data='new ViewDataDictionary(ViewData) { ["Alt"] = true, ["Main"] = true }' />
+
+<div class="w-full bg-surface py-space-lg">
+    <div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+        <a asp-controller="AboutUs" asp-action="Index" class="font-title-sm text-title-sm text-primary hover:text-secondary inline-flex items-center gap-1 font-semibold">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> See the full About Us page
+        </a>
+    </div>
+</div>
+
+<partial name="_AboutCta" />
+
+</div>
