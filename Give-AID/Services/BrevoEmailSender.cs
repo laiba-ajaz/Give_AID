@@ -38,11 +38,19 @@ namespace Give_AID.Services
                 {
                     From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
                     Subject = subject,
-                    Body = BuildHtmlEmailBody(messageContent),
                     IsBodyHtml = true
                 };
 
                 mailMessage.To.Add(toEmail);
+                mailMessage.ReplyToList.Add(new MailAddress(_settings.SenderEmail, _settings.SenderName));
+
+                // 1. Plain text alternative (critical for spam filter reputation and non-HTML readers)
+                string plainText = $"You have been invited to join Give-AID!\n\n\"{messageContent}\"\n\nExplore verified programmes: https://give-aid.org\n\n© {DateTime.Now.Year} Give-AID Global Welfare Foundation.";
+                mailMessage.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(plainText, null, "text/plain"));
+
+                // 2. Rich HTML view (replaces any localhost references with valid domain to prevent spam filtering)
+                string htmlBody = BuildHtmlEmailBody(messageContent);
+                mailMessage.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html"));
 
                 using var smtpClient = new SmtpClient(_settings.Server, _settings.Port)
                 {
@@ -116,7 +124,7 @@ namespace Give_AID.Services
                             <table role=""presentation"" width=""100%"" cellspacing=""0"" cellpadding=""0"" border=""0"" style=""margin-bottom:30px;"">
                                 <tr>
                                     <td align=""center"">
-                                        <a href=""http://localhost:5002/Programmes"" style=""display:inline-block; background-color:#a73918; color:#ffffff; text-decoration:none; padding:14px 32px; border-radius:10px; font-size:15px; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; box-shadow:0 2px 6px rgba(167,57,24,0.3);"">
+                                        <a href=""https://give-aid.org"" style=""display:inline-block; background-color:#a73918; color:#ffffff; text-decoration:none; padding:14px 32px; border-radius:10px; font-size:15px; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; box-shadow:0 2px 6px rgba(167,57,24,0.3);"">
                                             Explore Verified Programmes &rarr;
                                         </a>
                                     </td>
