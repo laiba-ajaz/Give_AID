@@ -1,0 +1,75 @@
+@using System.Security.Claims
+@{
+    // Login user ho to naam/email pehle se bhar do
+    var signedIn = User.Identity?.IsAuthenticated == true;
+    var userName = signedIn ? User.Identity!.Name : "";
+    var userEmail = signedIn ? User.FindFirstValue(ClaimTypes.Email) : "";
+
+    const string inputCls = "w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-sm text-body-sm focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all";
+}
+
+<!-- ===== LIVE CHAT BOX ===== -->
+<div id="chatBox" class="hidden fixed z-[60] bottom-4 right-4 left-4 sm:left-auto sm:w-[380px] h-[560px] max-h-[calc(100vh-2rem)] bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex-col"
+     role="dialog" aria-label="Live chat with Give-AID"
+     data-status-url="@Url.Content("~/chat/status")"
+     data-start-url="@Url.Content("~/chat/start")"
+     data-send-url="@Url.Content("~/chat/send")"
+     data-messages-url="@Url.Content("~/chat/messages")">
+    @Html.AntiForgeryToken()
+
+    <!-- Header -->
+    <div class="bg-primary text-on-primary px-space-md py-space-sm flex items-center gap-space-sm">
+        <span class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-secondary-container text-[20px]">support_agent</span>
+        </span>
+        <div class="flex-1 min-w-0">
+            <div class="font-title-sm text-title-sm font-semibold">Give-AID Support</div>
+            <div class="flex items-center gap-1 font-label-sm text-label-sm text-on-primary-container">
+                <span class="w-2 h-2 rounded-full bg-outline" data-chat-dot></span>
+                <span data-chat-status>Checking…</span>
+            </div>
+        </div>
+        <button type="button" class="w-9 h-9 rounded-full hover:bg-primary-container flex items-center justify-center" data-close-chat aria-label="Close chat">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+
+    <!-- Step 1: naam aur email -->
+    <form id="chatStart" class="flex-1 flex flex-col gap-space-md p-space-lg overflow-y-auto" novalidate>
+        <div>
+            <h3 class="font-headline-sm text-headline-sm text-primary font-normal">Hi there!</h3>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Tell us who you are and start chatting with our support team.</p>
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <label for="chatName" class="font-label-md text-label-md text-on-surface font-semibold">Your name</label>
+            <input id="chatName" name="name" class="@inputCls" maxlength="100" required autocomplete="name" value="@userName" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <label for="chatEmail" class="font-label-md text-label-md text-on-surface font-semibold">Email</label>
+            <input id="chatEmail" name="email" type="email" class="@inputCls" maxlength="100" required autocomplete="email" value="@userEmail" />
+            <span class="font-label-sm text-label-sm text-outline">If we're offline, we'll reply to this email.</span>
+        </div>
+        <p class="hidden font-body-sm text-body-sm text-error" data-chat-error></p>
+        <button type="submit" class="mt-auto w-full bg-secondary hover:bg-secondary-container text-on-secondary py-space-sm rounded-lg font-label-lg text-label-lg uppercase tracking-wider transition-colors flex items-center justify-center gap-space-xs">
+            <span class="material-symbols-outlined text-[18px]">chat</span> Start chat
+        </button>
+    </form>
+
+    <!-- Step 2: baat-cheet -->
+    <div id="chatConversation" class="hidden flex-1 flex-col min-h-0">
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-space-md flex flex-col gap-space-sm bg-surface-container-low" aria-live="polite"></div>
+
+        <div id="chatClosed" class="hidden p-space-md text-center bg-surface-container">
+            <p class="font-body-sm text-body-sm text-on-surface-variant">This chat has been closed by our team.</p>
+            <button type="button" class="mt-space-xs font-label-lg text-label-lg text-secondary hover:text-primary font-bold uppercase tracking-wider" data-new-chat>Start a new chat</button>
+        </div>
+
+        <form id="chatSend" class="flex items-end gap-space-xs p-space-sm border-t border-outline-variant/40 bg-surface-container-lowest">
+            <textarea id="chatText" rows="1" maxlength="1000" placeholder="Type your message…" aria-label="Message"
+                      class="@inputCls resize-none max-h-32"></textarea>
+            <button type="submit" class="w-11 h-11 shrink-0 rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary flex items-center justify-center transition-colors" aria-label="Send">
+                <span class="material-symbols-outlined text-[20px]">send</span>
+            </button>
+        </form>
+    </div>
+</div>

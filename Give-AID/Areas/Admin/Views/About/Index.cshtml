@@ -1,0 +1,47 @@
+@model List<AboutPage>
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<div class="page-header">
+    <div>
+        <h1>About Us</h1>
+        <p>Each sub-link of the About Us menu has its own page. Edit the text, photos and cards shown on the website.</p>
+    </div>
+    <a class="btn btn-ghost" asp-area="" asp-controller="AboutUs" asp-action="Index" target="_blank">
+        <span class="material-symbols-outlined">open_in_new</span> View on website
+    </a>
+</div>
+
+<div class="about-grid">
+    @foreach (var aboutPage in Model)
+    {
+        var info = AboutSections.Find(aboutPage.Slug);
+        var shown = aboutPage.Items.Count(i => i.IsActive);
+
+        <a class="about-tile" asp-action="Edit" asp-route-id="@aboutPage.AboutPageId">
+            <div class="about-tile-top">
+                <span class="stat-icon teal"><span class="material-symbols-outlined">@info.Icon</span></span>
+                @if (aboutPage.IsActive)
+                {
+                    <span class="badge badge-green">Live</span>
+                }
+                else
+                {
+                    <span class="badge badge-grey">Hidden</span>
+                }
+            </div>
+
+            <h3>@aboutPage.Title</h3>
+            <p class="clamp">@(string.IsNullOrWhiteSpace(aboutPage.Heading) ? "No heading yet." : aboutPage.Heading)</p>
+
+            <div class="about-tile-foot">
+                <span>
+                    <span class="material-symbols-outlined">view_agenda</span>
+                    @shown @(info.ItemName)@(shown == 1 ? "" : "s") shown
+                </span>
+                <span class="muted">Updated @aboutPage.UpdatedAt.ToString("dd MMM yyyy")</span>
+            </div>
+        </a>
+    }
+</div>

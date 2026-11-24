@@ -1,0 +1,346 @@
+@model AboutPage
+@{
+    var info = AboutSections.Find(Model.Slug);
+    ViewData["Title"] = "About Us · " + Model.Title;
+    var activeCount = Model.Items.Count(i => i.IsActive);
+}
+
+<div class="page-header">
+    <div>
+        <a class="back-link" asp-action="Index">
+            <span class="material-symbols-outlined">arrow_back</span> All About Us pages
+        </a>
+        <h1>@Model.Title</h1>
+        <p>Last updated @Model.UpdatedAt.ToString("dd MMM yyyy, hh:mm tt")</p>
+    </div>
+    <a class="btn btn-ghost" asp-area="" asp-controller="AboutUs" asp-action="Section" asp-route-slug="@Model.Slug" target="_blank">
+        <span class="material-symbols-outlined">open_in_new</span> View page
+    </a>
+</div>
+
+<!-- ===== Page content ===== -->
+<section class="card">
+    <div class="card-head">
+        <h2>Page content</h2>
+    </div>
+
+    <form asp-action="SavePage" method="post" enctype="multipart/form-data" class="card-body">
+        <input type="hidden" name="AboutPageId" value="@Model.AboutPageId" />
+        <input type="hidden" name="Slug" value="@Model.Slug" />
+
+        <div class="form-grid">
+            <div class="field">
+                <label for="pTitle">Menu name <span class="req">*</span></label>
+                <input id="pTitle" name="Title" class="input" maxlength="80" required value="@Model.Title" />
+                <span class="field-hint">Shown in the About Us menu on the website.</span>
+            </div>
+
+            <div class="field">
+                <label for="pHeading">Heading</label>
+                <input id="pHeading" name="Heading" class="input" maxlength="150" value="@Model.Heading"
+                       placeholder="Main line at the top of the page" />
+            </div>
+
+            <div class="field full">
+                <label for="pContent">Text</label>
+                <textarea id="pContent" name="Content" class="textarea tall" maxlength="4000" data-count="pContentCount"
+                          placeholder="Write the page text here. Press Enter to start a new paragraph.">@Model.Content</textarea>
+                <div class="char-count" id="pContentCount">0 / 4000</div>
+            </div>
+
+            <div class="field full">
+                <span class="field-label">Cover image</span>
+                <div class="uploader">
+                    <div class="uploader-preview">
+                        <img id="pPreview" alt="Cover image preview" src="@Model.ImagePath" data-original="@Model.ImagePath"
+                             hidden="@string.IsNullOrEmpty(Model.ImagePath)" />
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                    </div>
+                    <div class="uploader-info">
+                        <input type="file" name="ImageFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="pPreview" />
+                        <span class="field-hint">
+                            @(string.IsNullOrEmpty(Model.ImagePath) ? "Shown next to the page text · max 2 MB" : "Leave empty to keep the current image · max 2 MB")
+                        </span>
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <label class="check danger">
+                                <input type="checkbox" name="RemoveImage" value="true" /> Remove current image
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="field full">
+                <div class="active-row">
+                    <div>
+                        <b>Show on website</b>
+                        <span>Hidden pages are removed from the About Us menu.</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") aria-label="Show on website" />
+                        <span class="slider"></span>
+                    </label>
+                    <input type="hidden" name="IsActive" value="false" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <span class="material-symbols-outlined">check</span> Save changes
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- ===== Cards ===== -->
+<section class="card mt">
+    <div class="card-head">
+        <h2>@(info.ItemName.Substring(0, 1).ToUpper() + info.ItemName.Substring(1))s</h2>
+        <button type="button" class="btn btn-primary" onclick="openCreate()">
+            <span class="material-symbols-outlined">add</span> Add @info.ItemName
+        </button>
+    </div>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">@info.Icon</span>
+            <h3>Nothing added yet</h3>
+            <p>Each @info.ItemName you add is shown as a card on the @Model.Title page.</p>
+            <button type="button" class="btn btn-primary" onclick="openCreate()">
+                <span class="material-symbols-outlined">add</span> Add @info.ItemName
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="toolbar">
+            <span class="toolbar-count">@Model.Items.Count total · @activeCount shown on website</span>
+        </div>
+
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="col-id">Order</th>
+                        <th>@info.TitleLabel</th>
+                        @if (info.SubtitleLabel != null)
+                        {
+                            <th>@info.SubtitleLabel</th>
+                        }
+                        <th>@info.DescriptionLabel</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td class="col-id">@item.SortOrder</td>
+                        <td>
+                            <div class="cell-main">
+                                @if (info.ItemHasImage)
+                                {
+                                    if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <img src="@item.ImagePath" alt="" class="thumb" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <span class="thumb-empty"><span class="material-symbols-outlined">image</span></span>
+                                    }
+                                }
+                                <div class="cell-title">@item.Title</div>
+                            </div>
+                        </td>
+                        @if (info.SubtitleLabel != null)
+                        {
+                            <td>@(string.IsNullOrEmpty(item.Subtitle) ? "—" : item.Subtitle)</td>
+                        }
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Description)) { <div class="clamp" title="@item.Description">@item.Description</div> }
+                            else { <span class="muted">—</span> }
+                        </td>
+                        <td>
+                            <form asp-action="ToggleItem" asp-route-id="@item.AboutItemId" method="post" class="toggle-form">
+                                <label class="switch" title="@(item.IsActive ? "Click to hide" : "Click to show")">
+                                    <input type="checkbox" @(item.IsActive ? "checked" : "") onchange="this.form.submit()"
+                                           aria-label="Shown: @item.Title" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-text @(item.IsActive ? "on" : "")">@(item.IsActive ? "Shown" : "Hidden")</span>
+                            </form>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button type="button" class="icon-btn edit" title="Edit" aria-label="Edit @item.Title"
+                                        data-id="@item.AboutItemId"
+                                        data-title="@item.Title"
+                                        data-subtitle="@item.Subtitle"
+                                        data-description="@item.Description"
+                                        data-order="@item.SortOrder"
+                                        data-image="@item.ImagePath"
+                                        data-active="@(item.IsActive ? "true" : "false")"
+                                        onclick="openEdit(this)">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <form asp-action="DeleteItem" asp-route-id="@item.AboutItemId" method="post"
+                                      data-confirm="Delete &quot;@item.Title&quot;? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete @item.Title">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
+
+<!-- ===== Add / Edit card modal ===== -->
+<dialog id="itemModal" class="modal" aria-labelledby="itemModalTitle">
+    <form method="post" enctype="multipart/form-data" id="itemForm"
+          data-add-url="@Url.Action("AddItem")" data-edit-url="@Url.Action("EditItem")">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="AboutItemId" id="fId" value="0" />
+        <input type="hidden" name="AboutPageId" value="@Model.AboutPageId" />
+
+        <div class="modal-head">
+            <span class="modal-head-icon"><span class="material-symbols-outlined" id="modalIcon">add</span></span>
+            <div>
+                <h2 id="itemModalTitle">Add @info.ItemName</h2>
+                <p>Shown on the @Model.Title page.</p>
+            </div>
+            <button type="button" class="icon-btn" aria-label="Close" onclick="this.closest('dialog').close()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="field @(info.SubtitleLabel == null ? "full" : "")">
+                    <label for="fTitle">@info.TitleLabel <span class="req">*</span></label>
+                    <input id="fTitle" name="Title" maxlength="100" required />
+                </div>
+
+                @if (info.SubtitleLabel != null)
+                {
+                    <div class="field">
+                        <label for="fSubtitle">@info.SubtitleLabel</label>
+                        <input id="fSubtitle" name="Subtitle" maxlength="100" />
+                    </div>
+                }
+
+                <div class="field full">
+                    <label for="fDescription">@info.DescriptionLabel</label>
+                    <textarea id="fDescription" name="Description" maxlength="500" data-count="fDescCount"></textarea>
+                    <div class="char-count" id="fDescCount">0 / 500</div>
+                </div>
+
+                @if (info.ItemHasImage)
+                {
+                    <div class="field full">
+                        <span class="field-label">@info.ImageLabel</span>
+                        <div class="uploader">
+                            <div class="uploader-preview">
+                                <img id="fPreview" alt="Image preview" hidden />
+                                <span class="material-symbols-outlined">add_photo_alternate</span>
+                            </div>
+                            <div class="uploader-info">
+                                <input type="file" name="ImageFile" id="fImageFile" accept=".jpg,.jpeg,.png,.webp,.gif" data-preview="fPreview" />
+                                <span class="field-hint" id="fImageHint">JPG, PNG or WEBP · max 2 MB</span>
+                                <label class="check danger" id="fRemoveWrap" hidden>
+                                    <input type="checkbox" name="RemoveImage" id="fRemove" value="true" /> Remove current image
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="field">
+                    <label for="fOrder">Display order</label>
+                    <input id="fOrder" name="SortOrder" type="number" min="0" max="999" value="0" />
+                    <span class="field-hint">Smaller numbers are shown first.</span>
+                </div>
+
+                <div class="field">
+                    <div class="active-row">
+                        <div>
+                            <b>Show on website</b>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="IsActive" id="fActive" value="true" checked aria-label="Show on website" />
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="IsActive" value="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="fSubmit">
+                <span class="material-symbols-outlined">check</span> <span>Save</span>
+            </button>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+<script src="~/js/image-preview.js" asp-append-version="true"></script>
+<script>
+    const form = document.getElementById('itemForm');
+    const itemName = '@info.ItemName';
+    const hasImage = @(info.ItemHasImage ? "true" : "false");
+    const nextOrder = @(Model.Items.Count == 0 ? 1 : Model.Items.Max(i => i.SortOrder) + 1);
+
+    updateCharCounts();
+
+    function setMode(isEdit) {
+        form.action = isEdit ? form.dataset.editUrl : form.dataset.addUrl;
+        document.getElementById('itemModalTitle').textContent = (isEdit ? 'Edit ' : 'Add ') + itemName;
+        document.getElementById('modalIcon').textContent = isEdit ? 'edit' : 'add';
+        document.querySelector('#fSubmit span:last-child').textContent = isEdit ? 'Update' : 'Save';
+        if (hasImage) {
+            document.getElementById('fImageHint').textContent = isEdit
+                ? 'Leave empty to keep the current image · max 2 MB'
+                : 'JPG, PNG or WEBP · max 2 MB';
+        }
+    }
+
+    function openCreate() {
+        setMode(false);
+        document.getElementById('fId').value = 0;
+        if (hasImage) document.getElementById('fRemoveWrap').hidden = true;
+        openAddModal('itemModal');
+        document.getElementById('fOrder').value = nextOrder;
+        document.getElementById('fActive').checked = true;
+    }
+
+    function openEdit(btn) {
+        form.reset();
+        setMode(true);
+        document.getElementById('fId').value = btn.dataset.id;
+        document.getElementById('fTitle').value = btn.dataset.title;
+        const subtitle = document.getElementById('fSubtitle');
+        if (subtitle) subtitle.value = btn.dataset.subtitle || '';
+        document.getElementById('fDescription').value = btn.dataset.description || '';
+        document.getElementById('fOrder').value = btn.dataset.order;
+        document.getElementById('fActive').checked = btn.dataset.active === 'true';
+        if (hasImage) {
+            setCurrentImage('fPreview', 'fImageFile', btn.dataset.image);
+            document.getElementById('fRemove').checked = false;
+            document.getElementById('fRemoveWrap').hidden = !btn.dataset.image;
+        }
+        updateCharCounts(form);
+        document.getElementById('itemModal').showModal();
+    }
+</script>
+}

@@ -1,0 +1,266 @@
+@model AboutPage
+@{
+    // Ek About section: upar text + image, neeche us ke cards.
+    // "Alt" = halka background (full page par sections alag dikhen), "Main" = page ka main heading (h1).
+    var alt = ViewData["Alt"] as bool? ?? false;
+    var isMain = ViewData["Main"] as bool? ?? false;
+
+    var info = AboutSections.Find(Model.Slug);
+    var paragraphs = (Model.Content ?? "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    var items = Model.Items;
+
+    var itemsHeading = Model.Slug switch
+    {
+        AboutSections.ReadAboutUs => "Our journey",
+        AboutSections.WhatWeDo => "Our focus areas",
+        AboutSections.OurMission => "What we stand for",
+        AboutSections.OurTeam => "Meet the team",
+        AboutSections.Careers => "Open positions",
+        AboutSections.Achievements => "Milestones in numbers",
+        AboutSections.Supporters => "Voices of our supporters",
+        _ => ""
+    };
+
+    // Alternate background par cards ka rang ulta, taake card background mein ghul na jaye
+    var cardBg = alt ? "bg-surface-container-lowest" : "bg-surface-container-low";
+}
+
+<section id="@Model.Slug" class="w-full @(alt ? "bg-surface-container-low" : "bg-surface") py-space-xl scroll-mt-36">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+        <div class="@(string.IsNullOrEmpty(Model.ImagePath) ? "lg:col-span-9" : "lg:col-span-6") flex flex-col gap-space-md">
+            <div class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-secondary/10 text-secondary w-fit font-label-md text-label-md uppercase">
+                <span class="material-symbols-outlined text-[16px]">@info.Icon</span>
+                <span>@Model.Title</span>
+            </div>
+            @if (isMain)
+            {
+                <h1 class="font-headline-lg text-headline-lg text-primary font-normal">@(Model.Heading ?? Model.Title)</h1>
+            }
+            else
+            {
+                <h2 class="font-headline-lg text-headline-lg text-primary font-normal">@(Model.Heading ?? Model.Title)</h2>
+            }
+            @foreach (var para in paragraphs)
+            {
+                <p class="font-body-md text-body-md text-on-surface-variant">@para</p>
+            }
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <div class="lg:col-span-6">
+                <div class="relative w-full h-[320px] md:h-[400px] rounded-full overflow-hidden shadow-xl bg-surface-container">
+                    <img class="w-full h-full object-cover" src="@Model.ImagePath" alt="@Model.Title" loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/30 to-transparent"></div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (items.Count > 0 || Model.Slug == AboutSections.Careers)
+    {
+    <div class="mt-space-xl">
+    <h3 class="font-headline-sm text-headline-sm text-primary font-normal mb-space-lg">@itemsHeading</h3>
+
+    @switch (Model.Slug)
+    {
+        case AboutSections.ReadAboutUs:
+            <ol class="relative border-l-2 border-surface-container-high ml-space-sm flex flex-col gap-space-lg max-w-3xl">
+                @foreach (var item in items)
+                {
+                    <li class="pl-space-lg relative">
+                        <span class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-secondary ring-4 @(alt ? "ring-surface-container-low" : "ring-surface")"></span>
+                        @if (!string.IsNullOrEmpty(item.Subtitle))
+                        {
+                            <span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">@item.Subtitle</span>
+                        }
+                        <h4 class="font-title-lg text-title-lg text-primary">@item.Title</h4>
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1 whitespace-pre-line">@item.Description</p>
+                        }
+                    </li>
+                }
+            </ol>
+            break;
+
+        case AboutSections.OurMission:
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                @for (int i = 0; i < items.Count; i++)
+                {
+                    var item = items[i];
+                    <div class="@cardBg rounded-full p-space-lg flex flex-col gap-space-xs">
+                        <span class="font-headline-md text-headline-md text-secondary">@((i + 1).ToString("00"))</span>
+                        <h4 class="font-title-lg text-title-lg text-primary">@item.Title</h4>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant whitespace-pre-line">@item.Description</p>
+                    </div>
+                }
+            </div>
+            break;
+
+        case AboutSections.OurTeam:
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                @foreach (var item in items)
+                {
+                    <div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+                        <div class="aspect-[4/5] w-full bg-surface-container flex items-center justify-center">
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img class="w-full h-full object-cover" src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                            }
+                            else
+                            {
+                                <span class="material-symbols-outlined text-outline text-[64px]">person</span>
+                            }
+                        </div>
+                        <div class="p-space-md flex flex-col gap-1">
+                            <h4 class="font-title-lg text-title-lg text-primary">@item.Title</h4>
+                            @if (!string.IsNullOrEmpty(item.Subtitle))
+                            {
+                                <span class="font-label-md text-label-md text-secondary uppercase tracking-wider font-bold">@item.Subtitle</span>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">@item.Description</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            break;
+
+        case AboutSections.Careers:
+            if (items.Count == 0)
+            {
+                <div class="@cardBg rounded-full p-space-xl text-center flex flex-col items-center gap-space-sm">
+                    <span class="material-symbols-outlined text-secondary text-[40px]">work_history</span>
+                    <h4 class="font-title-lg text-title-lg text-primary">No open positions right now</h4>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">New roles are posted here first. You can still send us your CV through our contact form.</p>
+                    <a asp-controller="ContactUs" asp-action="Index" asp-route-subject="CV submission" class="mt-space-xs bg-primary hover:bg-primary-container text-on-primary px-space-lg py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors">Contact us</a>
+                </div>
+            }
+            else
+            {
+                <div class="flex flex-col gap-space-md">
+                    @foreach (var item in items)
+                    {
+                        <div class="bg-surface-container-lowest rounded-full shadow-sm p-space-lg flex flex-col md:flex-row md:items-start gap-space-md">
+                            <span class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">work</span>
+                            </span>
+                            <div class="flex-1 flex flex-col gap-space-xs">
+                                <h4 class="font-title-lg text-title-lg text-primary">@item.Title</h4>
+                                @if (!string.IsNullOrEmpty(item.Subtitle))
+                                {
+                                    <span class="inline-flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+                                        <span class="material-symbols-outlined text-[16px] text-secondary">location_on</span> @item.Subtitle
+                                    </span>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant whitespace-pre-line">@item.Description</p>
+                                }
+                            </div>
+                            <a asp-controller="ContactUs" asp-action="Index" asp-route-subject="@("Job application: " + item.Title)" class="self-start bg-secondary hover:bg-secondary-container text-on-secondary px-space-lg py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors shrink-0">Apply</a>
+                        </div>
+                    }
+                </div>
+            }
+            break;
+
+        case AboutSections.Achievements:
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                @foreach (var item in items)
+                {
+                    <div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm flex flex-col">
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img class="w-full h-40 object-cover" src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                        }
+                        <div class="p-space-lg flex flex-col gap-1">
+                            @if (!string.IsNullOrEmpty(item.Subtitle))
+                            {
+                                <span class="font-headline-lg text-headline-lg text-secondary leading-none">@item.Subtitle</span>
+                            }
+                            <h4 class="font-title-md text-title-md text-primary font-semibold mt-space-xs">@item.Title</h4>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">@item.Description</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            break;
+
+        case AboutSections.Supporters:
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+                @foreach (var item in items)
+                {
+                    <figure class="@cardBg rounded-full p-space-lg flex flex-col gap-space-md">
+                        <span class="material-symbols-outlined text-secondary text-[32px]">format_quote</span>
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            <blockquote class="font-body-md text-body-md text-on-surface italic">@item.Description</blockquote>
+                        }
+                        <figcaption class="flex items-center gap-space-sm mt-auto">
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img class="w-12 h-12 rounded-[50%] object-cover bg-surface-container-lowest" src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                            }
+                            else
+                            {
+                                <span class="w-12 h-12 rounded-[50%] bg-primary text-on-primary flex items-center justify-center font-title-md text-title-md">@item.Title.Substring(0, 1).ToUpper()</span>
+                            }
+                            <span class="flex flex-col">
+                                <span class="font-title-sm text-title-sm text-primary font-semibold">@item.Title</span>
+                                @if (!string.IsNullOrEmpty(item.Subtitle))
+                                {
+                                    <span class="font-label-md text-label-md text-on-surface-variant">@item.Subtitle</span>
+                                }
+                            </span>
+                        </figcaption>
+                    </figure>
+                }
+            </div>
+            break;
+
+        default:
+            @* What We Do *@
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                @foreach (var item in items)
+                {
+                    <div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col">
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img class="w-full h-44 object-cover" src="@item.ImagePath" alt="@item.Title" loading="lazy" />
+                        }
+                        <div class="p-space-md flex flex-col gap-space-xs">
+                            @if (string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <span class="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-1">
+                                    <span class="material-symbols-outlined">@info.Icon</span>
+                                </span>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Subtitle))
+                            {
+                                <span class="font-label-md text-label-md text-secondary uppercase tracking-wider font-bold">@item.Subtitle</span>
+                            }
+                            <h4 class="font-title-lg text-title-lg text-primary">@item.Title</h4>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="font-body-sm text-body-sm text-on-surface-variant whitespace-pre-line">@item.Description</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            break;
+    }
+    </div>
+    }
+
+</div>
+</section>

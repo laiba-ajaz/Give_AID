@@ -1,6 +1,12 @@
+@inject Give_AID.Data.AppDBContext Db
 @{
     // Sidebar mein current page highlight karne ke liye
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    // Contact Us, Live Chat aur Queries ke aage naye (bina jawab) items ki ginti
+    var unreadMessages = Db.ContactMessages.Count(m => !m.IsRead);
+    var unreadChats = Db.ChatMessages.Count(m => !m.FromAdmin && !m.IsReadByAdmin);
+    var openQueries = Db.Queries.Count(q => q.Status == QueryStatus.Open);
 
     var manageItems = new[]
     {
@@ -10,16 +16,12 @@
         new { Text = "NGOs",               Icon = "diversity_3",        Controller = "NGO" },
         new { Text = "Programmes",         Icon = "event",              Controller = "Programmes" },
         new { Text = "Our Partners",       Icon = "handshake",          Controller = "Partners" },
+        new { Text = "Gallery",            Icon = "photo_library",      Controller = "Gallery" },
+        new { Text = "About Us",           Icon = "info",               Controller = "About" },
+        new { Text = "Queries",            Icon = "forum",              Controller = "Queries" },
+        new { Text = "Contact Us",         Icon = "contact_mail",       Controller = "Contact" },
+        new { Text = "Live Chat",          Icon = "chat",               Controller = "Chat" },
         new { Text = "Donations",          Icon = "payments",           Controller = "Donations" },
-    };
-
-    // Requirement document ke baqi features: abhi bane nahi, is liye disabled
-    var upcomingItems = new[]
-    {
-        new { Text = "Gallery",      Icon = "photo_library" },
-        new { Text = "About Us",     Icon = "info" },
-        new { Text = "Queries",      Icon = "forum" },
-        new { Text = "Contact Us",   Icon = "contact_mail" },
     };
 
     var userName = User.Identity?.IsAuthenticated == true ? User.Identity.Name ?? "Admin" : "Admin";
@@ -66,19 +68,19 @@
                    aria-current="@(active ? "page" : null)">
                     <span class="material-symbols-outlined">@item.Icon</span>
                     @item.Text
+                    @if (item.Controller == "Contact" && unreadMessages > 0)
+                    {
+                        <span class="nav-count" title="Unread messages">@unreadMessages</span>
+                    }
+                    @if (item.Controller == "Chat" && unreadChats > 0)
+                    {
+                        <span class="nav-count" title="Unread chat messages">@unreadChats</span>
+                    }
+                    @if (item.Controller == "Queries" && openQueries > 0)
+                    {
+                        <span class="nav-count" title="Queries waiting for a reply">@openQueries</span>
+                    }
                 </a>
-            }
-        </nav>
-
-        <nav class="nav-group">
-            <div class="nav-label">Coming soon</div>
-            @foreach (var item in upcomingItems)
-            {
-                <span class="nav-link disabled" aria-disabled="true">
-                    <span class="material-symbols-outlined">@item.Icon</span>
-                    @item.Text
-                    <span class="nav-soon">Soon</span>
-                </span>
             }
         </nav>
 

@@ -1,0 +1,98 @@
+@model ContactMessage
+@{
+    ViewData["Title"] = "Message";
+
+    // "Reply by email" admin ka email app kholta hai, subject aur salam pehle se likha hota hai
+    var replySubject = Uri.EscapeDataString("Re: " + Model.Subject);
+    var replyBody = Uri.EscapeDataString($"Dear {Model.FullName},\n\nThank you for contacting Give-AID.\n\n\n\nKind regards,\nGive-AID Team");
+    var mailto = $"mailto:{Model.Email}?subject={replySubject}&body={replyBody}";
+}
+
+<div class="page-header">
+    <div>
+        <a class="back-link" asp-action="Index">
+            <span class="material-symbols-outlined">arrow_back</span> All messages
+        </a>
+        <h1>@Model.Subject</h1>
+        <p>Received @Model.CreatedAt.ToString("dddd, dd MMM yyyy 'at' hh:mm tt")</p>
+    </div>
+    @if (Model.IsReplied)
+    {
+        <span class="badge badge-green">Replied</span>
+    }
+    else
+    {
+        <span class="badge badge-grey">Needs reply</span>
+    }
+</div>
+
+<div class="message-layout">
+    <section class="card">
+        <div class="card-head">
+            <h2>Message</h2>
+        </div>
+        <div class="card-body">
+            <p class="message-text">@Model.Message</p>
+        </div>
+    </section>
+
+    <aside class="card">
+        <div class="card-head">
+            <h2>Sender</h2>
+        </div>
+        <div class="card-body">
+            <div class="cell-main">
+                <span class="avatar">@Model.FullName.Substring(0, 1).ToUpper()</span>
+                <div>
+                    <div class="cell-title">@Model.FullName</div>
+                    <a class="cell-sub" href="mailto:@Model.Email">@Model.Email</a>
+                </div>
+            </div>
+
+            <ul class="info-list">
+                <li>
+                    <span class="material-symbols-outlined">call</span>
+                    @if (string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <span class="muted">No phone given</span>
+                    }
+                    else
+                    {
+                        <a href="tel:@Model.Phone">@Model.Phone</a>
+                    }
+                </li>
+                <li>
+                    <span class="material-symbols-outlined">schedule</span>
+                    @Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                </li>
+            </ul>
+
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="@mailto">
+                    <span class="material-symbols-outlined">reply</span> Reply by email
+                </a>
+
+                <form asp-action="ToggleReplied" asp-route-id="@Model.ContactMessageId" method="post">
+                    <button type="submit" class="btn btn-teal">
+                        <span class="material-symbols-outlined">@(Model.IsReplied ? "undo" : "done_all")</span>
+                        @(Model.IsReplied ? "Move back to pending" : "Mark as replied")
+                    </button>
+                </form>
+
+                <form asp-action="MarkUnread" asp-route-id="@Model.ContactMessageId" method="post">
+                    <button type="submit" class="btn btn-ghost">
+                        <span class="material-symbols-outlined">mark_email_unread</span> Mark as unread
+                    </button>
+                </form>
+
+                <form asp-action="Delete" asp-route-id="@Model.ContactMessageId" method="post"
+                      data-confirm="Delete the message from @Model.FullName? This cannot be undone.">
+                    <button type="submit" class="btn btn-ghost btn-danger-text">
+                        <span class="material-symbols-outlined">delete</span> Delete message
+                    </button>
+                </form>
+            </div>
+            <p class="field-hint">"Reply by email" opens your email app. After sending, click "Mark as replied".</p>
+        </div>
+    </aside>
+</div>

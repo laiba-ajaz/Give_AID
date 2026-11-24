@@ -30,6 +30,46 @@ public class MemberRow
     public DateTime CreatedAt { get; set; }
 }
 
+public class ContactInboxViewModel
+{
+    public List<ContactMessage> Messages { get; set; } = new();
+    public string Filter { get; set; } = "all";
+    public string? Search { get; set; }
+    public int TotalCount { get; set; }
+    public int UnreadCount { get; set; }
+    public int PendingCount { get; set; }
+}
+
+public class ChatSessionRow
+{
+    public int Id { get; set; }
+    public string VisitorName { get; set; } = "";
+    public string VisitorEmail { get; set; } = "";
+    public bool IsClosed { get; set; }
+    public DateTime LastMessageAt { get; set; }
+    public string? LastText { get; set; }
+    public int Unread { get; set; }
+}
+
+public class ChatInboxViewModel
+{
+    public List<ChatSessionRow> Sessions { get; set; } = new();
+    public ChatSession? Selected { get; set; }
+    public List<ChatMessage> Messages { get; set; } = new();
+}
+
+public class QueryInboxViewModel
+{
+    public List<UserQuery> Queries { get; set; } = new();
+    public string Filter { get; set; } = "open";
+    public string? Search { get; set; }
+    public int TotalCount { get; set; }
+    public int OpenCount { get; set; }
+    public int UrgentCount { get; set; }
+    public int AnsweredCount { get; set; }
+    public int ClosedCount { get; set; }
+}
+
 public class MembersListViewModel
 {
     public List<MemberRow> Members { get; set; } = new();

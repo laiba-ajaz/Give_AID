@@ -148,246 +148,66 @@
 </div>
 </div>
 </section>
-<!-- 3. CHOOSE A CAUSE (3x2 Grid) -->
+<!-- 3. CHOOSE A CAUSE (admin panel ke Donation Causes se) -->
+@{
+    var homeCauses = ViewBag.Causes as List<DonationCauses> ?? new List<DonationCauses>();
+}
 <section class="w-full bg-surface py-space-xl" id="causes-section">
 <div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
-<!-- Section Heading -->
 <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
 <div class="flex flex-col gap-space-xs max-w-2xl">
 <span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">Frontline Focus</span>
 <h2 class="font-headline-lg text-headline-lg text-primary font-normal">Choose a cause close to your heart</h2>
 <p class="font-body-md text-body-md text-on-surface-variant">
-            Support certified frontline programmes engineered for measurable impact, backed by direct receipts and complete capital clarity.
+            Every cause is run through verified partner NGOs. Pick the one that matters to you and give directly.
           </p>
 </div>
-<div class="flex items-center gap-space-xs shrink-0">
-<button class="px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-lg text-label-lg uppercase" type="button">All Causes</button>
-<button class="px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg uppercase hover:bg-surface-container-highest" type="button">Urgent Needs</button>
-<button class="px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg uppercase hover:bg-surface-container-highest" type="button">Monthly Aid</button>
+<a class="font-title-sm text-title-sm text-primary hover:text-secondary inline-flex items-center gap-1 font-semibold shrink-0" href="~/Donate">
+          Donate now <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
 </div>
+@if (homeCauses.Count == 0)
+{
+<div class="bg-surface-container-low rounded-full p-space-xl text-center flex flex-col items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[40px]">volunteer_activism</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Causes will appear here soon.</p>
 </div>
-<!-- 3x2 Grid -->
+}
+else
+{
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-<!-- Card 1: Children -->
+@foreach (var cause in homeCauses)
+{
 <div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-<div class="relative h-48 w-full overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Group of energetic young school children smiling together in classroom setting, holding up fresh colorful notebooks, bright soft morning daylight" src="/images/home-8.jpg"/>
+<div class="relative h-48 w-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="@(string.IsNullOrEmpty(cause.imageURL) ? CauseLook.DefaultImage(cause.CauseName) : cause.imageURL)" alt="@cause.CauseName" loading="lazy"/>
 <div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-secondary shadow-sm flex items-center gap-1 font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px]">child_care</span>
-<span>Child Welfare</span>
+<span class="material-symbols-outlined text-[16px]">@CauseLook.Icon(cause.CauseName)</span>
+<span>@cause.CauseName</span>
 </div>
-<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
-              92% Goal Reached
-            </div>
 </div>
 <div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
 <div class="flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Children</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Nutrition packs, trauma safety retreats, and nurturing shelter homes for vulnerable children facing extreme poverty.
-              </p>
+<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">@cause.CauseName</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">@cause.CauseDescription</p>
 </div>
-<div class="flex flex-col gap-space-xs">
-<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-<div class="bg-secondary h-full rounded-full" style="width: 92%;"></div>
-</div>
-<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
-<span>Raised: <strong>$142,800</strong></span>
-<span>Goal: $155,000</span>
-</div>
-<div class="pt-space-xs flex justify-between items-center">
-<span class="font-body-sm text-body-sm text-outline">1,420 Beneficiaries</span>
-<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=children">
+<div class="pt-space-xs flex justify-end items-center">
+<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="@Url.Action("Index", "Donate", new { cause = cause.DonationCausesID })">
                   Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
 </a>
 </div>
 </div>
 </div>
+}
 </div>
-<!-- Card 2: Education -->
-<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-<div class="relative h-48 w-full overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Attentive young female student in science laboratory looking through digital tablet with focused expression, modern rural classroom setting, natural lighting" src="/images/home-9.jpg"/>
-<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-primary shadow-sm flex items-center gap-1 font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px]">menu_book</span>
-<span>Literacy &amp; STEM</span>
-</div>
-<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
-              78% Goal Reached
-            </div>
-</div>
-<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
-<div class="flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Education</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Essential school supplies, rural digital learning labs, and secondary school completion scholarships for first-generation learners.
-              </p>
-</div>
-<div class="flex flex-col gap-space-xs">
-<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-<div class="bg-primary h-full rounded-full" style="width: 78%;"></div>
-</div>
-<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
-<span>Raised: <strong>$218,500</strong></span>
-<span>Goal: $280,000</span>
-</div>
-<div class="pt-space-xs flex justify-between items-center">
-<span class="font-body-sm text-body-sm text-outline">3,850 Students</span>
-<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=education">
-                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 3: Disabled Persons -->
-<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-<div class="relative h-48 w-full overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Smiling person using an advanced motorized wheelchair participating in an inclusive community art project, sunny airy community workshop space" src="/images/home-10.jpg"/>
-<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-secondary shadow-sm flex items-center gap-1 font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px]">accessible</span>
-<span>Accessibility</span>
-</div>
-<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
-              84% Goal Reached
-            </div>
-</div>
-<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
-<div class="flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Disabled Persons</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Custom assistive mobility devices, specialized sensory therapy sessions, and inclusive livelihood skills training workshops.
-              </p>
-</div>
-<div class="flex flex-col gap-space-xs">
-<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-<div class="bg-secondary h-full rounded-full" style="width: 84%;"></div>
-</div>
-<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
-<span>Raised: <strong>$95,300</strong></span>
-<span>Goal: $113,000</span>
-</div>
-<div class="pt-space-xs flex justify-between items-center">
-<span class="font-body-sm text-body-sm text-outline">640 Families</span>
-<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=disabled">
-                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 4: Women -->
-<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-<div class="relative h-48 w-full overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Determined female cooperative artisan weaving fine sustainable textiles in a cooperative studio, warm sunlight, inspiring expression of independence" src="/images/home-11.jpg"/>
-<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-primary shadow-sm flex items-center gap-1 font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px]">female</span>
-<span>Empowerment</span>
-</div>
-<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
-              65% Goal Reached
-            </div>
-</div>
-<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
-<div class="flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Women</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Seed micro-grants for female entrepreneurs, community legal defence counsel, and comprehensive maternal and newborn care.
-              </p>
-</div>
-<div class="flex flex-col gap-space-xs">
-<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-<div class="bg-primary h-full rounded-full" style="width: 65%;"></div>
-</div>
-<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
-<span>Raised: <strong>$176,000</strong></span>
-<span>Goal: $270,000</span>
-</div>
-<div class="pt-space-xs flex justify-between items-center">
-<span class="font-body-sm text-body-sm text-outline">1,910 Women</span>
-<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=women">
-                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 5: Youth -->
-<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-<div class="relative h-48 w-full overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Two focused young developers collaborating over computer programming screens inside modern tech community workshop, vibrant collaborative learning" src="/images/home-12.jpg"/>
-<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-secondary shadow-sm flex items-center gap-1 font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px]">school</span>
-<span>Skilling &amp; Tech</span>
-</div>
-<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
-              89% Goal Reached
-            </div>
-</div>
-<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
-<div class="flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Youth</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Vocational apprenticeships, digital codework bootcamps, and career mentorship unlocking meaningful paths to economic resilience.
-              </p>
-</div>
-<div class="flex flex-col gap-space-xs">
-<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-<div class="bg-secondary h-full rounded-full" style="width: 89%;"></div>
-</div>
-<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
-<span>Raised: <strong>$89,200</strong></span>
-<span>Goal: $100,000</span>
-</div>
-<div class="pt-space-xs flex justify-between items-center">
-<span class="font-body-sm text-body-sm text-outline">820 Young Leaders</span>
-<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=youth">
-                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 6: Elderly -->
-<div class="group bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-<div class="relative h-48 w-full overflow-hidden">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Kind caregiver and cheerful senior citizen sharing laughter while holding cups of tea in a warm, welcoming common room, heartwarming respectful interaction" src="/images/home-13.jpg"/>
-<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-xs rounded-lg text-primary shadow-sm flex items-center gap-1 font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px]">elderly</span>
-<span>Elder Dignity</span>
-</div>
-<div class="absolute bottom-3 right-3 bg-primary/90 text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">
-              96% Goal Reached
-            </div>
-</div>
-<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
-<div class="flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">Elderly</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Daily hot nutrition delivery, healthcare companionship visits, and critical home winterization aid for isolated seniors.
-              </p>
-</div>
-<div class="flex flex-col gap-space-xs">
-<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-<div class="bg-primary h-full rounded-full" style="width: 96%;"></div>
-</div>
-<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-1">
-<span>Raised: <strong>$125,600</strong></span>
-<span>Goal: $130,000</span>
-</div>
-<div class="pt-space-xs flex justify-between items-center">
-<span class="font-body-sm text-body-sm text-outline">1,150 Seniors</span>
-<a class="font-title-sm text-title-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-1 group-hover:translate-x-1 transition-all" href="~/Donate?cause=elderly">
-                  Donate <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-</div>
+}
 </div>
 </section>
-<!-- 4. UPCOMING PROGRAMMES AND EVENTS -->
+<!-- 4. UPCOMING PROGRAMMES AND EVENTS (admin panel ke Programmes se) -->
+@{
+    var homeProgrammes = ViewBag.UpcomingProgrammes as List<Programme> ?? new List<Programme>();
+    var upcomingCount = ViewBag.UpcomingCount as int? ?? 0;
+}
 <section class="w-full bg-surface-container-low py-space-xl">
 <div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
 <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
@@ -396,101 +216,62 @@
 <h2 class="font-headline-lg text-headline-lg text-primary font-normal">Upcoming programmes and events</h2>
 </div>
 <a class="font-title-sm text-title-sm text-primary hover:text-secondary inline-flex items-center gap-1 font-semibold" href="~/Programmes">
-          View all calendar (24) <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+          View all programmes (@upcomingCount upcoming) <span class="material-symbols-outlined text-[18px]">calendar_month</span>
 </a>
 </div>
+@if (homeProgrammes.Count == 0)
+{
+<div class="bg-surface-container-lowest rounded-full p-space-xl text-center flex flex-col items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[40px]">event_upcoming</span>
+<p class="font-body-md text-body-md text-on-surface-variant">No upcoming programmes right now – check back soon.</p>
+</div>
+}
+else
+{
 <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<!-- Event Card 1 -->
+@for (int i = 0; i < homeProgrammes.Count; i++)
+{
+    var prog = homeProgrammes[i];
 <div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
 <div>
-<div class="relative h-44 w-full overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="Community volunteers packing school backpacks with books and stationery boxes inside bright community warehouse, wide shot, warm daylight" src="/images/home-14.jpg"/>
-<div class="absolute top-3 left-3 bg-secondary text-on-secondary rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
-<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">OCT</span>
-<span class="font-title-lg text-title-lg font-bold">28</span>
+<div class="relative h-44 w-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" src="@(string.IsNullOrEmpty(prog.ImagePath) ? CauseLook.DefaultImage(prog.Cause?.CauseName) : prog.ImagePath)" alt="@prog.Title" loading="lazy"/>
+<div class="absolute top-3 left-3 @(i % 2 == 0 ? "bg-secondary text-on-secondary" : "bg-primary text-on-primary") rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">@prog.StartDate.ToString("MMM").ToUpper()</span>
+<span class="font-title-lg text-title-lg font-bold">@prog.StartDate.ToString("dd")</span>
 </div>
+@if (prog.Cause != null)
+{
 <div class="absolute bottom-2 right-2 bg-primary/80 backdrop-blur-sm text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">groups</span> 48 spots open
-              </div>
+<span class="material-symbols-outlined text-[14px]">@CauseLook.Icon(prog.Cause.CauseName)</span> @prog.Cause.CauseName
+</div>
+}
 </div>
 <div class="p-space-md flex flex-col gap-space-xs">
+@if (!string.IsNullOrEmpty(prog.Location))
+{
 <div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
 <span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Austin Community Hub &amp; Remote
-              </div>
-<h3 class="font-title-lg text-title-lg text-primary">Back-to-School Literacy Drive 2025</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Sort, catalog, and package 5,000 science kits and bilingual books for high-need school districts ahead of the winter term.
-              </p>
+                @prog.Location
+</div>
+}
+<h3 class="font-title-lg text-title-lg text-primary">@prog.Title</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">@prog.Description</p>
+@if (prog.NGO != null)
+{
+<p class="font-label-sm text-label-sm text-outline">By @prog.NGO.NGOName</p>
+}
 </div>
 </div>
 <div class="p-space-md pt-0">
-<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="~/Programmes">
+<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="@Url.Action("Index", "Programmes", new { select = prog.ProgrammeId })">
 <span class="material-symbols-outlined text-[18px]">check</span> I'm interested
-            </a>
+</a>
 </div>
 </div>
-<!-- Event Card 2 -->
-<div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
-<div>
-<div class="relative h-44 w-full overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="Volunteer doctors and medical practitioners checking vitals in a converted high-tech mobile clinic van in a rural mountain township, clear morning sky" src="/images/home-15.jpg"/>
-<div class="absolute top-3 left-3 bg-primary text-on-primary rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
-<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">NOV</span>
-<span class="font-title-lg text-title-lg font-bold">04</span>
+}
 </div>
-<div class="absolute bottom-2 right-2 bg-primary/80 backdrop-blur-sm text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">groups</span> 12 clinician slots
-              </div>
-</div>
-<div class="p-space-md flex flex-col gap-space-xs">
-<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Appalachia Health Mission
-              </div>
-<h3 class="font-title-lg text-title-lg text-primary">Mobile Medical Van for Remote Elders</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Bringing free preventative screenings, blood glucose monitoring, dental checks, and prescription delivery to remote valleys.
-              </p>
-</div>
-</div>
-<div class="p-space-md pt-0">
-<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="~/Programmes">
-<span class="material-symbols-outlined text-[18px]">check</span> I'm interested
-            </a>
-</div>
-</div>
-<!-- Event Card 3 -->
-<div class="bg-surface-container-lowest rounded-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
-<div>
-<div class="relative h-44 w-full overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="High school and college youth assembling solar power sensors in a bright community workshop, high energy teamwork, modern setting" src="/images/home-16.jpg"/>
-<div class="absolute top-3 left-3 bg-secondary text-on-secondary rounded-lg px-space-sm py-1 flex flex-col items-center leading-tight shadow-md">
-<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">NOV</span>
-<span class="font-title-lg text-title-lg font-bold">12</span>
-</div>
-<div class="absolute bottom-2 right-2 bg-primary/80 backdrop-blur-sm text-on-primary px-space-sm py-0.5 rounded-full font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">groups</span> 30 youth seats
-              </div>
-</div>
-<div class="p-space-md flex flex-col gap-space-xs">
-<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
-<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                Metro Tech Center &amp; Lab
-              </div>
-<h3 class="font-title-lg text-title-lg text-primary">Youth Eco-Tech &amp; Skills Bootcamp</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                Hands-on weekend sprint teaching clean technology, IoT environmental sensors, and career placement mentorship.
-              </p>
-</div>
-</div>
-<div class="p-space-md pt-0">
-<a class="w-full bg-primary hover:bg-primary-container text-on-primary py-space-sm rounded-xl font-label-lg text-label-lg uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-space-xs" href="~/Programmes">
-<span class="material-symbols-outlined text-[18px]">check</span> I'm interested
-            </a>
-</div>
-</div>
-</div>
+}
 </div>
 </section>
 <!-- 5. ABOUT US SECTION (Split Layout) -->
@@ -530,27 +311,27 @@
           </p>
 <!-- 2-Column Quick Links Grid -->
 <div class="grid grid-cols-2 gap-space-sm pt-space-xs">
-<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="~/about-us#what-we-do">
 <span class="font-title-sm text-title-sm text-primary">What we do</span>
 <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </a>
-<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="~/about-us#our-achievements">
 <span class="font-title-sm text-title-sm text-primary">Our achievements</span>
 <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </a>
-<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="~/about-us#our-mission">
 <span class="font-title-sm text-title-sm text-primary">Our mission</span>
 <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </a>
-<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="~/about-us#our-supporters">
 <span class="font-title-sm text-title-sm text-primary">Our supporters</span>
 <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </a>
-<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="~/about-us#our-team">
 <span class="font-title-sm text-title-sm text-primary">Our leadership team</span>
 <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </a>
-<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="#">
+<a class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container flex items-center justify-between group transition-colors" href="~/about-us#career-with-us">
 <span class="font-title-sm text-title-sm text-primary">Careers with us</span>
 <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </a>
@@ -572,41 +353,38 @@
             Institutional matching funds double the velocity of your contribution automatically upon receipt.
           </p>
 </div>
-<!-- Stylized Corporate Badges Row -->
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-space-md w-full pt-space-sm">
-<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
+<!-- Partner logos (admin panel ke Our Partners se) -->
+@{
+    var homePartners = ViewBag.Partners as List<Partner> ?? new List<Partner>();
+}
+@if (homePartners.Count == 0)
+{
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-space-sm">Our partner companies will be listed here soon.</p>
+}
+else
+{
+<div class="flex flex-wrap justify-center gap-space-md w-full pt-space-sm">
+@foreach (var partner in homePartners)
+{
+    var hasSite = !string.IsNullOrEmpty(partner.WebsiteUrl);
+<a href="@(hasSite ? partner.WebsiteUrl : "#partners-section")" target="@(hasSite ? "_blank" : null)" rel="@(hasSite ? "noopener" : null)" title="@partner.Description"
+   class="h-16 min-w-[180px] px-space-md rounded-xl bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition-colors">
+@if (!string.IsNullOrEmpty(partner.LogoPath))
+{
+<img src="@partner.LogoPath" alt="@partner.PartnerName" class="max-h-10 max-w-[150px] object-contain" loading="lazy"/>
+}
+else
+{
 <span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
-<span class="material-symbols-outlined text-secondary">memory</span> TechCorp
-            </span>
+<span class="material-symbols-outlined text-secondary">handshake</span> @partner.PartnerName
+</span>
+}
+</a>
+}
 </div>
-<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
-<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
-<span class="material-symbols-outlined text-secondary">health_and_safety</span> HealthFirst
-            </span>
-</div>
-<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
-<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
-<span class="material-symbols-outlined text-secondary">account_balance</span> Global Bank
-            </span>
-</div>
-<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
-<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
-<span class="material-symbols-outlined text-secondary">eco</span> GreenLife
-            </span>
-</div>
-<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
-<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
-<span class="material-symbols-outlined text-secondary">rocket_launch</span> Apex Ventures
-            </span>
-</div>
-<div class="h-16 rounded-xl bg-surface-container-low flex items-center justify-center p-space-sm hover:bg-surface-container transition-colors">
-<span class="font-title-md text-title-md font-bold tracking-tight text-primary flex items-center gap-1">
-<span class="material-symbols-outlined text-secondary">public</span> Horizon Media
-            </span>
-</div>
-</div>
+}
 <div class="pt-space-xs">
-<a class="font-label-lg text-label-lg text-secondary hover:text-primary uppercase tracking-wider font-bold inline-flex items-center gap-1" href="~/HelpCentre#contact">
+<a class="font-label-lg text-label-lg text-secondary hover:text-primary uppercase tracking-wider font-bold inline-flex items-center gap-1" href="~/contact-us?subject=Corporate%20partnership">
             Join as corporate partner <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
 </a>
 </div>
@@ -621,11 +399,44 @@
 <span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest font-bold">Field Chronicles</span>
 <h2 class="font-headline-sm text-headline-sm text-primary font-normal">Real stories. Tangible dignity.</h2>
 </div>
-<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+<div class="flex flex-col md:items-end gap-space-xs">
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md md:text-right">
           Unfiltered moments captured directly by field partners across 34 operational countries this month.
         </p>
+<a class="font-title-sm text-title-sm text-primary hover:text-secondary inline-flex items-center gap-1 font-semibold" asp-controller="PhotoGallery" asp-action="Index">
+          View full gallery <span class="material-symbols-outlined text-[18px]">photo_library</span>
+</a>
 </div>
-<!-- 5 Photo Tiles Strip -->
+</div>
+@{
+    // Admin ki upload ki hui gallery photos; na hon to neeche wali default photos dikhti hain
+    var galleryPhotos = ViewBag.GalleryPhotos as List<GalleryImage> ?? new List<GalleryImage>();
+}
+@if (galleryPhotos.Count > 0)
+{
+<div class="grid grid-cols-2 md:grid-cols-5 gap-space-sm">
+    @for (int i = 0; i < galleryPhotos.Count; i++)
+    {
+        var photo = galleryPhotos[i];
+        var label = photo.Category ?? photo.Programme?.Title;
+        var lastOdd = i == galleryPhotos.Count - 1 && galleryPhotos.Count % 2 == 1;
+        <a asp-controller="PhotoGallery" asp-action="Index" class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container @(lastOdd ? "col-span-2 md:col-span-1" : "")">
+            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="@photo.ImagePath" alt="@photo.Title" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+            <div class="absolute bottom-3 left-3 right-3 text-on-primary">
+                @if (!string.IsNullOrEmpty(label))
+                {
+                    <p class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-wider">@label</p>
+                }
+                <p class="font-title-sm text-title-sm leading-snug">@photo.Title</p>
+            </div>
+        </a>
+    }
+</div>
+}
+else
+{
+@* 5 Photo Tiles Strip (default, jab tak gallery khaali hai) *@
 <div class="grid grid-cols-2 md:grid-cols-5 gap-space-sm">
 <!-- Tile 1 -->
 <div class="group relative h-64 rounded-xl overflow-hidden shadow-sm bg-surface-container">
@@ -673,6 +484,7 @@
 </div>
 </div>
 </div>
+}
 </div>
 </section>
 <!-- 8. ENGAGEMENT CALLOUT BANNER -->

@@ -1,0 +1,127 @@
+@model ChatInboxViewModel
+@{
+    ViewData["Title"] = "Live Chat";
+    var selected = Model.Selected;
+    var lastId = Model.Messages.Count == 0 ? 0 : Model.Messages.Max(m => m.ChatMessageId);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Live Chat</h1>
+        <p>Chats started from the "Launch Chat" button on the Help Centre. While this page is open, the website shows chat as <b>Online</b>.</p>
+    </div>
+    <span class="badge badge-green">You are online</span>
+</div>
+
+@if (Model.Sessions.Count == 0)
+{
+    <section class="card">
+        <div class="empty">
+            <span class="material-symbols-outlined">forum</span>
+            <h3>No chats yet</h3>
+            <p>When a visitor starts a chat on the Help Centre, it will appear here. Keep this page open to show as online.</p>
+        </div>
+    </section>
+}
+else
+{
+<div class="chat-layout">
+
+    <!-- ===== Chat list ===== -->
+    <section class="card chat-list" id="chatList" aria-label="Chats">
+        @foreach (var s in Model.Sessions)
+        {
+            var active = selected?.ChatSessionId == s.Id;
+            <a class="chat-item @(active ? "active" : "") @(s.IsClosed ? "closed" : "")" asp-action="Index" asp-route-id="@s.Id" data-id="@s.Id">
+                <span class="avatar">@s.VisitorName.Substring(0, 1).ToUpper()</span>
+                <span class="chat-item-main">
+                    <span class="chat-item-top">
+                        <b>@s.VisitorName</b>
+                        <small>@s.LastMessageAt.ToString("dd MMM, hh:mm tt")</small>
+                    </span>
+                    <span class="chat-item-text">@(s.IsClosed ? "Closed · " : "")@(s.LastText ?? "No messages yet")</span>
+                </span>
+                @if (s.Unread > 0)
+                {
+                    <span class="nav-count">@s.Unread</span>
+                }
+            </a>
+        }
+    </section>
+
+    <!-- ===== Selected chat ===== -->
+    <section class="card chat-panel">
+        @if (selected == null)
+        {
+            <div class="empty">
+                <span class="material-symbols-outlined">chat</span>
+                <h3>Select a chat</h3>
+                <p>Pick a conversation from the list.</p>
+            </div>
+        }
+        else
+        {
+            <div class="chat-head">
+                <span class="avatar">@selected.VisitorName.Substring(0, 1).ToUpper()</span>
+                <div class="chat-head-main">
+                    <div class="cell-title">@selected.VisitorName</div>
+                    <a class="cell-sub" href="mailto:@selected.VisitorEmail">@selected.VisitorEmail</a>
+                    <div class="cell-sub">Started @selected.StartedAt.ToString("dd MMM yyyy, hh:mm tt")</div>
+                </div>
+                <div class="row-actions">
+                    <form asp-action="ToggleClosed" asp-route-id="@selected.ChatSessionId" method="post">
+                        <button type="submit" class="btn btn-ghost">
+                            <span class="material-symbols-outlined">@(selected.IsClosed ? "lock_open" : "lock")</span>
+                            @(selected.IsClosed ? "Reopen" : "Close chat")
+                        </button>
+                    </form>
+                    <form asp-action="Delete" asp-route-id="@selected.ChatSessionId" method="post"
+                          data-confirm="Delete the whole chat with @selected.VisitorName? This cannot be undone.">
+                        <button type="submit" class="icon-btn danger" title="Delete chat" aria-label="Delete chat">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="adminMessages"
+                 data-id="@selected.ChatSessionId"
+                 data-last="@lastId"
+                 data-poll-url="@Url.Action("Poll")"
+                 data-reply-url="@Url.Action("Reply")">
+                @if (Model.Messages.Count == 0)
+                {
+                    <p class="chat-notice" id="noMessages">The visitor hasn't written anything yet.</p>
+                }
+                @foreach (var m in Model.Messages)
+                {
+                    <div class="bubble-row @(m.FromAdmin ? "me" : "")">
+                        <div class="bubble">@m.Text</div>
+                        <span class="bubble-meta">@(m.FromAdmin ? "You" : selected.VisitorName) · @m.SentAt.ToString("hh:mm tt")</span>
+                    </div>
+                }
+            </div>
+
+            @if (selected.IsClosed)
+            {
+                <p class="chat-notice closed-note">This chat is closed. Reopen it to send a reply.</p>
+            }
+            else
+            {
+                <form class="chat-reply" id="adminReply">
+                    @Html.AntiForgeryToken()
+                    <textarea class="textarea" id="replyText" rows="2" maxlength="1000"
+                              placeholder="Write a reply… (Enter to send, Shift+Enter for a new line)" aria-label="Reply"></textarea>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="material-symbols-outlined">send</span> Send
+                    </button>
+                </form>
+            }
+        }
+    </section>
+</div>
+}
+
+@section Scripts {
+<script src="~/js/admin-chat.js" asp-append-version="true"></script>
+}

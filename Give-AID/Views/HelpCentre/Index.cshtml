@@ -1,6 +1,17 @@
-﻿@model Give_AID.Models.HelpCentreViewModel
+﻿@inject Give_AID.Data.AppDBContext Db
 @{
     ViewData["Title"] = "Help Centre & Contact Us";
+
+    // Contact section ki details admin panel (Contact Us) se
+    var contact = Db.ContactInfos.FirstOrDefault() ?? new ContactInfo();
+
+    // Query form: login user ka naam/email pehle se, aur submit ke baad ka message
+    var signedIn = User.Identity?.IsAuthenticated == true;
+    var queryName = signedIn ? User.Identity!.Name : "";
+    var queryEmail = signedIn ? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value : "";
+    var querySent = TempData["QuerySent"] as string;
+    var querySentEmail = TempData["QueryEmail"] as string;
+    var queryError = TempData["QueryError"] as string;
 }
 
 <div class="flex flex-col w-full">
@@ -121,7 +132,7 @@
 <span class="font-label-md text-label-md text-secondary uppercase tracking-widest block">Direct Knowledge Base</span>
 <h2 class="font-headline-lg text-headline-lg text-primary font-medium">Frequently Answered Protocols</h2>
 </div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Updated Nov 2024</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Updated Nov 2026</span>
 </div>
 <!-- FAQ 1: EXPANDED STATE -->
 <div class="faq-item bg-surface-container-lowest rounded-xl shadow-md overflow-hidden transition-all duration-300">
@@ -239,7 +250,7 @@
 </div>
 </div>
 <!-- Right Column: "Raise a Query" Support Card (5 Cols) -->
-<div class="lg:col-span-5">
+<div class="lg:col-span-5 scroll-mt-28" id="raise-query">
 <div class="bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden relative">
 <!-- Accent Top Bar -->
 <div class="h-2 w-full bg-gradient-to-r from-primary via-primary-container to-secondary"></div>
@@ -256,38 +267,35 @@
                   Our welfare support staff typically responds within 3 hours.
                 </p>
 </div>
+@if (querySent != null)
+{
+<div class="bg-tertiary-fixed/30 p-space-md rounded-xl flex items-start gap-space-sm text-tertiary" role="status">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+<div>
+<h4 class="font-title-sm text-title-sm font-bold">Query received – your reference is @querySent</h4>
+<p class="font-body-sm text-body-sm">Keep this number. You can check our reply any time on the tracking page using this number and @querySentEmail.</p>
+<a class="inline-flex items-center gap-1 mt-1 font-label-md text-label-md font-bold hover:underline" asp-action="Track" asp-route-reference="@querySent">
+                    Track this query <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+}
+@if (queryError != null)
+{
+<div class="bg-error-container p-space-md rounded-xl flex items-center gap-space-sm text-on-error-container" role="alert">
+<span class="material-symbols-outlined text-[22px]">error</span>
+<p class="font-body-sm text-body-sm">@queryError</p>
+</div>
+}
 <!-- Interactive Form -->
-@if (Model != null && Model.IsSuccess)
-{
-    <div class="bg-tertiary-fixed/30 p-space-md rounded-xl flex items-center gap-space-sm text-tertiary animate-fadeIn mb-space-md" id="querySuccessMessage">
-        <span class="material-symbols-outlined text-[24px]">task_alt</span>
-        <div>
-            <h4 class="font-title-sm text-title-sm font-bold">Query Dispatched (@Model.ReferenceNumber)</h4>
-            <p class="font-body-sm text-body-sm">@Model.SuccessMessage</p>
-        </div>
-    </div>
-}
-
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="p-space-md rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm mb-space-md">
-        <div class="flex items-center gap-2 font-bold mb-1">
-            <span class="material-symbols-outlined text-[18px]">error</span>
-            <span>Please correct the errors below:</span>
-        </div>
-        <div asp-validation-summary="All" class="text-xs list-disc list-inside"></div>
-    </div>
-}
-
 <form class="flex flex-col gap-space-md" id="supportQueryForm" method="post" asp-controller="HelpCentre" asp-action="Query">
-@Html.AntiForgeryToken()
 <!-- Full Name Field -->
 <div class="flex flex-col gap-1.5">
 <label class="font-label-md text-label-md text-on-surface font-semibold" for="fullName">
                     Full Name <span class="text-secondary">*</span>
 </label>
 <div class="relative">
-<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="fullName" name="FullName" value="@Model?.FullName" autocomplete="name" placeholder="Your full name" minlength="2" required type="text"/>
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="fullName" name="FullName" autocomplete="name" placeholder="Your full name" minlength="2" maxlength="100" required type="text" value="@queryName"/>
 <span class="material-symbols-outlined absolute right-3 top-3 text-[18px] text-outline">badge</span>
 </div>
 </div>
@@ -297,7 +305,7 @@
                     Email Address <span class="text-secondary">*</span>
 </label>
 <div class="relative">
-<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="emailAddress" name="Email" value="@Model?.Email" autocomplete="email" placeholder="you@@example.com" required type="email"/>
+<input class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" id="emailAddress" name="Email" autocomplete="email" placeholder="you@@example.com" maxlength="100" required type="email" value="@queryEmail"/>
 <span class="material-symbols-outlined absolute right-3 top-3 text-[18px] text-outline">mail</span>
 </div>
 </div>
@@ -308,18 +316,18 @@
 </label>
 <div class="relative">
 <select class="w-full appearance-none bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="topicSelect" name="Topic" required>
-<option value="donation" selected="@(Model?.Topic == "donation" ? "selected" : null)">Donation &amp; Tax Inquiries</option>
-<option value="volunteer" selected="@(Model?.Topic == "volunteer" ? "selected" : null)">Volunteer Verification</option>
-<option value="corporate" selected="@(Model?.Topic == "corporate" ? "selected" : null)">Corporate Partnership</option>
-<option value="technical" selected="@(Model?.Topic == "technical" ? "selected" : null)">Technical Support</option>
-<option value="issue" selected="@(Model?.Topic == "issue" ? "selected" : null)">Report an Issue / Fraud Alert</option>
+<option selected="" value="donation">Donation &amp; Tax Inquiries</option>
+<option value="volunteer">Volunteer Verification</option>
+<option value="corporate">Corporate Partnership</option>
+<option value="technical">Technical Support</option>
+<option value="issue">Report an Issue / Fraud Alert</option>
 </select>
 <span class="material-symbols-outlined absolute right-3 top-3 text-[20px] text-outline pointer-events-none">expand_more</span>
 </div>
 </div>
 <!-- Urgent Priority Toggle Checkbox -->
 <div class="bg-surface-container-low p-space-sm rounded-lg flex items-start gap-space-sm">
-<input class="mt-1 w-4 h-4 rounded text-secondary focus:ring-secondary cursor-pointer" id="urgentToggle" name="IsUrgent" value="true" type="checkbox" @(Model != null && Model.IsUrgent ? "checked" : "")/>
+<input class="mt-1 w-4 h-4 rounded text-secondary focus:ring-secondary cursor-pointer" id="urgentToggle" name="IsUrgent" value="true" type="checkbox"/>
 <label class="cursor-pointer" for="urgentToggle">
 <div class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1">
 <span>Mark as urgent</span>
@@ -333,7 +341,7 @@
 <label class="font-label-md text-label-md text-on-surface font-semibold" for="messageBox">
                     Detailed Message <span class="text-secondary">*</span>
 </label>
-<textarea class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none" id="messageBox" name="Message" minlength="10" maxlength="2000" placeholder="Describe your inquiry or request in detail..." required="" rows="4">@Model?.Message</textarea>
+<textarea class="w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none" id="messageBox" name="Message" minlength="10" maxlength="2000" placeholder="Describe your inquiry or request in detail..." required="" rows="4"></textarea>
 </div>
 <!-- Submit Button -->
 <button class="w-full bg-secondary hover:bg-secondary-container text-on-secondary py-space-sm rounded-lg font-label-lg text-label-lg uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-space-xs" id="submitQueryBtn" type="submit">
@@ -345,15 +353,10 @@
 <span class="material-symbols-outlined text-[16px] text-tertiary">schedule</span>
 <span>Official response SLA: Under 4 business hours.</span>
 </div>
+<a class="self-center inline-flex items-center gap-1 font-label-md text-label-md text-secondary hover:text-primary font-bold" asp-action="Track">
+                  Already raised a query? Track it here <span class="material-symbols-outlined text-[16px]">manage_search</span>
+</a>
 </form>
-<!-- Success Notification Alert (hidden by default) -->
-<div class="hidden bg-tertiary-fixed/30 p-space-md rounded-xl items-center gap-space-sm text-tertiary animate-fadeIn" id="querySuccessMessage">
-<span class="material-symbols-outlined text-[24px]">task_alt</span>
-<div>
-<h4 class="font-title-sm text-title-sm font-bold">Query Dispatched (#GA-8924)</h4>
-<p class="font-body-sm text-body-sm">A welfare coordinator has been allocated. Check your email for tracking.</p>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -389,14 +392,16 @@
 </div>
 <div>
 <h4 class="font-title-sm text-title-sm text-primary font-bold">Give-AID Global Welfare HQ</h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant">240 Welfare Way, Suite 400<br/>San Francisco, CA 94107</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">@contact.Address<br/>@contact.City</p>
+@if (!string.IsNullOrEmpty(contact.MapLink))
+{
 <div class="mt-space-xs flex items-center gap-space-md">
-<a class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:underline font-semibold" href="https://maps.google.com/?q=240+Welfare+Way+San+Francisco+CA+94107" rel="noopener noreferrer" target="_blank">
+<a class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:underline font-semibold" href="@contact.MapLink" rel="noopener noreferrer" target="_blank">
 <span>Get Directions</span>
 <span class="material-symbols-outlined text-[14px]">directions</span>
 </a>
-<span class="font-label-sm text-label-sm text-outline">• Public Transit Nearby</span>
 </div>
+}
 </div>
 </div>
 </div>
@@ -405,18 +410,18 @@
 <div class="lg:col-span-6 p-space-lg lg:p-space-xl flex flex-col justify-between gap-space-md">
 <div class="flex flex-col gap-space-md">
 <!-- Live Chat Status Banner -->
-<div class="bg-tertiary-fixed/30 rounded-xl p-space-md flex items-center justify-between">
+<div class="bg-tertiary-fixed/30 rounded-xl p-space-md flex items-center justify-between gap-space-sm">
 <div class="flex items-center gap-space-sm">
 <div class="relative flex items-center justify-center">
-<span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping absolute"></span>
-<span class="w-3 h-3 rounded-full bg-emerald-500 relative"></span>
+<span class="hidden w-3 h-3 rounded-full bg-emerald-500 animate-ping absolute" data-chat-ping></span>
+<span class="w-3 h-3 rounded-full bg-outline relative" data-chat-dot></span>
 </div>
 <div>
-<div class="font-label-md text-label-md text-tertiary font-bold tracking-wide uppercase">Live Chat Status: Online</div>
-<div class="font-body-sm text-body-sm text-on-tertiary-fixed-variant">Average response wait: <strong>45 seconds</strong></div>
+<div class="font-label-md text-label-md text-tertiary font-bold tracking-wide uppercase" data-chat-banner>Live Chat</div>
+<div class="font-body-sm text-body-sm text-on-tertiary-fixed-variant" data-chat-sub>Chat with our support team.</div>
 </div>
 </div>
-<button class="bg-tertiary text-on-tertiary hover:bg-tertiary-container px-space-md py-1.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider transition-colors shrink-0 shadow-sm flex items-center gap-1" id="openLiveChatBtn">
+<button type="button" class="bg-tertiary text-on-tertiary hover:bg-tertiary-container px-space-md py-1.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider transition-colors shrink-0 shadow-sm flex items-center gap-1" id="openLiveChatBtn" data-open-chat>
 <span class="material-symbols-outlined text-[16px]">chat</span>
 <span>Launch Chat</span>
 </button>
@@ -430,8 +435,8 @@
 </div>
 <div>
 <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Physical Campus</div>
-<div class="font-title-sm text-title-sm text-on-surface font-semibold">240 Welfare Way, Suite 400</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant">San Francisco, CA 94107 • United States</div>
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">@contact.Address</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">@contact.City</div>
 </div>
 </div>
 <!-- Phone Inquiries -->
@@ -441,8 +446,8 @@
 </div>
 <div>
 <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Direct Hotline (Toll-Free)</div>
-<a class="font-title-sm text-title-sm text-primary hover:text-secondary font-bold transition-colors" href="tel:+18004483243">
-                    +1 (800) 448-3243
+<a class="font-title-sm text-title-sm text-primary hover:text-secondary font-bold transition-colors" href="tel:@(contact.Phone.Replace(" ", ""))">
+                    @contact.Phone
                   </a>
 <div class="font-body-sm text-body-sm text-on-surface-variant">Multi-lingual support available in English, Spanish, and French.</div>
 </div>
@@ -455,15 +460,20 @@
 <div>
 <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Electronic Inquiries</div>
 <div class="flex flex-wrap gap-x-space-md gap-y-1">
-<a class="font-title-sm text-title-sm text-primary hover:underline font-semibold" href="mailto:support@@give-aid.org">
-                      support@@give-aid.org
+<a class="font-title-sm text-title-sm text-primary hover:underline font-semibold" href="mailto:@contact.Email">
+                      @contact.Email
                     </a>
+@if (!string.IsNullOrEmpty(contact.SecondEmail))
+{
 <span class="text-outline">•</span>
-<a class="font-title-sm text-title-sm text-primary hover:underline font-semibold" href="mailto:partnerships@@give-aid.org">
-                      partnerships@@give-aid.org
+<a class="font-title-sm text-title-sm text-primary hover:underline font-semibold" href="mailto:@contact.SecondEmail">
+                      @contact.SecondEmail
                     </a>
+}
 </div>
-<div class="font-body-sm text-body-sm text-on-surface-variant">For corporate CSR audits: fiscal@@give-aid.org</div>
+<a class="inline-flex items-center gap-1 mt-1 font-label-md text-label-md text-secondary hover:text-primary font-bold" asp-controller="ContactUs" asp-action="Index">
+                    Or send us a message <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </a>
 </div>
 </div>
 <!-- Operating Hours -->
@@ -474,10 +484,10 @@
 <div>
 <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Operational Hours</div>
 <div class="font-body-md text-body-md text-on-surface font-semibold">
-                    Monday – Friday: 8:00 AM – 8:00 PM EST
+                    @contact.OfficeHours
                   </div>
 <div class="font-body-sm text-body-sm text-on-surface-variant">
-                    Saturday: 9:00 AM – 4:00 PM EST • Sunday: Emergency Dispatch Only
+                    @contact.WeekendHours
                   </div>
 </div>
 </div>
@@ -496,6 +506,8 @@
 </section>
 <!-- Interactive Script for FAQ Accordions, Live Chat, and Form Submission -->
 </div>
+
+<partial name="_ChatWidget" />
 
 @section Scripts {
 <script>
@@ -579,7 +591,7 @@
       if (faqSearchButton) faqSearchButton.addEventListener('click', filterFaqs);
       pills.forEach(pill => pill.addEventListener('click', filterFaqs));
 
-      // Raise a Query — validate on client, then post to HelpCentreController.Query
+      // Raise a Query — browser check kare, phir server par bhejo (do baar click se do queries na banein)
       const queryForm = document.getElementById('supportQueryForm');
       queryForm.addEventListener('submit', (e) => {
         if (!queryForm.checkValidity()) {
@@ -587,32 +599,12 @@
           queryForm.reportValidity();
           return;
         }
-        // Submits directly to HelpCentreController.Query
+        const submitBtn = document.getElementById('submitQueryBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Sending...</span>';
       });
 
-      // Live Chat Modal Feedback
-      const liveChatBtn = document.getElementById('openLiveChatBtn');
-      if (liveChatBtn) {
-        liveChatBtn.addEventListener('click', () => {
-          alert('Connecting to Live Welfare Coordinator... (Avg wait time: 45 sec). Representative Sarah Jenkins will join momentarily.');
-        });
-      }
     });
-
-    // Form Submission Interactive Handler
-    function handleFormSubmit() {
-      const form = document.getElementById('supportQueryForm');
-      const successMsg = document.getElementById('querySuccessMessage');
-      const submitBtn = document.getElementById('submitQueryBtn');
-
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Transmitting Dispatch...</span>';
-
-      setTimeout(() => {
-        form.classList.add('hidden');
-        successMsg.classList.remove('hidden');
-        successMsg.classList.add('flex');
-      }, 700);
-    }
   </script>
+<script src="~/js/chat.js" asp-append-version="true"></script>
 }

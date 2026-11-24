@@ -1,0 +1,155 @@
+@model QueryInboxViewModel
+@{
+    ViewData["Title"] = "Queries";
+    var filtered = !string.IsNullOrWhiteSpace(Model.Search);
+
+    var tabs = new[]
+    {
+        new { Key = "open",     Text = "Needs reply", Count = Model.OpenCount },
+        new { Key = "urgent",   Text = "Urgent",      Count = Model.UrgentCount },
+        new { Key = "answered", Text = "Answered",    Count = Model.AnsweredCount },
+        new { Key = "closed",   Text = "Closed",      Count = Model.ClosedCount },
+        new { Key = "all",      Text = "All",         Count = Model.TotalCount },
+    };
+}
+
+<div class="page-header">
+    <div>
+        <h1>Queries</h1>
+        <p>Questions raised from the Help Centre. Your reply is shown to the user on the "Track your query" page.</p>
+    </div>
+    <a class="btn btn-ghost" asp-area="" asp-controller="HelpCentre" asp-action="Track" target="_blank">
+        <span class="material-symbols-outlined">open_in_new</span> Track page
+    </a>
+</div>
+
+<section class="stats">
+    <a class="card stat" asp-action="Index" asp-route-filter="open">
+        <span class="stat-icon coral"><span class="material-symbols-outlined">pending_actions</span></span>
+        <div>
+            <div class="stat-value">@Model.OpenCount</div>
+            <div class="stat-label">Waiting for a reply</div>
+        </div>
+    </a>
+    <a class="card stat" asp-action="Index" asp-route-filter="urgent">
+        <span class="stat-icon sand"><span class="material-symbols-outlined">priority_high</span></span>
+        <div>
+            <div class="stat-value">@Model.UrgentCount</div>
+            <div class="stat-label">Urgent &amp; waiting</div>
+        </div>
+    </a>
+    <a class="card stat" asp-action="Index" asp-route-filter="answered">
+        <span class="stat-icon teal"><span class="material-symbols-outlined">mark_email_read</span></span>
+        <div>
+            <div class="stat-value">@Model.AnsweredCount</div>
+            <div class="stat-label">Answered</div>
+        </div>
+    </a>
+</section>
+
+<section class="card">
+    <div class="toolbar">
+        <div class="filter-tabs">
+            @foreach (var t in tabs)
+            {
+                <a asp-action="Index" asp-route-filter="@t.Key" asp-route-q="@Model.Search"
+                   class="filter-tab @(Model.Filter == t.Key ? "active" : "")" aria-current="@(Model.Filter == t.Key ? "page" : null)">
+                    @t.Text <span>@t.Count</span>
+                </a>
+            }
+        </div>
+        <form method="get" asp-action="Index">
+            <input type="hidden" name="filter" value="@Model.Filter" />
+            <div class="search">
+                <span class="material-symbols-outlined">search</span>
+                <input class="input" type="search" name="q" value="@Model.Search"
+                       placeholder="Search name, email, GA-number…" aria-label="Search queries" />
+            </div>
+            <button type="submit" class="btn btn-teal">Search</button>
+            @if (filtered)
+            {
+                <a class="btn btn-ghost" asp-action="Index" asp-route-filter="@Model.Filter">Clear</a>
+            }
+        </form>
+    </div>
+
+    @if (Model.Queries.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">@(filtered ? "search_off" : "task_alt")</span>
+            <h3>@(filtered ? "No matching queries" : Model.Filter == "open" ? "All caught up!" : "No queries here")</h3>
+            <p>@(filtered ? "Try another name, email or reference number." : Model.Filter == "open" ? "Every query has been answered." : "Queries raised from the Help Centre will appear here.")</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="col-id">Ref</th>
+                        <th>From</th>
+                        <th>Topic &amp; message</th>
+                        <th>Received</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var x in Model.Queries)
+                {
+                    <tr class="@(x.Status == QueryStatus.Open ? "row-unread" : "")">
+                        <td class="col-id nowrap">@x.Reference</td>
+                        <td>
+                            <div class="cell-main">
+                                <span class="avatar">@x.FullName.Substring(0, 1).ToUpper()</span>
+                                <div>
+                                    <div class="cell-title">@x.FullName</div>
+                                    <div class="cell-sub">@x.Email</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="cell-link" asp-action="Details" asp-route-id="@x.UserQueryId">@QueryTopics.Name(x.Topic)</a>
+                            <div class="clamp small muted">@x.Message</div>
+                        </td>
+                        <td class="nowrap muted">@x.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</td>
+                        <td class="nowrap">
+                            @if (x.IsUrgent && x.Status == QueryStatus.Open)
+                            {
+                                <span class="badge badge-coral">Urgent</span>
+                            }
+                            else if (x.Status == QueryStatus.Open)
+                            {
+                                <span class="badge badge-grey">Needs reply</span>
+                            }
+                            else if (x.Status == QueryStatus.Answered)
+                            {
+                                <span class="badge badge-green">Answered</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-teal">Closed</span>
+                            }
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <a class="icon-btn edit" title="Open & reply" aria-label="Open query @x.Reference"
+                                   asp-action="Details" asp-route-id="@x.UserQueryId">
+                                    <span class="material-symbols-outlined">reply</span>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@x.UserQueryId" method="post"
+                                      data-confirm="Delete query @x.Reference from @x.FullName? This cannot be undone.">
+                                    <button type="submit" class="icon-btn danger" title="Delete" aria-label="Delete query @x.Reference">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

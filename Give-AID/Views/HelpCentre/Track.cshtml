@@ -1,0 +1,122 @@
+@model QueryTrackViewModel
+@{
+    ViewData["Title"] = "Track your query";
+
+    const string inputCls = "w-full bg-surface-container-low text-on-surface px-space-md py-space-sm rounded-lg font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all";
+    const string labelCls = "font-label-md text-label-md text-on-surface font-semibold";
+}
+
+@functions {
+    // Status ke hisaab se rang aur icon
+    static (string Css, string Icon, string Text) StatusLook(string status) => status switch
+    {
+        QueryStatus.Answered => ("bg-tertiary-fixed/40 text-tertiary", "mark_email_read", "Answered"),
+        QueryStatus.Closed => ("bg-surface-container text-on-surface-variant", "lock", "Closed"),
+        _ => ("bg-secondary-fixed text-on-secondary-fixed", "hourglass_top", "Waiting for reply")
+    };
+}
+
+<div class="flex flex-col w-full">
+
+<!-- ===== PAGE INTRO ===== -->
+<section class="w-full bg-primary text-on-primary py-space-xl">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin">
+    <nav class="flex items-center gap-space-xs text-on-primary-container font-label-md text-label-md mb-space-md">
+        <a class="hover:text-on-primary transition-colors" asp-controller="Home" asp-action="Index">Home</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <a class="hover:text-on-primary transition-colors" asp-action="Index">Help Centre</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-on-primary font-semibold">Track your query</span>
+    </nav>
+    <h1 class="font-headline-lg text-headline-lg font-normal max-w-3xl">Track your query</h1>
+    <p class="font-body-md text-body-md text-on-primary-container mt-space-xs max-w-2xl">
+        Enter the reference number you received (for example GA-00012) and your email to see the status and our reply.
+    </p>
+</div>
+</section>
+
+<section class="w-full bg-surface-container-low py-space-xl min-h-[50vh]">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+
+    <!-- ===== LOOKUP FORM ===== -->
+    <div class="lg:col-span-4 bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg">
+        <h2 class="font-headline-sm text-headline-sm text-primary font-normal mb-space-md">Find a query</h2>
+        <form asp-action="Track" method="post" class="flex flex-col gap-space-md">
+            <div class="flex flex-col gap-1.5">
+                <label for="reference" class="@labelCls">Reference number <span class="text-secondary">*</span></label>
+                <input id="reference" name="reference" class="@inputCls uppercase" placeholder="GA-00012" required maxlength="20" value="@Model.Reference" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label for="email" class="@labelCls">Email used in the query <span class="text-secondary">*</span></label>
+                <input id="email" name="email" type="email" class="@inputCls" placeholder="you@@example.com" required maxlength="100" value="@Model.Email" />
+            </div>
+            <button type="submit" class="w-full bg-secondary hover:bg-secondary-container text-on-secondary py-space-sm rounded-lg font-label-lg text-label-lg uppercase tracking-wider transition-colors flex items-center justify-center gap-space-xs">
+                <span class="material-symbols-outlined text-[18px]">manage_search</span> Check status
+            </button>
+        </form>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-md">
+            Need to ask something new?
+            <a class="text-secondary font-semibold hover:underline" href="@Url.Action("Index")#raise-query">Raise a query</a>
+        </p>
+    </div>
+
+    <div class="lg:col-span-8 flex flex-col gap-space-lg">
+
+        <!-- ===== SEARCH RESULT ===== -->
+        @if (Model.Searched && Model.Result == null)
+        {
+            <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex items-start gap-space-md">
+                <span class="material-symbols-outlined text-error text-[28px]">search_off</span>
+                <div>
+                    <h2 class="font-title-lg text-title-lg text-primary">No query found</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Please check the reference number and make sure the email is the same one you used when sending the query.</p>
+                </div>
+            </div>
+        }
+        else if (Model.Result != null)
+        {
+            <partial name="_QueryCard" model="Model.Result" />
+        }
+        else if (Model.MyQueries.Count == 0)
+        {
+            <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex items-start gap-space-md">
+                <span class="material-symbols-outlined text-secondary text-[28px]">contact_support</span>
+                <div>
+                    <h2 class="font-title-lg text-title-lg text-primary">Your reply will appear here</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Enter your reference number and email on the left. If you are logged in, all your queries are listed here automatically.</p>
+                </div>
+            </div>
+        }
+
+        <!-- ===== LOGIN USER KI APNI QUERIES ===== -->
+        @if (Model.MyQueries.Count > 0)
+        {
+            <div>
+                <h2 class="font-headline-sm text-headline-sm text-primary font-normal mb-space-md">Your queries</h2>
+                <div class="flex flex-col gap-space-sm">
+                    @foreach (var q in Model.MyQueries)
+                    {
+                        var look = StatusLook(q.Status);
+                        <details class="group bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden" open="@(Model.MyQueries.Count == 1)">
+                            <summary class="cursor-pointer list-none p-space-md flex items-center gap-space-md">
+                                <span class="font-label-md text-label-md text-outline w-20 shrink-0">@q.Reference</span>
+                                <span class="flex-1 min-w-0 font-title-sm text-title-sm text-primary truncate">@QueryTopics.Name(q.Topic)</span>
+                                <span class="hidden sm:inline font-label-sm text-label-sm text-on-surface-variant">@q.CreatedAt.ToString("dd MMM yyyy")</span>
+                                <span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full font-label-sm text-label-sm @look.Css">
+                                    <span class="material-symbols-outlined text-[14px]">@look.Icon</span> @look.Text
+                                </span>
+                                <span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <div class="px-space-md pb-space-md">
+                                <partial name="_QueryCard" model="q" view-data='new ViewDataDictionary(ViewData) { ["Compact"] = true }' />
+                            </div>
+                        </details>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+</section>
+
+</div>
