@@ -20,185 +20,189 @@ build_property.TargetFrameworkVersion = v10.0
 build_property.EntryPointFilePath = 
 build_property.RootNamespace = Give_AID
 build_property.RootNamespace = Give_AID
-build_property.ProjectDir = C:\Users\LapnDesk\Desktop\Give_AID\Give-AID\
+build_property.ProjectDir = C:\Users\HP\Give_AID\Give-AID\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\LapnDesk\Desktop\Give_AID\Give-AID
+build_property.MSBuildProjectDirectory = C:\Users\HP\Give_AID\Give-AID
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/About/Edit.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/About/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWJvdXRcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/About/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/About/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWJvdXRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Chat/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Chat/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Contact/Details.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Contact/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ29udGFjdFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Contact/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Contact/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ29udGFjdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Contact/Message.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Contact/Message.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ29udGFjdFxNZXNzYWdlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Dashboard/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/DonationCauses/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/DonationCauses/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRG9uYXRpb25DYXVzZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Donations/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Donations/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRG9uYXRpb25zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Gallery/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Gallery/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcR2FsbGVyeVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/NGO/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/NGO/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTkdPXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Partners/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Partners/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUGFydG5lcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Programmes/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/ProgrammeInterests/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZ3JhbW1lSW50ZXJlc3RzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Programmes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZ3JhbW1lc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Queries/Details.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Queries/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVlcmllc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Queries/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Queries/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVlcmllc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Shared/_AdminLayout.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Shared/_AdminLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/Users/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/_ViewImports.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Areas/Admin/Views/_ViewStart.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Areas/Admin/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/AboutUs/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/AboutUs/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWJvdXRVc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/AboutUs/Section.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/AboutUs/Section.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWJvdXRVc1xTZWN0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/AboutUs/_AboutBlock.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/AboutUs/_AboutBlock.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWJvdXRVc1xfQWJvdXRCbG9jay5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/AboutUs/_AboutCta.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/AboutUs/_AboutCta.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWJvdXRVc1xfQWJvdXRDdGEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Account/Register.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/ContactUs/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/ContactUs/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGFjdFVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Donate/History.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Donate/History.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uYXRlXEhpc3RvcnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Donate/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Donate/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uYXRlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/HelpCentre/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/HelpCentre/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVscENlbnRyZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/HelpCentre/Track.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/HelpCentre/Track.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVscENlbnRyZVxUcmFjay5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/HelpCentre/_QueryCard.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/HelpCentre/_QueryCard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVscENlbnRyZVxfUXVlcnlDYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Home/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Home/Privacy.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Invite/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Invite/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52aXRlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/PhotoGallery/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/PhotoGallery/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhvdG9HYWxsZXJ5XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Programmes/Index.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Programmes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZ3JhbW1lc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Shared/Error.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Shared/_AuthLayout.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Shared/_AuthLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BdXRoTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Shared/_ChatWidget.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Shared/_ChatWidget.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DaGF0V2lkZ2V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Shared/_Head.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Shared/_Head.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9IZWFkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/_ViewImports.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/_ViewStart.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/LapnDesk/Desktop/Give_AID/Give-AID/Views/Shared/_Layout.cshtml]
+[C:/Users/HP/Give_AID/Give-AID/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-yzcl8ewgu9

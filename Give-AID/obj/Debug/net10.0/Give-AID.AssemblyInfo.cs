@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Give-AID")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c06dee5b2e0bc6c6a61aee1c40ce5f0c31d06b17")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8180e42ca554b1f234410d26f8de4eb166af8d73")]
 [assembly: System.Reflection.AssemblyProductAttribute("Give-AID")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Give-AID")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

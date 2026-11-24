@@ -3149,23 +3149,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\LapnDesk\\.nuget\\packages\\": {},
+    "C:\\Users\\HP\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\LapnDesk\\Desktop\\Give_AID\\Give-AID\\Give-AID.csproj",
+      "projectUniqueName": "C:\\Users\\HP\\Give_AID\\Give-AID\\Give-AID.csproj",
       "projectName": "Give-AID",
-      "projectPath": "C:\\Users\\LapnDesk\\Desktop\\Give_AID\\Give-AID\\Give-AID.csproj",
-      "packagesPath": "C:\\Users\\LapnDesk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\LapnDesk\\Desktop\\Give_AID\\Give-AID\\obj\\",
+      "projectPath": "C:\\Users\\HP\\Give_AID\\Give-AID\\Give-AID.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HP\\Give_AID\\Give-AID\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\LapnDesk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3237,7 +3237,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -13,7 +13,6 @@
     tabRegister.className = login ? IDLE : ACTIVE;
     registerForm.classList.toggle('hidden', login);
     loginForm.classList.toggle('hidden', !login);
-    $('dividerText').textContent = login ? 'Or log in with your email' : 'Or register with institutional credentials';
     $('switchPrompt').textContent = login ? "Don't have an account? " : 'Already have an account? ';
     $('switchLinkText').textContent = login ? 'Register here' : 'Log In here';
     $('switchLink').setAttribute('href', login ? '#register' : '#login');
