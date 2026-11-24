@@ -22,7 +22,16 @@
 </section>
 
 <!-- ===== TOP STATS CARDS ===== -->
-<section class="stats" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+<section class="stats" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+    <!-- Total Aid Channeled Stat Card -->
+    <a class="card stat" asp-controller="Donations" asp-action="Index">
+        <span class="stat-icon" style="background:#d4edda; color:#155724;"><span class="material-symbols-outlined">payments</span></span>
+        <div>
+            <div class="stat-value">$@Model.TotalFundsRaised.ToString("N0")</div>
+            <div class="stat-label">Aid Channeled</div>
+            <div class="stat-sub">@Model.TotalDonationsCount donation@(Model.TotalDonationsCount == 1 ? "" : "s") processed</div>
+        </div>
+    </a>
     <a class="card stat" asp-controller="Users" asp-action="Index">
         <span class="stat-icon teal"><span class="material-symbols-outlined">group</span></span>
         <div>
@@ -159,8 +168,59 @@
     </section>
 </div>
 
-<!-- ===== ROW 2: RECENT QUERIES & VOLUNTEER REGISTRATIONS ===== -->
+<!-- ===== ROW 2: RECENT DONATIONS & RECENT QUERIES ===== -->
 <div class="grid-2" style="margin-top:20px;">
+    <!-- Recent Donations -->
+    <section class="card">
+        <div class="card-head">
+            <h2>Recent Donations</h2>
+            <a asp-controller="Donations" asp-action="Index">View all donations →</a>
+        </div>
+        @if (Model.RecentDonations.Count == 0)
+        {
+            <div class="empty">
+                <span class="material-symbols-outlined">payments</span>
+                <p>No donations processed yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Donor</th><th>Cause</th><th>Amount</th><th>Date</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var d in Model.RecentDonations)
+                    {
+                        var donorName = d.User?.FullName ?? "Anonymous";
+                        <tr>
+                            <td>
+                                <div class="cell-main">
+                                    <span class="avatar">@(string.IsNullOrEmpty(donorName) ? "?" : donorName.Substring(0, 1).ToUpper())</span>
+                                    <div>
+                                        <div class="cell-title">@donorName</div>
+                                        <div class="cell-sub">@(d.User?.Email ?? "—")</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cell-title" style="font-size:13px; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                    @(d.DonationCause?.CauseName ?? "Community")
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-weight:bold; color:#0b6623;">$@d.TotalCharged.ToString("N2")</span>
+                            </td>
+                            <td class="nowrap muted" style="font-size:12px;">@d.CreatedAt.ToString("dd MMM, hh:mm tt")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
     <!-- Recent Queries (Help Centre) -->
     <section class="card">
         <div class="card-head">
@@ -221,8 +281,10 @@
             </div>
         }
     </section>
+</div>
 
-    <!-- Recent Volunteer / Programme Interests -->
+<!-- ===== ROW 3: VOLUNTEER & PROGRAMME REGISTRATIONS ===== -->
+<div style="margin-top:20px;">
     <section class="card">
         <div class="card-head">
             <h2>Volunteer &amp; Programme Interests</h2>
@@ -240,7 +302,7 @@
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
-                        <tr><th>Volunteer</th><th>Programme</th><th>Role</th><th>Date</th></tr>
+                        <tr><th>Volunteer</th><th>Programme</th><th>Role</th><th>Phone / Contact</th><th>Date</th></tr>
                     </thead>
                     <tbody>
                     @foreach (var pi in Model.RecentInterests)
@@ -251,19 +313,22 @@
                                     <span class="avatar">@(string.IsNullOrEmpty(pi.Name) ? "?" : pi.Name.Substring(0, 1).ToUpper())</span>
                                     <div>
                                         <div class="cell-title">@pi.Name</div>
-                                        <div class="cell-sub">@(pi.Phone ?? pi.Email)</div>
+                                        <div class="cell-sub">@pi.Email</div>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="cell-title" style="font-size:13px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                <div class="cell-title" style="font-size:13px; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                                     @(pi.Programme?.Title ?? $"Programme #{pi.ProgrammeId}")
                                 </div>
                             </td>
                             <td>
                                 <span class="badge badge-blue">@pi.ParticipationRole</span>
                             </td>
-                            <td class="nowrap muted" style="font-size:12px;">@pi.CreatedAt.ToString("dd MMM")</td>
+                            <td class="muted" style="font-size:13px;">
+                                @(string.IsNullOrEmpty(pi.Phone) ? "—" : pi.Phone)
+                            </td>
+                            <td class="nowrap muted" style="font-size:12px;">@pi.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</td>
                         </tr>
                     }
                     </tbody>

@@ -49,6 +49,17 @@ public class DashboardController : Controller
                 .Take(5)
                 .ToList(),
 
+            // Donations processed (User Module Feature 1)
+            TotalFundsRaised = _context.Donations.Sum(d => (decimal?)d.TotalCharged) ?? 0m,
+            TotalDonationsCount = _context.Donations.Count(),
+            RecentDonations = _context.Donations
+                .AsNoTracking()
+                .Include(d => d.User)
+                .Include(d => d.DonationCause)
+                .OrderByDescending(d => d.CreatedAt)
+                .Take(5)
+                .ToList(),
+
             RecentMembers = _context.Users
                 .AsNoTracking()
                 .OrderByDescending(u => u.CreatedAt)

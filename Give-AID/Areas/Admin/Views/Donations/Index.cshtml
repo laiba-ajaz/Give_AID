@@ -1,19 +1,146 @@
+@model List<Give_AID.Models.Donation>
 @{
     ViewData["Title"] = "Donations";
+    decimal totalRaised = ViewBag.TotalRaised ?? 0m;
+    int totalCount = ViewBag.TotalCount ?? 0;
+    decimal avgDonation = ViewBag.AvgDonation ?? 0m;
+    var causes = ViewBag.Causes as List<DonationCauses> ?? new();
+    int? selectedCause = ViewBag.SelectedCause as int?;
+    string? search = ViewBag.Search as string;
 }
 
 <div class="page-header">
     <div>
-        <h1>Donations</h1>
-        <p>Every donation made on the website, with amount, cause and donor.</p>
+        <h1>Donations &amp; Aid Contributions</h1>
+        <p>Every donation processed on Give-AID with live cause allocations and transaction references.</p>
     </div>
+    <a class="btn btn-ghost" asp-area="" asp-controller="Donate" asp-action="Index" target="_blank">
+        <span class="material-symbols-outlined">open_in_new</span> Donate page
+    </a>
 </div>
 
-<section class="card">
-    <div class="empty">
-        <span class="material-symbols-outlined">payments</span>
-        <h3>Not connected yet</h3>
-        <p>Donations will be listed here once the website's Donate page saves payments to the database.</p>
-        <a class="btn btn-teal" asp-controller="DonationCauses" asp-action="Index">Manage donation causes</a>
+<!-- ===== SUMMARY STATS ===== -->
+<section class="stats">
+    <div class="card stat">
+        <span class="stat-icon coral"><span class="material-symbols-outlined">payments</span></span>
+        <div>
+            <div class="stat-value">$@totalRaised.ToString("N2")</div>
+            <div class="stat-label">Total Aid Channeled</div>
+            <div class="stat-sub">Across all verified causes</div>
+        </div>
     </div>
+    <div class="card stat">
+        <span class="stat-icon teal"><span class="material-symbols-outlined">volunteer_activism</span></span>
+        <div>
+            <div class="stat-value">@totalCount</div>
+            <div class="stat-label">Successful Donations</div>
+            <div class="stat-sub">Processed contributions</div>
+        </div>
+    </div>
+    <div class="card stat">
+        <span class="stat-icon sand"><span class="material-symbols-outlined">analytics</span></span>
+        <div>
+            <div class="stat-value">$@avgDonation.ToString("N2")</div>
+            <div class="stat-label">Average Contribution</div>
+            <div class="stat-sub">Per donor transaction</div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DONATIONS DATA CARD ===== -->
+<section class="card">
+    <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <div style="flex:1; min-width:200px;">
+            <input type="text" name="q" value="@search" placeholder="Search by donor name, email or transaction ID..." class="input" style="width:100%; padding:8px 12px; border:1px solid #ccc; border-radius:8px;" />
+        </div>
+        <div>
+            <select name="causeId" class="input" style="padding:8px 12px; border:1px solid #ccc; border-radius:8px;">
+                <option value="">All Causes</option>
+                @foreach (var c in causes)
+                {
+                    <option value="@c.DonationCausesID" selected="@(selectedCause == c.DonationCausesID ? "selected" : null)">@c.CauseName</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="display:flex; align-items:center; gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:18px;">search</span> Filter
+        </button>
+        @if (selectedCause.HasValue || !string.IsNullOrEmpty(search))
+        {
+            <a asp-action="Index" class="btn btn-ghost">Reset</a>
+        }
+    </form>
+
+    @if (Model.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">payments</span>
+            <h3>No donations found</h3>
+            <p>No donations match your selected filter criteria.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Donor</th>
+                        <th>Supported Cause</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Frequency</th>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var d in Model)
+                {
+                    var donorName = d.User?.FullName ?? "Anonymous Donor";
+                    var donorEmail = d.User?.Email ?? "—";
+                    <tr>
+                        <td>
+                            <div class="cell-main">
+                                <span class="avatar">@(string.IsNullOrEmpty(donorName) ? "?" : donorName.Substring(0, 1).ToUpper())</span>
+                                <div>
+                                    <div class="cell-title">@donorName</div>
+                                    <div class="cell-sub">@donorEmail</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cell-title" style="font-weight:600; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                @(d.DonationCause?.CauseName ?? "Community Welfare")
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight:bold; font-size:15px; color:#002d2e;">
+                                $@d.TotalCharged.ToString("N2")
+                            </div>
+                            @if (d.CoverFees)
+                            {
+                                <div class="cell-sub muted" style="font-size:11px;">(Covered 3% fee)</div>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge badge-muted">@d.PaymentMethod ****@d.CardLast4</span>
+                        </td>
+                        <td>
+                            <span class="badge @(d.Frequency == "Monthly" ? "badge-blue" : "badge-green")">@d.Frequency</span>
+                        </td>
+                        <td>
+                            <code style="font-size:12px; background:#f1f4f9; padding:2px 6px; border-radius:4px; color:#444;">
+                                @d.TransactionId
+                            </code>
+                        </td>
+                        <td class="nowrap muted" style="font-size:13px;">
+                            @d.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
 </section>

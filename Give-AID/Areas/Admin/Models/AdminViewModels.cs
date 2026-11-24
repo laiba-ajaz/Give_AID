@@ -22,6 +22,11 @@ public class DashboardViewModel
     public int TotalInterests { get; set; }
     public List<ProgrammeInterest> RecentInterests { get; set; } = new();
 
+    // Donations (Feature 1) ke summary stats aur recent contributions
+    public decimal TotalFundsRaised { get; set; }
+    public int TotalDonationsCount { get; set; }
+    public List<Donation> RecentDonations { get; set; } = new();
+
     public List<MemberRow> RecentMembers { get; set; } = new();
     public List<Programme> NextProgrammes { get; set; } = new();
 }
