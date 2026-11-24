@@ -49,13 +49,31 @@
             <div class="flex items-center gap-space-sm shrink-0">
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    <a asp-controller="Donate" asp-action="History" class="hidden sm:inline-flex items-center gap-1 px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors">
-                        <span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
-                        <span>@(User.Identity.Name ?? "Donor")</span>
-                    </a>
-                    <a asp-controller="Donate" asp-action="History" title="My Donations" class="hidden md:inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">
-                        <span>My Donations</span>
-                    </a>
+                    @* Agar Admin login hai to Admin Dashboard ka button dikhao, regular donor ke liye My Donations *@
+                    var isAdmin = User.IsInRole("Admin") || (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true);
+                    if (isAdmin)
+                    {
+                        <!-- Admin Dashboard button (Desktop & Tablet) -->
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="hidden sm:inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-on-primary px-space-md py-1.5 rounded-full font-label-md text-label-md font-semibold transition-all duration-200 shadow-sm">
+                            <span class="material-symbols-outlined text-[18px] text-secondary-container">space_dashboard</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+                        <!-- Admin icon shortcut (Mobile phone) -->
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="sm:hidden w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-secondary-container" title="Admin Dashboard">
+                            <span class="material-symbols-outlined text-[18px]">space_dashboard</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <!-- Regular Donor Profile & My Donations Link -->
+                        <a asp-controller="Donate" asp-action="History" class="hidden sm:inline-flex items-center gap-1 px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors">
+                            <span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+                            <span>@(User.Identity.Name ?? "Donor")</span>
+                        </a>
+                        <a asp-controller="Donate" asp-action="History" title="My Donations" class="hidden md:inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">
+                            <span>My Donations</span>
+                        </a>
+                    }
                     <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="inline-flex items-center justify-center bg-surface-container hover:bg-error-container/30 text-primary hover:text-error px-space-md py-1.5 rounded-full font-label-md text-label-md transition-colors duration-200 uppercase tracking-wide">
@@ -88,10 +106,21 @@
                 }
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    <a asp-controller="Donate" asp-action="History" class="sm:hidden mt-space-sm inline-flex items-center justify-between bg-surface-container text-primary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg">
-                        <span>My Donations (@(User.Identity.Name ?? "Donor"))</span>
-                        <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                    </a>
+                    var isMobileAdmin = User.IsInRole("Admin") || (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true);
+                    if (isMobileAdmin)
+                    {
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="sm:hidden mt-space-sm inline-flex items-center justify-between bg-primary text-on-primary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg font-semibold">
+                            <span>Admin Dashboard</span>
+                            <span class="material-symbols-outlined text-[18px] text-secondary-container">space_dashboard</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Donate" asp-action="History" class="sm:hidden mt-space-sm inline-flex items-center justify-between bg-surface-container text-primary px-space-lg py-space-sm rounded-full font-label-lg text-label-lg">
+                            <span>My Donations (@(User.Identity.Name ?? "Donor"))</span>
+                            <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                        </a>
+                    }
                     <form asp-controller="Account" asp-action="Logout" method="post" class="sm:hidden mt-space-xs">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="w-full inline-flex items-center justify-center bg-error-container/30 text-error px-space-lg py-space-sm rounded-full font-label-lg text-label-lg uppercase tracking-wide">Log Out</button>
