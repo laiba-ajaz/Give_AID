@@ -236,49 +236,35 @@
         }
         else
         {
-            <div class="table-wrap">
-                <table class="data-table">
-                    <thead>
-                        <tr><th>Inquirer</th><th>Topic</th><th>Status</th><th>Action</th></tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var q in Model.RecentQueries)
-                    {
-                        <tr>
-                            <td>
-                                <div class="cell-main">
-                                    <span class="avatar">@(string.IsNullOrEmpty(q.FullName) ? "?" : q.FullName.Substring(0, 1).ToUpper())</span>
-                                    <div>
-                                        <div class="cell-title">@q.FullName</div>
-                                        <div class="cell-sub">@q.Email</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="muted" style="font-size:13px;">@QueryTopics.Name(q.Topic)</span>
-                            </td>
-                            <td>
-                                @if (q.Status == QueryStatus.Open)
-                                {
-                                    <span class="badge @(q.IsUrgent ? "badge-red" : "badge-amber")">@(q.IsUrgent ? "Urgent" : "Open")</span>
-                                }
-                                else if (q.Status == QueryStatus.Answered)
-                                {
-                                    <span class="badge badge-green">Answered</span>
-                                }
-                                else
-                                {
-                                    <span class="badge badge-muted">@q.Status</span>
-                                }
-                            </td>
-                            <td class="nowrap">
-                                <a asp-controller="Queries" asp-action="Details" asp-route-id="@q.UserQueryId" class="btn btn-ghost" style="padding:4px 10px; font-size:12px;">Reply →</a>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
+            <ul class="list">
+            @foreach (var q in Model.RecentQueries)
+            {
+                <li>
+                    <span class="avatar">@(string.IsNullOrEmpty(q.FullName) ? "?" : q.FullName.Substring(0, 1).ToUpper())</span>
+                    <div class="list-main">
+                        <div class="list-title" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@q.FullName</span>
+                            @if (q.Status == QueryStatus.Open)
+                            {
+                                <span class="badge @(q.IsUrgent ? "badge-red" : "badge-amber")" style="flex-shrink:0;">@(q.IsUrgent ? "Urgent" : "Open")</span>
+                            }
+                            else if (q.Status == QueryStatus.Answered)
+                            {
+                                <span class="badge badge-green" style="flex-shrink:0;">Answered</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-muted" style="flex-shrink:0;">@q.Status</span>
+                            }
+                        </div>
+                        <div class="list-sub" style="display:flex; justify-content:space-between; align-items:center; margin-top:3px; gap:8px;">
+                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px;">@QueryTopics.Name(q.Topic) &middot; <span class="muted">@q.CreatedAt.ToString("dd MMM")</span></span>
+                            <a asp-controller="Queries" asp-action="Details" asp-route-id="@q.UserQueryId" style="color:var(--primary); font-weight:600; font-size:12px; text-decoration:none; flex-shrink:0;">Reply &rarr;</a>
+                        </div>
+                    </div>
+                </li>
+            }
+            </ul>
         }
     </section>
 </div>

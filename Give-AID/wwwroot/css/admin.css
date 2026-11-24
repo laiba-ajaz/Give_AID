@@ -357,6 +357,7 @@ a { color: var(--surface-tint); }
     border: 1px solid var(--surface-high);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
+    min-width: 0;
 }
 .card-head {
     display: flex;
@@ -421,6 +422,9 @@ a.stat:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
     display: grid;
     grid-template-columns: 1.4fr 1fr;
     gap: 20px;
+}
+.grid-2 > * {
+    min-width: 0;
 }
 
 .welcome {
