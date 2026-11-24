@@ -9,7 +9,7 @@
 <section class="card welcome">
     <div>
         <h2>@greeting, @firstName</h2>
-        <p>Here's what's happening across Give-AID today. Keep causes, NGOs and programmes up to date so donors always see the latest.</p>
+        <p>Here's what's happening across Give-AID today. Keep causes, NGOs, queries, and programmes up to date.</p>
     </div>
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <a class="btn btn-primary" asp-controller="Programmes" asp-action="Index">
@@ -21,7 +21,8 @@
     </div>
 </section>
 
-<section class="stats">
+<!-- ===== TOP STATS CARDS ===== -->
+<section class="stats" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
     <a class="card stat" asp-controller="Users" asp-action="Index">
         <span class="stat-icon teal"><span class="material-symbols-outlined">group</span></span>
         <div>
@@ -54,8 +55,27 @@
             <div class="stat-sub">@Model.TotalProgrammes in total</div>
         </div>
     </a>
+    <!-- User Queries Stat Card -->
+    <a class="card stat" asp-controller="Queries" asp-action="Index">
+        <span class="stat-icon" style="background:#e8def8; color:#6750a4;"><span class="material-symbols-outlined">forum</span></span>
+        <div>
+            <div class="stat-value">@Model.OpenQueries</div>
+            <div class="stat-label">Open Queries</div>
+            <div class="stat-sub">@Model.TotalQueries in total</div>
+        </div>
+    </a>
+    <!-- Programme Volunteer Interests Stat Card -->
+    <a class="card stat" asp-controller="ProgrammeInterests" asp-action="Index">
+        <span class="stat-icon" style="background:#ffd8e4; color:#7d5260;"><span class="material-symbols-outlined">how_to_reg</span></span>
+        <div>
+            <div class="stat-value">@Model.TotalInterests</div>
+            <div class="stat-label">Volunteer Interests</div>
+            <div class="stat-sub">Registered participants</div>
+        </div>
+    </a>
 </section>
 
+<!-- ===== ROW 1: MEMBERS & UPCOMING PROGRAMMES ===== -->
 <div class="grid-2">
     <section class="card">
         <div class="card-head">
@@ -135,6 +155,120 @@
                 </li>
             }
             </ul>
+        }
+    </section>
+</div>
+
+<!-- ===== ROW 2: RECENT QUERIES & VOLUNTEER REGISTRATIONS ===== -->
+<div class="grid-2" style="margin-top:20px;">
+    <!-- Recent Queries (Help Centre) -->
+    <section class="card">
+        <div class="card-head">
+            <h2>Recent User Queries</h2>
+            <a asp-controller="Queries" asp-action="Index">View all queries →</a>
+        </div>
+        @if (Model.RecentQueries.Count == 0)
+        {
+            <div class="empty">
+                <span class="material-symbols-outlined">inbox</span>
+                <p>No user queries received yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Inquirer</th><th>Topic</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var q in Model.RecentQueries)
+                    {
+                        <tr>
+                            <td>
+                                <div class="cell-main">
+                                    <span class="avatar">@(string.IsNullOrEmpty(q.FullName) ? "?" : q.FullName.Substring(0, 1).ToUpper())</span>
+                                    <div>
+                                        <div class="cell-title">@q.FullName</div>
+                                        <div class="cell-sub">@q.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="muted" style="font-size:13px;">@QueryTopics.Name(q.Topic)</span>
+                            </td>
+                            <td>
+                                @if (q.Status == QueryStatus.Open)
+                                {
+                                    <span class="badge @(q.IsUrgent ? "badge-red" : "badge-amber")">@(q.IsUrgent ? "Urgent" : "Open")</span>
+                                }
+                                else if (q.Status == QueryStatus.Answered)
+                                {
+                                    <span class="badge badge-green">Answered</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-muted">@q.Status</span>
+                                }
+                            </td>
+                            <td class="nowrap">
+                                <a asp-controller="Queries" asp-action="Details" asp-route-id="@q.UserQueryId" class="btn btn-ghost" style="padding:4px 10px; font-size:12px;">Reply →</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    <!-- Recent Volunteer / Programme Interests -->
+    <section class="card">
+        <div class="card-head">
+            <h2>Volunteer &amp; Programme Interests</h2>
+            <a asp-controller="ProgrammeInterests" asp-action="Index">View all volunteers →</a>
+        </div>
+        @if (Model.RecentInterests.Count == 0)
+        {
+            <div class="empty">
+                <span class="material-symbols-outlined">person_pin</span>
+                <p>No volunteer registrations yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Volunteer</th><th>Programme</th><th>Role</th><th>Date</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var pi in Model.RecentInterests)
+                    {
+                        <tr>
+                            <td>
+                                <div class="cell-main">
+                                    <span class="avatar">@(string.IsNullOrEmpty(pi.Name) ? "?" : pi.Name.Substring(0, 1).ToUpper())</span>
+                                    <div>
+                                        <div class="cell-title">@pi.Name</div>
+                                        <div class="cell-sub">@(pi.Phone ?? pi.Email)</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cell-title" style="font-size:13px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                    @(pi.Programme?.Title ?? $"Programme #{pi.ProgrammeId}")
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-blue">@pi.ParticipationRole</span>
+                            </td>
+                            <td class="nowrap muted" style="font-size:12px;">@pi.CreatedAt.ToString("dd MMM")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
         }
     </section>
 </div>

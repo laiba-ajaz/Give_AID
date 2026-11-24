@@ -1,0 +1,111 @@
+@model List<Give_AID.Models.ProgrammeInterest>
+@{
+    ViewData["Title"] = "Programme Interests";
+    var programmes = ViewBag.Programmes as List<Give_AID.Models.Programme> ?? new();
+    int? selectedProg = ViewBag.SelectedProgramme as int?;
+    string? search = ViewBag.Search as string;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Volunteer &amp; Programme Interests</h1>
+        <p>Volunteers, mentors, and donors who submitted their interest via the public Programmes page.</p>
+    </div>
+    <a class="btn btn-ghost" asp-area="" asp-controller="Programmes" asp-action="Index" target="_blank">
+        <span class="material-symbols-outlined">open_in_new</span> View Programmes
+    </a>
+</div>
+
+<section class="card">
+    <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <div style="flex:1; min-width:200px;">
+            <input type="text" name="q" value="@search" placeholder="Search by name, email or phone..." class="input" style="width:100%; padding:8px 12px; border:1px solid #ccc; border-radius:8px;" />
+        </div>
+        <div>
+            <select name="programmeId" class="input" style="padding:8px 12px; border:1px solid #ccc; border-radius:8px;">
+                <option value="">All Programmes</option>
+                @foreach (var p in programmes)
+                {
+                    <option value="@p.ProgrammeId" selected="@(selectedProg == p.ProgrammeId ? "selected" : null)">@p.Title</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="display:flex; items-center:center; gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:18px;">search</span> Filter
+        </button>
+        @if (selectedProg.HasValue || !string.IsNullOrEmpty(search))
+        {
+            <a asp-action="Index" class="btn btn-ghost">Reset</a>
+        }
+    </form>
+
+    @if (Model.Count == 0)
+    {
+        <div class="empty">
+            <span class="material-symbols-outlined">person_pin</span>
+            <p>No volunteer registrations found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Programme</th>
+                        <th>Role</th>
+                        <th>Message</th>
+                        <th>Date Registered</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="cell-main">
+                                <span class="avatar">@(string.IsNullOrEmpty(item.Name) ? "?" : item.Name.Substring(0, 1).ToUpper())</span>
+                                <div>
+                                    <div class="cell-title">@item.Name</div>
+                                    <div class="cell-sub">
+                                        <a href="mailto:@item.Email" style="color:inherit; text-decoration:underline;">@item.Email</a>
+                                        @if (!string.IsNullOrEmpty(item.Phone))
+                                        {
+                                            <span> · @item.Phone</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cell-title" style="font-weight:600;">@(item.Programme?.Title ?? $"Programme #{item.ProgrammeId}")</div>
+                            <div class="cell-sub muted">@(item.Programme?.Location ?? "")</div>
+                        </td>
+                        <td>
+                            <span class="badge badge-blue">@item.ParticipationRole</span>
+                        </td>
+                        <td>
+                            <div style="max-width:240px; font-size:13px; color:#444;" title="@item.Message">
+                                @(string.IsNullOrEmpty(item.Message) ? "—" : (item.Message.Length > 80 ? item.Message.Substring(0, 80) + "..." : item.Message))
+                            </div>
+                        </td>
+                        <td class="nowrap muted" style="font-size:13px;">
+                            @item.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                        </td>
+                        <td class="nowrap">
+                            <form asp-action="Delete" asp-route-id="@item.InterestId" method="post" onsubmit="return confirm('Remove this volunteer registration?');" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-ghost" style="color:#d32f2f; padding:4px 8px; font-size:12px;">
+                                    <span class="material-symbols-outlined" style="font-size:16px;">delete</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

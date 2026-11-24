@@ -31,6 +31,24 @@ public class DashboardController : Controller
             TotalProgrammes = _context.Programmes.Count(),
             UpcomingProgrammes = _context.Programmes.Count(p => p.isActive && p.StartDate >= today),
 
+            // User queries (Help Centre se)
+            TotalQueries = _context.Queries.Count(),
+            OpenQueries = _context.Queries.Count(q => q.Status == QueryStatus.Open),
+            RecentQueries = _context.Queries
+                .AsNoTracking()
+                .OrderByDescending(q => q.CreatedAt)
+                .Take(5)
+                .ToList(),
+
+            // Programme volunteer interests
+            TotalInterests = _context.ProgrammeInterests.Count(),
+            RecentInterests = _context.ProgrammeInterests
+                .AsNoTracking()
+                .Include(pi => pi.Programme)
+                .OrderByDescending(pi => pi.CreatedAt)
+                .Take(5)
+                .ToList(),
+
             RecentMembers = _context.Users
                 .AsNoTracking()
                 .OrderByDescending(u => u.CreatedAt)

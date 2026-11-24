@@ -13,6 +13,15 @@ public class DashboardViewModel
     public int UpcomingProgrammes { get; set; }
     public int TotalProgrammes { get; set; }
 
+    // User Queries ke stats aur recent list (Help Centre)
+    public int TotalQueries { get; set; }
+    public int OpenQueries { get; set; }
+    public List<UserQuery> RecentQueries { get; set; } = new();
+
+    // Programme Interests (Volunteers & Participants) ke stats aur list
+    public int TotalInterests { get; set; }
+    public List<ProgrammeInterest> RecentInterests { get; set; } = new();
+
     public List<MemberRow> RecentMembers { get; set; } = new();
     public List<Programme> NextProgrammes { get; set; } = new();
 }
